@@ -68,24 +68,25 @@
 \usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
 \setabbreviationstyle[acronym]{long-short}
 
-% define new commands
+% define glossaries
 \makeglossaries
-
 \newacronym{blat}{BLAT}{BLAST-like alignment tool}
 \newacronym{llm}{LLM}{Large language model}
 \newacronym{hmm}{HMM}{Hidden Markov Model}
 \newacronym{gpu}{GPU}{Graphics Processing Unit}
+\newacronym{drs}{DRS}{NanoPore direct RNA sequencing}
+\newacronym{bert}{BERT}{Bidirectional Encoder Representations from Transformers}
+\newacronym{gpt}{GPT}{Generative Pre-trained Transformer}
 
-\newacronym{cli}{CLI}{Command-Line Interface}
-\newacronym{api}{API}{Application Programming Interface}
 \newacronym{ide}{IDE}{Integrated Development Environment}
 \newacronym{gil}{GIL}{Global Interpreter Lock}
 \newacronym{ci}{CI}{Continuous Integration}
 \newacronym{cd}{CD}{Continuous Development}
 \newacronym{ucsc}{UCSC}{UCSC Genome Browser}
-\newacronym{hsp}{HSP}{High-Scoring Pair}
-%%
 
+% define macros
+% chopper = DeepChopper
+\newcommand{\chopper}{DeepChopper}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -158,7 +159,7 @@
 
 \abstract{
 	\glspl{llm} have revolutionized natural language processing and are now poised to transform biological sequence analysis.
-	This study explores the application of \glspl{llm} to nanopore direct RNA sequencing data, focusing on predicting adapters.
+	This study explores the application of \glspl{llm} to \gls{drs} data, focusing on predicting adapters.
 	Our results demonstrate that \glspl{llm} can effectively handle long contexts in biological sequences, providing accurate and efficient predictions.
 	This showcases the potential for broader applications of \glspl{llm} in genomics and transcriptomics, offering a powerful tool for the biotechnology field.}
 
@@ -166,28 +167,43 @@
 
 \section{Main}\label{sec1}
 
-%References:
-%Doitsidis, A., et al. (2018). Pore-caster: A deep neural network for accurate base calling in nanopore sequencing. BMC Genomics, 19(1), 1-13.
-%Kondrashov, A., et al. (2018). Improving nanopore RNA sequencing accuracy with deep learning. Nature Communications, 9(1), 1-11.
-%Ragan, M. A., et al. (2017). A deep learning framework for RNA structure prediction. Nature Methods, 14(8), 615-621.
-%Finn, C., et al. (2016). Deep learning for protein structure prediction. Science, 354(6312), 341-344.
-%Al-Rfou, D., et al. (2020). Longformer: The long-document transformer. arXiv preprint arXiv:2006.16633.
-%Vaswani, A., et al. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30(1), 6000-6010.
-%Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018). BERT: Pre-training of deep bidirectional transformers for language understanding. Proceedings of the 51st Annual Meeting of the Association for Computational Linguistics, 4171-4186.
-%Radford, A., et al. (2019). Language models are few-shot learners. Advances in Neural Information Processing Systems, 32(1), 2167-2177.
-%Brown, J. L., et al. (2020). Language models are 0-shot learners. Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, 6414-6423.
+% Introduction
 
-Introduction
+The advent of \glspl{llm} has revolutionized natural language processing, enabling unprecedented advancements in tasks requiring the comprehension of extensive contexts.
+This breakthrough holds significant promise for the field of bioinformatics, where biological sequences often exhibit complex and lengthy patterns.
+Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
 
-Language models, particularly large-scale ones like GPT-3 and BERT, have achieved remarkable success in various natural language processing tasks.
+
+Nanopore sequencing, particularly direct RNA sequencing, provides a detailed view of RNA molecules, capturing a wide range of sequence information including modifications.
+However, accurately identifying adapters within these sequences is a critical challenge that impacts the overall data quality and subsequent analysis.
+Traditional methods often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
+
+
+To address this, we developed \chopper, a language model tailored for biological sequences, leveraging the architecture and training paradigms of state-of-the-art \glspl{llm}.
+Our model was trained on extensive \gls{drs} datasets, learning to predict adapter sequences with high accuracy.
+The application of such a model not only enhances the precision of adapter identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications.
+
+The core of our approach lies in the ability of \glspl{llm} to understand and generate sequences based on context.
+By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict adapters embedded within long sequences.
+This method significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences.
+
+Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying adapters with remarkable accuracy.
+This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
+Moreover, the flexibility of \glspl{llm} allows for adaptation to various other tasks within bioinformatics, such as m6A detection, gene prediction, variant calling, and functional annotation.
+
+In conclusion, the integration of \glspl{llm} into bioinformatics presents a powerful tool for advancing genomic research.
+By successfully predicting adapters in \gls{drs} data, we demonstrate the potential of \glspl{llm} to enhance the accuracy and efficiency of biological sequence analysis.
+This study, exemplified by \chopper, paves the way for broader applications of \glspl{llm} in understanding and interpreting the vast complexities of genomic information.
+
+Language models, particularly large-scale ones like \gls{gpt} and \gls{bert}~\cite{devlin2018bert}, have achieved remarkable success in various natural language processing tasks.
 These models, by leveraging vast amounts of data and complex architectures, can understand and generate human-like text.
 The principles underlying these models can be extended to biological sequences, where DNA, RNA, and protein sequences can be treated as languages with their own syntax and semantics.
 
-Nanopore direct RNA sequencing is a cutting-edge technology that enables the sequencing of RNA molecules directly, providing insights into transcriptomic landscapes.
+\gls{drs} is a cutting-edge technology that enables the sequencing of RNA molecules directly, providing insights into transcriptomic landscapes.
 However, accurately predicting adapter sequences, which are crucial for correct read alignment and downstream analysis, remains a significant challenge.
 Traditional methods often struggle with the complexity and variability inherent in these sequences.
 
-In this study, we explore the use of large language models to predict adapters in nanopore direct RNA sequencing data.
+In this study, we explore the use of large language models to predict adapters in \gls{drs} data.
 By leveraging the capacity of \glspl{llm} to handle large contexts, we aim to improve the accuracy and efficiency of adapter prediction, thereby enhancing the overall quality of sequencing data analysis.
 
 % Importance of Language Models in Biological Sequences
@@ -200,10 +216,9 @@ In contrast, \glspl{llm}, with their transformer-based architects, can process a
 For example, recent studies have demonstrated the effectiveness of language models in predicting protein structures and functions, understanding genomic variations, and annotating functional elements in genomes.
 The ability to process large contexts is particularly advantageous in these applications, where local and global sequence features are crucial for accurate predictions.
 
-In the context of nanopore direct RNA sequencing, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
+In the context of \gls{drs}, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
 These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods.
 By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
-
 
 \begin{figure}[!h]
 	%    \includegraphics[width=\linewidth]{figures/fas_len_ranges}
@@ -212,43 +227,41 @@ By leveraging the extensive contextual understanding provided by \glspl{llm}, we
 	\label{fig:f1}
 \end{figure}
 
-
 % Predicting Adapters in Nanopore Direct RNA Sequencing
 
-Nanopore direct RNA sequencing allows for real-time, high-throughput sequencing of RNA molecules, providing a comprehensive view of the transcriptome.
+\gls{drs} allows for real-time, high-throughput sequencing of RNA molecules, providing a comprehensive view of the transcriptome.
 However, the presence of adapter sequences, necessary for sequencing, poses a challenge for data analysis.
 Accurate prediction of these adapters is crucial for aligning reads and ensuring the reliability of downstream analyses.
 
-In this study, we employed a large language model to predict adapter sequences in nanopore direct RNA sequencing data.
+In this study, we employed a large language model to predict adapter sequences in \gls{drs} data.
 Our model was trained on a diverse dataset of RNA sequences, including various adapter types and configurations.
 The training process involved fine-tuning the model on this specific task, optimizing for accuracy and efficiency.
 
 The results demonstrate that our language model can predict adapters with high accuracy, outperforming traditional methods.
 Figures 1 and 2 illustrate the comparison between our model's predictions and the actual adapter sequences, highlighting the model's precision and recall.
 
-These findings suggest that \glspl{llm} can effectively handle the complexity and variability of biological sequences, making them a valuable tool for improving the accuracy of nanopore direct RNA sequencing.
+These findings suggest that \glspl{llm} can effectively handle the complexity and variability of biological sequences, making them a valuable tool for improving the accuracy of \gls{drs}.
 This not only enhances the quality of sequencing data but also opens up new possibilities for the application of language models in other areas of genomics and transcriptomics.
 
 % Conclusion
 
-Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of nanopore direct RNA sequencing.
+Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of \gls{drs}.
 By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
 This showcases the broader applicability of language models in handling complex biological data, paving the way for advancements in genomics and transcriptomics.
 Future research can explore additional applications and further optimize these models for specific biological tasks, solidifying their role in biotechnology.
 
 
 \begin{figure}[!h]
-	%    \includegraphics[width=\linewidth]{figures/fas_len_ranges}
 	\includegraphics[height=0.6\columnwidth]{example-image-duck}
-	\caption{\bf this is figure 2.}
+	\caption{\bf This is figure 2.}
 	\label{fig:f2}
 \end{figure}
-
 
 \section{Methods}\label{sec2}
 
 \subsection{Language Model Architecture}
 
+ We adapted a transformer-based language model architecture, fine-tuning it for biological sequences. The model was trained to predict adapter sequences based on the contextual information present in the RNA sequences.
 The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
 Specifically, we employed a model with \num{24} layers, \num{16} attention heads, and a hidden size of \num{1024}.
 This configuration was chosen to balance performance and computational feasibility.
@@ -258,7 +271,9 @@ This approach allowed the model to leverage general RNA sequence patterns while 
 
 \subsection{Data Preparation}
 
-The dataset for this study comprised publicly available nanopore direct RNA sequencing data, supplemented with manually annotated adapter sequences.
+\gls{drs} datasets were obtained from publicly available repositories, ensuring a comprehensive representation of diverse RNA sequences.
+These datasets included both raw sequencing reads and annotated adapters.
+The dataset for this study comprised publicly available \gls{drs} data, supplemented with manually annotated adapter sequences.
 Preprocessing involved quality control steps such as read filtering and trimming to ensure high-quality data.
 Adapter sequences were identified and labeled, creating a training set with positive (adapter) and negative (non-adapter) examples.
 To further enhance the dataset, synthetic adapters were generated based on known sequences, providing additional training examples and improving the model's generalization capability.
@@ -266,11 +281,31 @@ To further enhance the dataset, synthetic adapters were generated based on known
 
 \subsection{Training Procedure}
 
+The model was trained using supervised learning, with sequences annotated for adapter regions serving as the training data.
+Various data augmentation techniques were employed to enhance model robustness and generalization.
 Training was conducted on a high-performance computing cluster, utilizing \glspl{gpu} to expedite the process.
 The model was trained using the Adam optimization algorithm, with a learning rate of \num{1e-4}.
 The training process involved multiple epochs, with early stopping criteria based on validation performance to prevent overfitting.
 Evaluation metrics included accuracy, precision, recall, and F1 score, with cross-validation to ensure robustness.
 The final model was selected based on the best performance on the validation set, and its predictions were compared against a baseline model using traditional methods.
+
+
+We perform multi-task learning to find the optimal model’s parameters.
+The total loss for one window is the sum of the losses from each supported position.
+Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with :
+where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities,  is the true base.
+
+ denotes the predicted probability that a
+position is informative, and is the indicator function that equals to 1, and 0 otherwise.
+We trained the model on 2 A100 GPUs for a maximum of 1 million steps.
+The batch size was 128, so the model saw 128 million examples.
+Validation was performed every 2000 steps, and we selected the model with the highest validation F1 score for the base prediction task.
+The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beat_{2} = 0.999 \) parameters.
+We used a cosine learning rate scheduler with an initial learning rate of \( 3 \times 10^{-4} \).
+Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\) -norm with a maximum norm value of 1.
+The dropout value in transformer was set to 0.1.
+The complete list of hyperparameters can be found in Supplementary Table 11
+
 
 \subsection{Evaluation Metrics and Analysis}
 
@@ -307,28 +342,23 @@ The results were further validated by testing the model on an independent datase
 
 \bmhead{Supplementary information}
 
-If your article has accompanying supplementary file/s please state so here.
-Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
-Please refer to Journal-level guidance for any specific requirements.
-
+% If your article has accompanying supplementary file/s please state so here.
+% Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
+% Please refer to Journal-level guidance for any specific requirements.
 \bmhead{Data Availability}
 
 The sources of HiFi, ONT and CLR reads of the six family datasets and HCC1395 normal-tumor paired cell are listed.
-The human reference genome GRCh37 was downloaded from  \url{http://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference}.
 The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38\_reference\_genome/}.
-
 
 \bmhead{Code Availability}
 
-DeepChopper (v.1.0) is available at GitHub (\url{https://github.com/songbowang125/SVision-pro.git}).
-The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/songbowang125/SVision-pro-Utils.git}).
+DeepChopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 Both repositories are available under a MIT License.
-
 
 \bmhead{Acknowledgements}
 
 Acknowledgements are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
-
 Please refer to Journal-level guidance for any specific requirements.
 
 % \section*{Declarations}
@@ -358,12 +388,12 @@ Please refer to Journal-level guidance for any specific requirements.
 	An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
 
 	%%=============================================%%
-	%% For submissions to Nature Portfolio Journals %%
+	%% For submissions to Nature Portfolio Journals%%
 	%% please use the heading ``Extended Data''.   %%
 	%%=============================================%%
 
 	%%=============================================================%%
-	%% Sample for another appendix section			       %%
+	%% Sample for another appendix section			               %%
 	%%=============================================================%%
 
 	%% \section{Example of another appendix section}\label{secA2}%
