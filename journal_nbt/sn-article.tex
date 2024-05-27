@@ -261,7 +261,7 @@ Future research can explore additional applications and further optimize these m
 
 \subsection{Language Model Architecture}
 
- We adapted a transformer-based language model architecture, fine-tuning it for biological sequences. The model was trained to predict adapter sequences based on the contextual information present in the RNA sequences.
+We adapted a transformer-based language model architecture, fine-tuning it for biological sequences. The model was trained to predict adapter sequences based on the contextual information present in the RNA sequences.
 The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
 Specifically, we employed a model with \num{24} layers, \num{16} attention heads, and a hidden size of \num{1024}.
 This configuration was chosen to balance performance and computational feasibility.
@@ -295,15 +295,15 @@ The total loss for one window is the sum of the losses from each supported posit
 Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with :
 where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities,  is the true base.
 
- denotes the predicted probability that a
+denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
 We trained the model on 2 A100 GPUs for a maximum of 1 million steps.
 The batch size was 128, so the model saw 128 million examples.
 Validation was performed every 2000 steps, and we selected the model with the highest validation F1 score for the base prediction task.
-The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beat_{2} = 0.999 \) parameters.
+The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters.
 We used a cosine learning rate scheduler with an initial learning rate of \( 3 \times 10^{-4} \).
-Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\) -norm with a maximum norm value of 1.
-The dropout value in transformer was set to 0.1.
+Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\)-norm with a maximum norm value of 1.
+The dropout value in transformer was set to \num{0.1}.
 The complete list of hyperparameters can be found in Supplementary Table 11
 
 
