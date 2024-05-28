@@ -31,10 +31,10 @@
 \begin{document}
 
 \begin{tikzpicture}[
-		neuron/.style={circle, draw, fill=black!10, minimum size=1em},
-		node/.style={thick,circle,draw=myblue,minimum size=1.5em},
-		node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20},
+		node/.style={thick,circle,draw=myblue,minimum size=1.5em, inner sep=0.5,outer sep=0.6},
+		node hidden/.style={node,blue!20!black, draw=myblue!30!black, fill=myblue!20},
 		node embed/.style={thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
+		connect/.style={-stealth, ultra thick, shorten >=1},
 	]
 
 	\begin{scope}[scale=1, local bounding box=seqbox]
@@ -57,7 +57,7 @@
 	\begin{scope}[shift={($(seqbox.south)+(-2,-8)$)}, scale=1, local bounding box=modelbox1]
 		% define box size 
 		\def\boxsize{6em}
-		\def\boxdist{10em}
+		\def\boxdist{9em}
 		\def\boxcolor{myorange}
 		\def\nodedist{1.7em}
 
@@ -83,9 +83,9 @@
 		\end{scope}
 
 		% add arrow from seq to token
-		\draw[-stealth, ultra thick] (seq) -- node[midway, above] {Tokenization} (token);
+		\draw[connect] (seq) -- node[midway, above] {Tokenization} (token);
 		% add arrow from token to embedding
-		\draw[-stealth, ultra thick] ([xshift=8em]token.west) -- node[midway, above] {Feature Extract} (embed);
+		\draw[connect] ([xshift=8em]token.west) -- node[midway, above] {Feature Extract} (embed);
 
 		\begin{scope}[shift={(embed.center)},yshift=-2em, scale=0.4, local bounding box=embed_box]
 			\begin{scope}[opacity=0.3]
@@ -138,24 +138,24 @@
 		\node[node hidden,  yshift=-0.9em] (out2) at (output.center) {};
 
 		% add arrow from embedding to linear layer
-		\draw[-stealth, ultra thick] ( [xshift=9em]embed.west) -- (weight_layer1);
+		\draw[connect] ( [xshift=9em]embed.west) -- (weight_layer1);
 
 		% add qual unber add1
-		\node[below=of add1] (qual) {\tt 5>SS\dots S\textcolor{mymauve}{,*\%\%\%\#\$,}SS\dots <HL};
+		\node[below= \boxdist of add1] (qual) {\tt 5>SS\dots S\textcolor{mymauve}{,*\%\%\%\#\$,}SS\dots <HL};
 		\node[below=1pt of qual] (qual2) {\tt BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
 		\node[below=1pt of qual2] (qual3) {\tt *-)))(\dots =\textcolor{mymauve}{EEEEA?<:>=9;;9}};
 
 		\node[right = \boxdist of output] (final_feature) {};
 
-		\draw[-stealth, ultra thick] (weight_layer1) -- (add1);
-		\draw[-stealth, ultra thick] (add1) -- (weight_layer2)  node[midway, above] (residual_label) {Residual};
-		\draw[-stealth, ultra thick] (weight_layer2) -- (add2);
-		\draw[-stealth, ultra thick] (add2) -- (output) node[midway, above] {ReLU};
-		\draw[-stealth, ultra thick] (output) -- (final_feature) node[above] {};
+		\draw[connect] (weight_layer1) -- (add1);
+		\draw[connect] (add1) -- (weight_layer2)  node[midway, above] (residual_label) {Residual};
+		\draw[connect] (weight_layer2) -- (add2);
+		\draw[connect] (add2) -- (output) node[midway, above] {ReLU};
+		\draw[connect] (output) -- (final_feature) node[above] {};
 
 		% add arrow from qual to add1
-		\draw[-stealth, ultra thick] (qual) -- (add1);
-		\draw[-stealth, dashed, ultra thick]
+		\draw[connect] (qual) -- (add1);
+		\draw[connect, dashed]
 		(residual_label.north) to[out=90, in=90, looseness=1.5]
 		node[below=2ex, midway, align=center] {skip connection\\(identity)}
 		node[above, midway] {$\vec x$}
@@ -197,7 +197,7 @@
 				(0, 1) rectangle ++(16, 1)
 				(0, 0) rectangle ++(10, 1);
 
-				\fill[mygreen]
+				\fill[mymauve]
 				(8, 2) rectangle ++(8, 1)
 				(16, 1) rectangle ++(8, 1)
 				(10, 0) rectangle ++(14, 1);
@@ -205,17 +205,16 @@
 				\draw [white] (0, 0) grid (24, 3);
 
 			\end{scope}
-
 		\end{scope}
 
 
-		\draw[-stealth, ultra thick] ([xshift=9em]final_feature.west) -- node[above]{Decoding} (label);
+		\draw[connect] ([xshift=9em]final_feature.west) -- node[above]{Decoding} (label);
 
 		\node[right = 3  * \boxdist of label ] (result) { \tt GTGCATCTG\dots CCTG};
 		\node[below = 1pt of result] (result2)  { \tt GACCGT\dots A};
 		\node[above = 1pt of result] (result3)  { \tt ATAC\dots A \; TA\dots AGT};
 
-		\draw[-stealth, ultra thick] ([xshift=22em]label.west) -- node[above] {Chop} (result);
+		\draw[connect] ([xshift=22em]label.west) -- node[midway, above] {Chop} (result);
 
 
 	\end{scope}

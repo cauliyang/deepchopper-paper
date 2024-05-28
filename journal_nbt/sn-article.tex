@@ -61,6 +61,7 @@
 %% my package
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
+    scientific-notation=true,
     round-mode = places,
     round-precision = 2
 }
@@ -221,7 +222,7 @@ By leveraging the extensive contextual understanding provided by \glspl{llm}, we
 \begin{figure}[!h]
 	%    \includegraphics[width=\linewidth]{figures/fas_len_ranges}
 	\includegraphics[height=0.6\columnwidth]{example-image-duck}
-	\caption{\bf this is figure 1.}
+	\caption{\bf This is figure 1.}
 	\label{fig:f1}
 \end{figure}
 
@@ -329,10 +330,31 @@ The results were further validated by testing the model on an independent datase
 % row 3    & data 7   & data 8  & data 9\footnotemark[2]  \\
 % \botrule
 % \end{tabular}
+
 % \footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
 % \footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
 % \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
 % \end{table}
+
+\begin{table}[h]
+	\caption{Benchmarking for different models}
+	\label{tab:bechmark}
+	\begin{tabular}{@{}
+			l
+			S[table-format=1.4e-2] % Formats the F1 column in scientific notation
+			S[table-format=1.4e-2] % Formats the Loss column in scientific notation
+			@{}}
+		\toprule
+		{Model}             & {F1}                         & {Loss}                         \\ \midrule
+		CNN                 & 0.9909037351608276           & 0.00302332011051476            \\
+		Model with Hyean    & 0.9925663471221924           & 0.002182388212531805           \\
+		Model with Caduceus & \bfseries 0.9977396130561829 & \bfseries 0.000541145505849272 \\ \bottomrule
+	\end{tabular}
+	% \footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
+	% \footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
+	% \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
+\end{table}
+
 
 \backmatter
 
