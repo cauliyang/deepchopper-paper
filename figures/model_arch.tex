@@ -4,10 +4,8 @@
 \usepackage{xcolor}
 \usetikzlibrary{calc}
 \usetikzlibrary{positioning}
-\usetikzlibrary{snakes}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.pathreplacing}
-\usepackage{pgfplots}
 
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{mygold}{HTML}{B8860B}
@@ -32,8 +30,14 @@
 
 \begin{tikzpicture}[
 		node/.style={thick,circle,draw=myblue,minimum size=1.5em, inner sep=0.5,outer sep=0.6},
-		node hidden/.style={node,blue!20!black, draw=myblue!30!black, fill=myblue!20},
-		node embed/.style={thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
+		node hidden/.style={node,
+				very thick,
+				draw=myblue,
+				% blue!20!black,
+				% draw=myblue!30!black,
+				fill=myblue!20
+			},
+		node embed/.style={very thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
 		connect/.style={-stealth, ultra thick, shorten >=1},
 	]
 
@@ -62,13 +66,17 @@
 		\def\nodedist{1.7em}
 
 		% add seq -> tokenization
-		\node (seq) at (0,0) { \tt GTGCATCTG\dots CCTG\textcolor{mymauve}{AGGAGTAG}};
-		\node[below = 1pt of seq] (seq2)  { \tt GACCGT\dots A\textcolor{mymauve}{TGGGGACTGTGGTC}};
-		\node[above = 1pt of seq] (seq3)  { \tt ATAC\dots A\textcolor{mymauve}{AGTTAGAG}TA\dots AGT};
+		\node (seq) at (0,0) { \tt seq2: GTGCATCTG\dots CCTG\textcolor{mymauve}{AGGAGTAG}};
+		\node[below = 1pt of seq] (seq2)  { \tt seq3: GACCGT\dots A\textcolor{mymauve}{TGGGGACTGTGGTC}};
+		\node[above = 1pt of seq] (seq3)  { \tt seq1: ATAC\dots A\textcolor{mymauve}{AGTTAGAG}TA\dots AGT};
+
+		% draw a box around the sequence
+		\draw[olivegreen, dashed, rounded corners, very thick] ($(seq3.north west) + (-0.5, 0.5)$) rectangle ($(seq2.south east) + (0.5, -0.5)$);
+		\node[above = 3em of seq3, align=center] (seq_text) {Input Sequence};
 
 
 		% Draw the edge from seq to a point to the right (formerly 'token') and label it
-		\node[right = \boxdist of seq] (token) {}; % Define position without drawing the node
+		\node[right = 1.5 * \boxdist of seq] (token) {}; % Define position without drawing the node
 		% add embedding as rectangle
 		\node[right = 2 * \boxdist of token] (embed)  {};
 
@@ -83,7 +91,7 @@
 		\end{scope}
 
 		% add arrow from seq to token
-		\draw[connect] (seq) -- node[midway, above] {Tokenization} (token);
+		\draw[connect] ([xshift=20em]seq.west) -- node[midway, above] {Tokenization} (token);
 		% add arrow from token to embedding
 		\draw[connect] ([xshift=8em]token.west) -- node[midway, above] {Feature Extract} (embed);
 
@@ -145,6 +153,11 @@
 		\node[below=1pt of qual] (qual2) {\tt BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
 		\node[below=1pt of qual2] (qual3) {\tt *-)))(\dots =\textcolor{mymauve}{EEEEA?<:>=9;;9}};
 
+		% % draw a box around the qual
+		\draw[olivegreen, dashed, rounded corners, very thick] ($(qual.north west) + (-0.5, 0.5)$) rectangle ($(qual3.south east) + (0.5, -0.5)$);
+		\node[below = 3em of qual3, align=center] (qual_text) {Input Quality};
+
+
 		\node[right = \boxdist of output] (final_feature) {};
 
 		\draw[connect] (weight_layer1) -- (add1);
@@ -154,7 +167,8 @@
 		\draw[connect] (output) -- (final_feature) node[above] {};
 
 		% add arrow from qual to add1
-		\draw[connect] (qual) -- (add1);
+		\draw[connect] ($(qual) + (0,1)$) -- (add1);
+
 		\draw[connect, dashed]
 		(residual_label.north) to[out=90, in=90, looseness=1.5]
 		node[below=2ex, midway, align=center] {skip connection\\(identity)}
@@ -207,14 +221,18 @@
 			\end{scope}
 		\end{scope}
 
-
 		\draw[connect] ([xshift=9em]final_feature.west) -- node[above]{Decoding} (label);
 
-		\node[right = 3  * \boxdist of label ] (result) { \tt GTGCATCTG\dots CCTG};
+		\node[right = 3.5  * \boxdist of label ] (result) { \tt GTGCATCTG\dots CCTG};
 		\node[below = 1pt of result] (result2)  { \tt GACCGT\dots A};
 		\node[above = 1pt of result] (result3)  { \tt ATAC\dots A \; TA\dots AGT};
 
-		\draw[connect] ([xshift=22em]label.west) -- node[midway, above] {Chop} (result);
+		% draw a box around the result
+		\draw[myred, dashed, rounded corners, very thick] ($(result3.north west) + (-0.5, 0.5)$) rectangle ($(result2.south east) + (1, -0.5)$);
+		\node[above = 3em of result3, align=center] (result_text) {Output Sequence};
+
+
+		\draw[connect] ([xshift=22em]label.west) -- node[midway, above] {Chop} ([xshift=-2em]result.west);
 
 
 	\end{scope}
