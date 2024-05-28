@@ -173,11 +173,9 @@ The advent of \glspl{llm} has revolutionized natural language processing, enabli
 This breakthrough holds significant promise for the field of bioinformatics, where biological sequences often exhibit complex and lengthy patterns.
 Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
 
-
 Nanopore sequencing, particularly direct RNA sequencing, provides a detailed view of RNA molecules, capturing a wide range of sequence information including modifications.
 However, accurately identifying adapters within these sequences is a critical challenge that impacts the overall data quality and subsequent analysis.
 Traditional methods often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
-
 
 To address this, we developed \chopper, a language model tailored for biological sequences, leveraging the architecture and training paradigms of state-of-the-art \glspl{llm}.
 Our model was trained on extensive \gls{drs} datasets, learning to predict adapter sequences with high accuracy.
@@ -293,8 +291,7 @@ The final model was selected based on the best performance on the validation set
 We perform multi-task learning to find the optimal model’s parameters.
 The total loss for one window is the sum of the losses from each supported position.
 Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with :
-where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities,  is the true base.
-
+where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilitiesis the true base.
 denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
 We trained the model on 2 A100 GPUs for a maximum of 1 million steps.
@@ -305,7 +302,6 @@ We used a cosine learning rate scheduler with an initial learning rate of \( 3 \
 Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\)-norm with a maximum norm value of 1.
 The dropout value in transformer was set to \num{0.1}.
 The complete list of hyperparameters can be found in Supplementary Table 11
-
 
 \subsection{Evaluation Metrics and Analysis}
 
