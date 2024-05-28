@@ -181,12 +181,42 @@
 			\end{scope}
 		\end{scope}
 
+		% \node[right = 1.5* \boxdist of final_feature] (label) {\tt 000000000\dots 0000\textcolor{mymauve}{11111111}};
+		% \node[below = 1pt of label] (label2) {\tt 000000\dots 0\textcolor{mymauve}{11111111111111}};
+		% \node[above=1pt of label] (label3) {\tt 0000\dots 0\textcolor{mymauve}{11111111}00\dots 000};
 
-		\node[right = 1.5* \boxdist of final_feature] (label) {\tt 000000000\dots 0000\textcolor{mymauve}{11111111}};
-		\node[below = 1pt of label] (label2) {\tt 000000\dots 0\textcolor{mymauve}{11111111111111}};
-		\node[above=1pt of label] (label3) {\tt 0000\dots 0\textcolor{mymauve}{11111111}00\dots 000};
+		\node[right = 1.5* \boxdist of final_feature] (label) {};
+
+		\begin{scope}[shift={(label.center)}, scale=0.3, yshift=-3em, local bounding box=label_box]
+			% Draw the second matrix slightly shifted
+			\begin{scope}[opacity=1]
+				% Combine fill operations for each color
+				\fill[black!40]
+				(0, 2) rectangle ++(8, 1)
+				(16, 2) rectangle ++(8, 1)
+				(0, 1) rectangle ++(16, 1)
+				(0, 0) rectangle ++(10, 1);
+
+				\fill[mygreen]
+				(8, 2) rectangle ++(8, 1)
+				(16, 1) rectangle ++(8, 1)
+				(10, 0) rectangle ++(14, 1);
+				% Draw the grid
+				\draw [white] (0, 0) grid (24, 3);
+
+			\end{scope}
+
+		\end{scope}
+
 
 		\draw[-stealth, ultra thick] ([xshift=9em]final_feature.west) -- node[above]{Decoding} (label);
+
+		\node[right = 3  * \boxdist of label ] (result) { \tt GTGCATCTG\dots CCTG};
+		\node[below = 1pt of result] (result2)  { \tt GACCGT\dots A};
+		\node[above = 1pt of result] (result3)  { \tt ATAC\dots A \; TA\dots AGT};
+
+		\draw[-stealth, ultra thick] ([xshift=22em]label.west) -- node[above] {Chop} (result);
+
 
 	\end{scope}
 
