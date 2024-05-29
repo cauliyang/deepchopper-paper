@@ -57,6 +57,13 @@
 \usepackage{listings}%
 %%%%
 
+\usepackage{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{listofitems} % for \readlist to create arrays
 
 %% my package
 \usepackage[detect-all=true]{siunitx}
@@ -218,6 +225,13 @@ The ability to process large contexts is particularly advantageous in these appl
 In the context of \gls{drs}, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
 These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods.
 By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
+
+\begin{figure}
+	\begin{center}
+		\includestandalone[scale=0.3]{figures/model_arch}
+	\end{center}
+	\caption{Model Architecture}\label{fig:model}
+\end{figure}
 
 \begin{figure}[!h]
 	%    \includegraphics[width=\linewidth]{figures/fas_len_ranges}

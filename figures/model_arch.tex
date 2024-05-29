@@ -1,5 +1,4 @@
 \documentclass[tikz,border=10pt]{standalone}
-\usepackage{tkz-graph}
 \usepackage{amsmath,amssymb}
 \usepackage{xcolor}
 \usetikzlibrary{calc}
@@ -7,6 +6,9 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.pathreplacing}
 \usepackage{listofitems} % for \readlist to create arrays
+
+
+\begin{document}
 
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{mygold}{HTML}{B8860B}
@@ -21,8 +23,6 @@
 \colorlet{mydarkblue}{blue!40!black}
 \colorlet{mydarkgreen}{green!30!black}
 
-
-\begin{document}
 
 \begin{tikzpicture}[
 		node/.style={thick,circle,draw=myblue,minimum size=12, inner sep=0.5,outer sep=0.6},
@@ -210,7 +210,7 @@
 		\draw[connect] (add2) -- (output) node[midway, above] { ReLU};
 		\draw[connect] (output) -- ([xshift=10em]final_feature.east) node[above, midway] {Softmax};
 		% add arrow from qual to add1
-		\draw[connect] ($(qual2) + (5,0)$) -- (add1) node[above, midway, sloped] {Standardization};
+		\draw[connect] ($(qual2) + (5.5,0)$) -- (add1) node[above, midway] {Standardization};
 
 		\draw[connect, dashed]
 		(residual_label) to[out=-90, in=-90, looseness=1]
