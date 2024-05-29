@@ -38,7 +38,9 @@
 				fill=myblue!20
 			},
 		node embed/.style={very thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
-		connect/.style={-stealth, ultra thick, shorten >=1},
+		connect/.style={-stealth, ultra thick, shorten <=2pt, shorten >=2pt},
+		% make all text bigger/.style={font=\Large},
+		every node/.style={font=\Large}
 	]
 
 	\begin{scope}[scale=1, local bounding box=seqbox]
@@ -62,7 +64,7 @@
 		% define box size 
 		\def\boxsize{6em}
 		\def\boxdist{9em}
-		\def\boxcolor{myorange}
+		\def\boxcolor{myblue}
 		\def\nodedist{1.7em}
 
 		% add seq -> tokenization
@@ -73,7 +75,6 @@
 		% draw a box around the sequence
 		\draw[olivegreen, dashed, rounded corners, very thick] ($(seq3.north west) + (-0.5, 0.5)$) rectangle ($(seq2.south east) + (0.5, -0.5)$);
 		\node[above = 3em of seq3, align=center] (seq_text) {Input Sequence};
-
 
 		% Draw the edge from seq to a point to the right (formerly 'token') and label it
 		\node[right = 1.5 * \boxdist of seq] (token) {}; % Define position without drawing the node
@@ -121,27 +122,27 @@
 			\end{scope}
 		\end{scope}
 
-		\node[\boxcolor!40, right = 1.5 * \boxdist of embed, draw, fill=\boxcolor, fill opacity=0.1, very thick, rounded corners=2, minimum size=\boxsize * 1.25] (weight_layer1) {};
+		\node[\boxcolor, right = 1.5 * \boxdist of embed, draw, very thick, rounded corners, minimum size=\boxsize * 1.25] (weight_layer1) {};
 		\node[node hidden, yshift=  2.3em] (n1) at (weight_layer1.center) {};
 		\node[node hidden, yshift={(2.3em - \nodedist)}] (n2) at (weight_layer1.center) {};
 		\node[node hidden, yshift={(2.3em - 2*\nodedist)}] (n3) at (weight_layer1.center) {};
 		\node[node hidden, yshift={(2.3em - 3*\nodedist)}] (n4) at (weight_layer1.center) {};
 
 		% add a plus sign to show residual connection
-		\node[right= \boxdist of weight_layer1, font=\Large, inner sep=0] (add1) {$\oplus$};
+		\node[right= \boxdist of weight_layer1, font=\Huge, minimum size=0.5 * \boxsize] (add1) {$\oplus$};
 
 		% add weight layer 2
-		\node[\boxcolor!40, right= \boxdist of add1, rectangle, draw, fill=\boxcolor, fill opacity=0.1, very thick, rounded corners=2, minimum size=\boxsize * 1.25] (weight_layer2) {};
+		\node[\boxcolor, right= \boxdist of add1, rectangle, draw, very thick, rounded corners, minimum size=\boxsize * 1.25] (weight_layer2) {};
 		% add 4 node hidden to weight_layer2
 		\node[node hidden, yshift=2.3em] (w2n1) at (weight_layer2.center) {};
 		\node[node hidden, yshift={(2.3em - \nodedist)}] (w2n2) at (weight_layer2.center) {};
 		\node[node hidden, yshift={(2.3em - 2*\nodedist)}] (w2n3) at (weight_layer2.center) {};
 		\node[node hidden, yshift={(2.3em - 3*\nodedist)}] (w2n4) at (weight_layer2.center) {};
 
-		\node[right= \boxdist of weight_layer2, font=\Large, inner sep=0] (add2) {$\oplus$};
+		\node[right= \boxdist of weight_layer2, font=\Huge, minimum size=0.5 * \boxsize] (add2) {$\oplus$};
 
 		% add output box with two nodes
-		\node[\boxcolor!40, rectangle, draw, fill=\boxcolor, fill opacity=0.1, very thick, rounded corners=2, minimum size=\boxsize, right = \boxdist of add2] (output) {};
+		\node[\boxcolor, rectangle, draw, very thick, rounded corners, minimum size=\boxsize, right = \boxdist of add2] (output) {};
 		\node[node hidden,  yshift=0.9em] (out1) at (output.center) {};
 		\node[node hidden,  yshift=-0.9em] (out2) at (output.center) {};
 
@@ -149,25 +150,26 @@
 		\draw[connect] ( [xshift=9em]embed.west) -- (weight_layer1);
 
 		% add qual unber add1
-		\node[below= \boxdist of add1] (qual) {\tt 5>SS\dots S\textcolor{mymauve}{,*\%\%\%\#\$,}SS\dots <HL};
-		\node[below=1pt of qual] (qual2) {\tt BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
-		\node[below=1pt of qual2] (qual3) {\tt *-)))(\dots =\textcolor{mymauve}{EEEEA?<:>=9;;9}};
+		\node[below= 1.5 * \boxdist of add1] (qual) {\tt qual1: 5>SS\dots S\textcolor{mymauve}{,*\%\%\%\#\$,}SS\dots <HL};
+		\node[below=1pt of qual] (qual2) {\tt qual2: BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
+		\node[below=1pt of qual2] (qual3) {\tt qual3: *-)))(\dots =\textcolor{mymauve}{EEEEA?<:>=9;;9}};
 
 		% % draw a box around the qual
 		\draw[olivegreen, dashed, rounded corners, very thick] ($(qual.north west) + (-0.5, 0.5)$) rectangle ($(qual3.south east) + (0.5, -0.5)$);
 		\node[below = 3em of qual3, align=center] (qual_text) {Input Quality};
-
 
 		\node[right = \boxdist of output] (final_feature) {};
 
 		\draw[connect] (weight_layer1) -- (add1);
 		\draw[connect] (add1) -- (weight_layer2)  node[midway, above] (residual_label) {Residual};
 		\draw[connect] (weight_layer2) -- (add2);
-		\draw[connect] (add2) -- (output) node[midway, above] {ReLU};
-		\draw[connect] (output) -- (final_feature) node[above] {};
+		\draw[connect] (add2) -- (output) node[midway, above] { ReLU};
+		\draw[connect] (output) -- (final_feature) node[above, midway] {Softmax};
 
 		% add arrow from qual to add1
-		\draw[connect] ($(qual) + (0,1)$) -- (add1);
+		\draw[connect] ($(qual) + (0,1)$) -- (add1) node[above, midway, sloped] {Standardization};
+		% let the label parallel to the line
+
 
 		\draw[connect, dashed]
 		(residual_label.north) to[out=90, in=90, looseness=1.5]
@@ -233,8 +235,6 @@
 
 
 		\draw[connect] ([xshift=22em]label.west) -- node[midway, above] {Chop} ([xshift=-2em]result.west);
-
-
 	\end{scope}
 
 \end{tikzpicture}
