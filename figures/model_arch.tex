@@ -10,7 +10,6 @@
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{mygold}{HTML}{B8860B}
 \definecolor{mynavy}{HTML}{000080}
-
 \definecolor{olivegreen}{rgb}{0,0.6,0}
 
 \colorlet{myred}{red!80!black}
@@ -33,9 +32,7 @@
 		node hidden/.style={node,
 				very thick,
 				draw=myblue,
-				% blue!20!black,
-				% draw=myblue!30!black,
-				fill=myblue!20
+				fill=myblue!50
 			},
 		node embed/.style={very thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
 		connect/.style={-stealth, ultra thick, shorten <=2pt, shorten >=2pt},
@@ -47,6 +44,7 @@
 		\node (seq) at (0,0) {\tt GTGCATCTG\dots CCTG\textcolor{mymauve}{AGGAGTAG}};
 		\node (label) at (0,-0.5) {\tt 000000000\dots 0000\textcolor{mymauve}{11111111}};
 		\node (qual) at (0,-1) {\tt BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
+
 		% add name seq and label to the left part of the sequence
 		\node[left = 1em of seq] (seq_text)  {Sequence};
 		\node[left = 1em of label]  (label_text) {Label};
@@ -79,7 +77,7 @@
 		% Draw the edge from seq to a point to the right (formerly 'token') and label it
 		\node[right = 1.5 * \boxdist of seq] (token) {}; % Define position without drawing the node
 		% add embedding as rectangle
-		\node[right = 2 * \boxdist of token] (embed)  {};
+		\node[right = 5 * \boxdist of token] (embed)  {};
 
 		% Draw the matrix directly at the position of the matrix node
 		\begin{scope}[shift={(token.center)}, yshift=-2em, scale=0.4, local bounding box=token_box]
@@ -92,9 +90,9 @@
 		\end{scope}
 
 		% add arrow from seq to token
-		\draw[connect] ([xshift=20em]seq.west) -- node[midway, above] {Tokenization} (token);
+		\draw[connect] ($(seq.east) + (1, 0)$) -- node[midway, above] {Tokenization} (token);
 		% add arrow from token to embedding
-		\draw[connect] ([xshift=8em]token.west) -- node[midway, above] {Feature Extract} (embed);
+		\draw[connect] ($(token.east) + (2.5, 0)$) -- node[midway, above] {Feature Extract} (embed);
 
 		\begin{scope}[shift={(embed.center)},yshift=-2em, scale=0.4, local bounding box=embed_box]
 			\begin{scope}[opacity=0.3]
@@ -168,8 +166,6 @@
 
 		% add arrow from qual to add1
 		\draw[connect] ($(qual) + (0,1)$) -- (add1) node[above, midway, sloped] {Standardization};
-		% let the label parallel to the line
-
 
 		\draw[connect, dashed]
 		(residual_label.north) to[out=90, in=90, looseness=1.5]
@@ -197,10 +193,6 @@
 			\end{scope}
 		\end{scope}
 
-		% \node[right = 1.5* \boxdist of final_feature] (label) {\tt 000000000\dots 0000\textcolor{mymauve}{11111111}};
-		% \node[below = 1pt of label] (label2) {\tt 000000\dots 0\textcolor{mymauve}{11111111111111}};
-		% \node[above=1pt of label] (label3) {\tt 0000\dots 0\textcolor{mymauve}{11111111}00\dots 000};
-
 		\node[right = 1.5* \boxdist of final_feature] (label) {};
 
 		\begin{scope}[shift={(label.center)}, scale=0.3, yshift=-3em, local bounding box=label_box]
@@ -219,7 +211,6 @@
 				(10, 0) rectangle ++(14, 1);
 				% Draw the grid
 				\draw [white] (0, 0) grid (24, 3);
-
 			\end{scope}
 		\end{scope}
 
@@ -232,7 +223,6 @@
 		% draw a box around the result
 		\draw[myred, dashed, rounded corners, very thick] ($(result3.north west) + (-0.5, 0.5)$) rectangle ($(result2.south east) + (1, -0.5)$);
 		\node[above = 3em of result3, align=center] (result_text) {Output Sequence};
-
 
 		\draw[connect] ([xshift=22em]label.west) -- node[midway, above] {Chop} ([xshift=-2em]result.west);
 	\end{scope}
