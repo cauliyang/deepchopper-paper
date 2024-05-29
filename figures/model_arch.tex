@@ -28,15 +28,16 @@
 
 
 \begin{tikzpicture}[
-		node/.style={thick,circle,draw=myblue,minimum size=1.5em, inner sep=0.5,outer sep=0.6},
-		node hidden/.style={node,
-				very thick,
-				draw=myblue,
-				fill=myblue!50
+		node/.style={thick,circle,draw=myblue,minimum size=12, inner sep=0.5,outer sep=0.6},
+		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
+		node hidden/.style={
+				node,
+				blue!20!black,
+				draw=myblue!30!black,
+				fill=myblue!20,
 			},
-		node embed/.style={very thick, circl, minimum size=0.5em, fill=mygreen!20,draw=mygreen!30!black},
+		node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
 		connect/.style={-stealth, ultra thick, shorten <=2pt, shorten >=2pt},
-		% make all text bigger/.style={font=\Large},
 		every node/.style={font=\Large}
 	]
 
@@ -79,7 +80,7 @@
 		\node[right = 1.5 * \boxdist of seq] (token) {}; % Define position without drawing the node
 		\node[right = 1.5 * \boxdist of token] (pretrain) {};
 		% add embedding as rectangle
-		\node[right = 2.5 * \boxdist of pretrain] (embed)  {};
+		\node[right = 3 * \boxdist of pretrain] (embed)  {};
 
 		% Draw the matrix directly at the position of the matrix node
 		\begin{scope}[shift={(token.center)}, yshift=-2em, scale=0.4, local bounding box=token_box]
@@ -95,16 +96,11 @@
 		\draw[connect] ($(seq.east) + (1, 0)$) -- node[midway, above] {Tokenization} (token);
 		% add arrow from token to embedding
 		\draw[connect] ($(token.east) + (2.5, 0)$) -- (pretrain);
-		\draw[connect] ($(pretrain.east) + (6, 0)$) -- (embed);
+		\draw[connect] ($(pretrain.east) + (6, 0)$) -- (embed) node [midway, above] {Feature Extract};
 
 		% NEURAL NETWORK with coefficients, shifted
 		\begin{scope}[shift={(pretrain)}, yshift=1em,  x=2.2cm, y=1.4cm, scale=0.5,
-			local bounding box=nn_box,
-			node/.style={thick,circle,draw=myblue,minimum size=12,inner sep=0.5,outer sep=0.6},
-			node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
-			node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20},
-			node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20},
-			node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
+			local bounding box=pretrain_box,
 			connect/.style={thick,mydarkblue}, %,line cap=round
 			connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1},
 			node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle
@@ -143,7 +139,8 @@
 				\path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.5] {$\vdots$};
 			}
 		\end{scope}
-		\node[above=  of nn_box, align=center] (nn_text) {Long-Context Pre-training Language Model};
+
+		\node[above=  of pretrain_box, align=center] (nn_text) {Long-Context Pre-training Language Model};
 
 		\begin{scope}[shift={(embed.center)},yshift=-2em, scale=0.4, local bounding box=embed_box]
 			\begin{scope}[opacity=0.3]
@@ -172,57 +169,7 @@
 		\end{scope}
 
 
-
-
-		% NEURAL NETWORK with coefficients, shifted
-		\begin{scope}[shift={(pretrain)}, yshift=1em,  x=2.2cm, y=1.4cm, scale=0.5,
-			local bounding box=nn_box,
-			node/.style={thick,circle,draw=myblue,minimum size=12,inner sep=0.5,outer sep=0.6},
-			node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
-			node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20},
-			node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20},
-			node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
-			connect/.style={thick,mydarkblue}, %,line cap=round
-			connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1},
-			node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle
-			node 2/.style={node hidden},
-			node 3/.style={node out}
-			]
-			\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
-
-			\message{^^JNeural network, shifted}
-			\readlist\Nnod{4,5,5,5,3} % array of number of nodes per layer
-			\readlist\Nstr{n,m,m,m,k} % array of string number of nodes per layer
-			\readlist\Cstr{\strut x,a^{(\prev)},a^{(\prev)},a^{(\prev)},y} % array of coefficient symbol per layer
-			\def\yshift{0.5} % shift last node for dots
-
-			\message{^^J  Layer}
-			\foreachitem \N \in \Nnod{ % loop over layers
-				\def\lay{\Ncnt} % alias of index of current layer
-				\pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
-				\message{\lay,}
-				\foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
-							\index=(\i<\N?int(\i):"\Nstr[\lay]");
-							\x=\lay; \n=\nstyle;}] in {1,...,\N}{ % loop over nodes
-						% NODES
-						\node[node \n] (N\lay-\i) at (\x,\y) {};
-
-						% CONNECTIONS
-						\ifnum\lay>1 % connect to previous layer
-							\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-									\draw[connect,white,line width=1.2] (N\prev-\j) -- (N\lay-\i);
-									\draw[connect] (N\prev-\j) -- (N\lay-\i);
-									%\draw[connect] (N\prev-\j.0) -- (N\lay-\i.180); % connect to left
-								}
-						\fi % else: nothing to connect first layer
-
-					}
-				\path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.5] {$\vdots$};
-			}
-		\end{scope}
-
-
-		\node[\boxcolor, right = 1.5 * \boxdist of embed,  very thick, rounded corners, minimum size=\boxsize * 1.25] (weight_layer1) {};
+		\node[\boxcolor, right = 1.5 * \boxdist of embed,  very thick, rounded corners, minimum size= 0.5 * \boxsize] (weight_layer1) {};
 		\node[node hidden, yshift=  2.3em] (n1) at (weight_layer1.center) {};
 		\node[node hidden, yshift={(2.3em - \nodedist)}] (n2) at (weight_layer1.center) {};
 		\node[node hidden, yshift={(2.3em - 2*\nodedist)}] (n3) at (weight_layer1.center) {};
@@ -230,10 +177,10 @@
 
 
 		% add a plus sign to show residual connection
-		\node[right= \boxdist of weight_layer1, font=\Huge, minimum size=0.5 * \boxsize] (add1) {$\oplus$};
+		\node[right= 0.8 * \boxdist of weight_layer1, font=\Huge, minimum size= 0.5 * \boxsize] (add1) {$\oplus$};
 
 		% add weight layer 2
-		\node[\boxcolor, right= \boxdist of add1, rectangle, very thick, rounded corners, minimum size=\boxsize * 1.25] (weight_layer2) {};
+		\node[\boxcolor, right= \boxdist of add1, rectangle, very thick, rounded corners, minimum size= 0.5 * \boxsize] (weight_layer2) {};
 		% add 4 node hidden to weight_layer2
 		\node[node hidden, yshift=2.3em] (w2n1) at (weight_layer2.center) {};
 		\node[node hidden, yshift={(2.3em - \nodedist)}] (w2n2) at (weight_layer2.center) {};
