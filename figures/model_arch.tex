@@ -46,7 +46,7 @@
 		\node[left = 1em of seq] (seq_text)  {Sequence};
 		\node[left = 1em of label]  (label_text) {Label};
 		\node[left = 1em of qual] (qual_text)  {Quality};
-		% add a box around the sequence 
+		% add a box around the sequence
 		\draw [myblue!40, fill=myblue, fill opacity=0.02,rounded corners=2]  ($(seq_text.north west) + (-0.5, 0.5)$) rectangle ($(qual.south east) + (0.5, -0.5)$);
 	\end{scope}
 
@@ -55,9 +55,9 @@
 	%                                                                                     | relu
 	% seq -> tokenization -> embedding ->  linear layer ------> + ------> linear layer -> + -----> output
 	%                                                           |
-	%                                                          qual 
+	%                                                          qual
 	\begin{scope}[shift={($(seqbox.south)+(-2,-8)$)}, scale=1, local bounding box=modelbox1]
-		% define box size 
+		% define box size
 		\def\boxsize{6em}
 		\def\boxdist{9em}
 		\def\boxcolor{myblue}
