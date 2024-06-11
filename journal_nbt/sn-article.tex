@@ -57,6 +57,7 @@
 \usepackage{listings}%
 %%%%
 
+\usepackage{xspace}
 \usepackage{standalone}
 \usepackage{tikz}
 \usetikzlibrary{calc}
@@ -94,7 +95,7 @@
 
 % define macros
 % chopper = DeepChopper
-\newcommand{\chopper}{Sherlock}
+\newcommand{\chopper}{ProjectX\xspace}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -187,14 +188,14 @@ However, accurately identifying adapters within these sequences is a critical ch
 Traditional methods often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 
 To address this, we developed \chopper, a language model tailored for biological sequences, leveraging the architecture and training paradigms of state-of-the-art \glspl{llm}.
-Our model was trained on extensive \gls{drs} datasets, learning to predict adapter sequences with high accuracy.
-The application of such a model not only enhances the precision of adapter identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications.
+Our model was trained on extensive \gls{drs} datasets, learning to predict artifitial sequences with high accuracy.
+The application of such a model not only enhances the precision of artifitial sequences identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications and errorous base detection.
 
 The core of our approach lies in the ability of \glspl{llm} to understand and generate sequences based on context.
-By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict adapters embedded within long sequences.
+By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict  artifitial sequences embedded within long sequences.
 This method significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences.
 
-Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying adapters with remarkable accuracy.
+Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying  artifitial sequences with remarkable accuracy.
 This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
 Moreover, the flexibility of \glspl{llm} allows for adaptation to various other tasks within bioinformatics, such as m6A detection, gene prediction, variant calling, and functional annotation.
 
@@ -274,11 +275,14 @@ Future research can explore additional applications and further optimize these m
 
 \subsection{Language Model Architecture}
 
-We adapted a transformer-based language model architecture, fine-tuning it for biological sequences. The model was trained to predict adapter sequences based on the contextual information present in the RNA sequences.
+We adapted a transformer-based language model architecture, fine-tuning it for biological sequences.
+The model was trained to predict  artifitial sequences based on the contextual information present in the RNA sequences.
 The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
+We design a qual block to use quality of the input sequence to predict output.
+The backbone is used to conduct feature extration, and help us better understand the biological sequnces.
 Specifically, we employed a model with \num{24} layers, \num{16} attention heads, and a hidden size of \num{1024}.
 This configuration was chosen to balance performance and computational feasibility.
-Training the model involved using a corpus of RNA sequences, including annotated adapter regions.
+Training the model involved using a corpus of \gls{drs} sequences, including annotated ar regions.
 The model was pretrained on a large dataset of general RNA sequences before fine-tuning on the specific task of adapter prediction.
 This approach allowed the model to leverage general RNA sequence patterns while focusing on the nuances of adapter sequences during fine-tuning.
 
@@ -384,7 +388,7 @@ The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genome
 
 \bmhead{Code Availability}
 
-DeepChopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+\chopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 Both repositories are available under a MIT License.
 
@@ -449,8 +453,7 @@ Please refer to Journal-level guidance for any specific requirements.
 			\begin{small}
 				\begin{tabular}{ll}
 					\toprule
-					Library                                                & License                                                                            \\
-					\midrule
+					Library                                                & License                                                                            \\ \midrule
 					GenomicsBenchmark~\cite{grevsova2023genomic}           & Apache 2.0                                                                         \\
 					Mamba~\cite{gu2023mamba}                               & Apache 2.0                                                                         \\
 					HuggingFace~\cite{wolf2019huggingface}                 & Apache 2.0                                                                         \\
@@ -462,8 +465,7 @@ Please refer to Journal-level guidance for any specific requirements.
 					Pandas \cite{reback2020pandas}                         & BSD 3-Clause ``New" or ``Revised"                                                  \\
 					PyTorch~\cite{Paszke_PyTorch_An_Imperative_2019}       & BSD-3 Clause                                                                       \\
 					PyTorch Lightning~\cite{Falcon_PyTorch_Lightning_2019} & Apache 2.0                                                                         \\
-					Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\
-					\bottomrule
+					Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\ \bottomrule
 				\end{tabular}
 			\end{small}
 		\end{center}
@@ -472,7 +474,7 @@ Please refer to Journal-level guidance for any specific requirements.
 
 	\section{Computational resources}
 
-	Model training and inference were run on \glspl{gpu}   with machine type varying by model size during pre-training and downstream tasks.
+	Model training and inference were run on \glspl{gpu} with machine type varying by model size during pre-training and downstream tasks.
 	We use two  A100 \glspl{gpu}.
 \end{appendices}
 
