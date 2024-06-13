@@ -13,6 +13,7 @@
 \usetikzlibrary{chains}
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{shapes.multipart}
+\usetikzlibrary {backgrounds}
 
 \usepackage{listofitems} % for \readlist to create arrays
 \usepackage{amssymb}
@@ -44,7 +45,7 @@
 \begin{tikzpicture}[
 	font=\scriptsize \tt,
 	block/.style={rectangle, text centered, rounded corners, minimum height=1em, minimum width=4em, fill=c6},
-	connect/.style={rounded corners, black!30, text=black, thick, -{latex[width=0.5mm]}, shorten >=1pt, shorten <=1pt},
+	connect/.style={rounded corners, black!30, text=black, thick, -{latex[width=0.1mm]}, shorten >=1pt, shorten <=1pt},
 	skip loop/.style  2 args= {connect, to path={-- ++(#1, 0) |- node[right, sloped, pos=0.2, inner sep=1pt, fill=white] {#2} (\tikztotarget)}},
 	nnode/.style={thin, circle,draw=c7, minimum size=6, inner sep=0.5,outer sep=0.6},
 	node in/.style={nnode, green!20!black,draw=c7!30!black,fill=c7!25},
@@ -57,7 +58,7 @@
 	node out/.style={nnode, red!20!black, draw=myred!30!black,fill=myred!20},
 	]
 
-	\begin{scope}[local bounding box=exon]
+	\begin{scope}[local bounding box=exon, scale=0.75, transform shape]
 		\begin{scope}[start chain, node distance=0mm, 
         nodes/.style={inner sep=0, outer sep=0},
             ]
@@ -75,7 +76,7 @@
 	\end{scope}
 
 
-    \begin{scope}[shift={(exon.center)}, yshift=-1.5cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.8, transform shape]
+    \begin{scope}[shift={(exon.center)}, yshift=-1.3cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.75, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 			% column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
@@ -96,7 +97,7 @@
         \node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
 	\end{scope}
 
-	\begin{scope}[local bounding box=tokens, shift={(databox.south)}, yshift=-1cm]
+	\begin{scope}[local bounding box=tokens, shift={(databox.south)}, yshift=-0.65cm]
 		\matrix (tokens1)   [
 			matrix of nodes,
 			nodes in empty cells,
@@ -115,9 +116,9 @@
 		};
 	\end{scope}
 
-	\node (lcglm) [below of=tokens1, yshift=-0.4cm, block, fill=l1,  thick, minimum height = 3em] {Long-Context GLM};
+	\node (lcglm) [below of=tokens1, yshift=0.2cm, block, fill=l1,  thick, minimum height = 3em] {Long-Context GLM};
 
-	\begin{scope}[shift={(lcglm.south)}, yshift=-0.8cm, xshift=3, local bounding box=features]
+	\begin{scope}[shift={(lcglm.south)}, yshift=-0.2cm, xshift=3, local bounding box=features]
 		\begin{scope}[opacity=0.8]
 			\matrix (features1)   [
 				matrix of nodes,
@@ -177,9 +178,9 @@
 	\end{scope}
 
 
-	\node (mlp) [below of=features2, yshift=-0.3cm, rectangle, text centered, rounded corners, minimum width=5em, minimum height=2em,  fill=c6] {MLP};
+	\node (mlp) [below of=features2, yshift=0.3cm, rectangle, text centered, rounded corners, minimum width=5em, minimum height=2em,  fill=c6] {MLP};
 
-	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-0.8cm]
+	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-0.7cm]
 		\matrix (output)   [
 			matrix of nodes,
 			nodes in empty cells,
@@ -202,13 +203,8 @@
         	\matrix (mprediction) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={thin,  inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
-			% row 1 column 1/.style={nodes={fill=p1}},
-			% row 1 column 2/.style={nodes={fill=p1}},
-			% row 1 column 3/.style={nodes={fill=p3}},
 			row 1 column 3/.style={nodes={fill=p3, text=white}},
 			row 1 column 4/.style={nodes={fill=p3, text=white}},
-			% row 1 column 6/.style={nodes={fill=p1}},
-			% row 1 column 7/.style={nodes={fill=p1}},
 		] {
             A & T & T &  T  & C & G & G \\
 		};
@@ -218,12 +214,19 @@
 	\path
     (exon) edge[connect] (databox)
     (databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
-	(tokens) edge[connect] (lcglm)
-	(lcglm) edge[connect] (features)
-	(features) edge[connect] (mlp)
+	% (tokens) edge[connect] (lcglm)
+	% (lcglm) edge[connect] (features)
+	% (features) edge[connect] (mlp)
 	(mlp) edge[connect] (output)
 	(output) edge["Predict", connect, font=\tiny \tt] (prediction)
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-7);
+
+
+     \begin{scope}[on background layer]
+        \node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
+      \node[inner sep=2pt, anchor=north west] at (modelbox.north west) {Model};
+  \end{scope}
+
 \end{tikzpicture}
 
 \end{document}
