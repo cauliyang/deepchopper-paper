@@ -59,9 +59,9 @@
 	]
 
 	\begin{scope}[local bounding box=exon, scale=0.75, transform shape]
-		\begin{scope}[start chain, node distance=0mm, 
-        nodes/.style={inner sep=0, outer sep=0},
-            ]
+		\begin{scope}[start chain, node distance=0mm,
+				nodes/.style={inner sep=0, outer sep=0},
+			]
 			\node (exon-n1) [on chain] {ATT};
 			\node (exon-n2) [fill=c7, text=white, on chain] {GT\dots AG};
 			\node (exon-n3) [on chain] {TCGG};
@@ -76,7 +76,7 @@
 	\end{scope}
 
 
-    \begin{scope}[shift={(exon.center)}, yshift=-1.3cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.75, transform shape]
+	\begin{scope}[shift={(exon.center)}, yshift=-1.3cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.75, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 			% column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
@@ -89,12 +89,12 @@
 			row 1 column 6/.style={nodes={fill=p1}},
 			row 1 column 7/.style={nodes={fill=p1}},
 		] {
-			 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
-			 A & T & T & T & C & G & G \\
+			0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+			A & T & T & T & C & G & G \\
 		};
-        \node (rnaseq-label) [left=1pt of rnaseq-2-1] {RNA};
-        \node (label) [left=1pt of rnaseq-1-1] {Label};
-        \node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
+		\node (rnaseq-label) [left=1pt of rnaseq-2-1] {RNA};
+		\node (label) [left=1pt of rnaseq-1-1] {Label};
+		\node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
 	\end{scope}
 
 	\begin{scope}[local bounding box=tokens, shift={(databox.south)}, yshift=-0.65cm]
@@ -178,7 +178,32 @@
 	\end{scope}
 
 
-	\node (mlp) [below of=features2, yshift=0.3cm, rectangle, text centered, rounded corners, minimum width=5em, minimum height=2em,  fill=c6] {MLP};
+	% \node (mlp) [below of=features2, yshift=0.3cm, rectangle, text centered, rounded corners, minimum width=5em, minimum height=2em,  fill=c6] {MLP};
+
+
+	\begin{scope}[shift={(lcglm)}, yshift=-0.6cm, x=2.2cm, y=1.4cm, local bounding box=mlp,
+			mynode/.style={thick, draw=c7,fill=c7!20, circle, minimum size=15},
+            rotate=-90,
+            scale=0.3,
+            transform shape,
+		]
+		\readlist\Nnod{3,4,2} % number of nodes per layer
+		% \Nnodlen = length of \Nnod (i.e. total number of layers)
+		% \Nnod[1] = element (number of nodes) at index 1
+		\foreachitem \N \in \Nnod{ % loop over layers
+		% \N     = current element in this iteration (i.e. number of nodes for this layer)
+		% \Ncnt  = index of current layer in this iteration
+		\foreach \i [evaluate={\x=\Ncnt; \y=\N/2-\i+0.5; \prev=int(\Ncnt-1);}] in {1,...,\N}{ % loop over nodes
+				\node[mynode] (N\Ncnt-\i) at (\x,\y) {};
+				\ifnum\Ncnt>1 % connect to previous layer
+					\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+							\draw[thick] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
+						}
+				\fi % else: nothing to connect first layer
+			}
+        }
+	\end{scope}
+
 
 	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-0.7cm]
 		\matrix (output)   [
@@ -199,21 +224,21 @@
 		};
 	\end{scope}
 
-    \begin{scope}[shift={(output)}, yshift=-1cm, local bounding box=prediction]
-        	\matrix (mprediction) [matrix of nodes, nodes in empty cells,
+	\begin{scope}[shift={(output)}, yshift=-1cm, local bounding box=prediction]
+		\matrix (mprediction) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={thin,  inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
 			row 1 column 3/.style={nodes={fill=p3, text=white}},
 			row 1 column 4/.style={nodes={fill=p3, text=white}},
 		] {
-            A & T & T &  T  & C & G & G \\
+			A & T & T & T & C & G & G \\
 		};
 	\end{scope}
 
 
 	\path
-    (exon) edge[connect] (databox)
-    (databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
+	(exon) edge[connect] (databox)
+	(databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
 	% (tokens) edge[connect] (lcglm)
 	% (lcglm) edge[connect] (features)
 	% (features) edge[connect] (mlp)
@@ -222,10 +247,10 @@
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-7);
 
 
-     \begin{scope}[on background layer]
-        \node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
-      \node[inner sep=2pt, anchor=north west] at (modelbox.north west) {Model};
-  \end{scope}
+	\begin{scope}[on background layer]
+		\node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
+		\node[inner sep=2pt, anchor=north west] at (modelbox.north west) {Model};
+	\end{scope}
 
 \end{tikzpicture}
 
