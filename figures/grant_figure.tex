@@ -1,0 +1,194 @@
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{xcolor}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{matrix}
+\usetikzlibrary{graphs}
+\usetikzlibrary{graphs.standard}
+\usetikzlibrary{quotes}
+\usepackage{listofitems} % for \readlist to create arrays
+\usepackage{amssymb}
+\usepackage{textcomp}  % For \texttimes
+\usepackage{relsize}
+\begin{document}
+
+\definecolor{c1}{RGB}{239,243,255}
+\definecolor{c2}{RGB}{198,219,239}
+\definecolor{c3}{RGB}{158,202,225}
+\definecolor{c4}{RGB}{107,174,214}
+\definecolor{c5}{RGB}{66,146,198}
+\definecolor{c6}{RGB}{33,113,181}
+\definecolor{c7}{RGB}{8,69,148}
+
+
+\definecolor{p1}{RGB}{254,224,210}
+\definecolor{p2}{RGB}{252,146,114}
+\definecolor{p3}{RGB}{222,45,38}
+
+\definecolor{l1}{RGB}{117,107,177}
+
+\colorlet{myred}{red!80!black}
+\colorlet{myblue}{blue!80!black}
+\colorlet{mygreen}{green!60!black}
+
+
+\begin{tikzpicture}[
+	font=\scriptsize,
+	fontscale/.style = {font=\relsize{#1}},
+	block/.style={rectangle, text centered, rounded corners, minimum height=1em, minimum width=4em, fill=c6},
+	connect/.style={rounded corners, black!65, text=black, very thick, -Stealth[round], shorten >=1pt, shorten <=1pt},
+	skip loop/.style  2 args= {connect, to path={-- ++(#1, 0) |- node[right, sloped, pos=0.2, inner sep=1pt, fill=white] {#2} (\tikztotarget)}},
+	nnode/.style={thin, circle,draw=c7, minimum size=6, inner sep=0.5,outer sep=0.6},
+	node in/.style={nnode, green!20!black,draw=c7!30!black,fill=c7!25},
+	node hidden/.style={
+			nnode,
+			blue!20!black,
+			draw=myblue!30!black,
+			fill=myblue!20,
+		},
+	node out/.style={nnode, red!20!black, draw=myred!30!black,fill=myred!20},
+	]
+
+	\node (data) [block] {Data};
+
+	\begin{scope}[local bounding box=tokens, shift={(data.south)}, yshift=-1cm]
+		\matrix (tokens1)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			column 1/.style={nodes={fill=c1}},
+			column 2/.style={nodes={fill=c2}},
+			column 3/.style={nodes={fill=c3}},
+			column 4/.style={nodes={fill=c4}},
+			column 5/.style={nodes={fill=c5}},
+			column 6/.style={nodes={fill=c6}},
+			column 7/.style={nodes={fill=c7}},
+		]
+		{
+			 &  &  &  &  &  & \\
+		};
+	\end{scope}
+
+	\node (lcglm) [below of=tokens1, yshift=-0.7cm, block, fill=l1,  thick, minimum height = 3em] {Long-Context GLM};
+
+	\begin{scope}[shift={(lcglm.south)}, yshift=-1cm, xshift=3, local bounding box=features]
+		\begin{scope}[opacity=0.8]
+			\matrix (features1)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2,draw},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+
+		\begin{scope}[shift={(-0.1, -0.1)}, opacity=0.9]
+			\matrix (features2)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2, draw, outer sep=0pt},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+
+		\begin{scope}[shift={(-0.2, -0.2)}, opacity=1]
+			\matrix (features3)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2, draw, outer sep=0pt},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+	\end{scope}
+
+
+	\node (mlp) [below of=features2, yshift=-0.5cm, rectangle, text centered, rounded corners, minimum width=5em, minimum height=2em,  fill=c6] {MLP};
+
+	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-1cm]
+		\matrix (output)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			column 1/.style={nodes={fill=p1}},
+			column 2/.style={nodes={fill=p1}},
+			column 3/.style={nodes={fill=p3}},
+			column 4/.style={nodes={fill=p3}},
+			column 5/.style={nodes={fill=p3}},
+			column 6/.style={nodes={fill=p1}},
+			column 7/.style={nodes={fill=p1}},
+		]
+		{
+			 &  &  &  &  &  & \\
+		};
+	\end{scope}
+
+
+
+	% Node styles
+	\tikzset{
+		yesStyle/.style={
+				circle, draw=green!60, fill=green!5, thick,
+				minimum size=1, % Define the size of the circle
+				inner sep=1pt, % Minimal padding around the text
+				text centered % Center the content
+			},
+		noStyle/.style={
+				rectangle, draw=red!60, fill=red!5, thick,
+				minimum size=1, % Ensure it matches the yesStyle
+				inner sep=2pt, % Consistent with yesStyle
+				text centered % Center the content
+			}
+	}
+
+	\node (prediction) [below=of outputbox] {};  % Text node
+	% Yes and No nodes with custom shapes
+	\node (prediction1) [yesStyle, below = of output, xshift=-1em , scale=0.8]{\checkmark};  % Using tick symbol
+	\node (prediction2) [noStyle, below = of output, xshift=1em, scale=0.8] {\texttimes};  % Using cross symbol
+
+
+
+	\path (data) edge["Tokenizer", connect, font=\tiny] (tokens)
+	(tokens) edge[connect] (lcglm)
+	(lcglm) edge[connect] (features)
+	(features) edge[connect] (mlp)
+	(mlp) edge[connect] (output)
+	% (output) edge[connect] (prediction)
+	(output) edge["Predict", connect, font=\tiny] (prediction)
+	edge[blue,  skip loop={15mm}{Loss}] (data);
+\end{tikzpicture}
+
+\end{document}
