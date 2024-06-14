@@ -1,0 +1,247 @@
+\documentclass[tikz,border=10pt]{standalone}
+
+\usepackage{xcolor}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{matrix}
+\usetikzlibrary{graphs}
+\usetikzlibrary{graphs.standard}
+\usetikzlibrary{quotes}
+\usetikzlibrary{fit}
+\usetikzlibrary{chains}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary {backgrounds}
+
+\usepackage{listofitems} % for \readlist to create arrays
+
+\begin{document}
+
+\definecolor{c1}{RGB}{239,243,255}
+\definecolor{c2}{RGB}{198,219,239}
+\definecolor{c3}{RGB}{158,202,225}
+\definecolor{c4}{RGB}{107,174,214}
+\definecolor{c5}{RGB}{66,146,198}
+\definecolor{c6}{RGB}{33,113,181}
+\definecolor{c7}{RGB}{8,69,148}
+
+
+\definecolor{p1}{RGB}{254,224,210}
+\definecolor{p2}{RGB}{252,146,114}
+\definecolor{p3}{RGB}{222,45,38}
+
+\definecolor{l1}{RGB}{117,107,177}
+
+\colorlet{myred}{red!80!black}
+\colorlet{myblue}{blue!80!black}
+\colorlet{mygreen}{green!60!black}
+
+
+\begin{tikzpicture}[
+	font=\scriptsize \tt,
+	block/.style={rectangle, text centered, rounded corners, minimum height=1em, minimum width=4em, fill=c6},
+	connect/.style={rounded corners, black!30, text=black, thick, -{latex[width=0.1mm]}, shorten >=1pt, shorten <=1pt},
+	skip loop/.style  2 args= {connect, to path={-- ++(#1, 0) |- node[right, sloped, pos=0.2, inner sep=1pt, fill=white] {#2} (\tikztotarget)}},
+	nnode/.style={thin, circle,draw=c7, minimum size=6, inner sep=0.5,outer sep=0.6},
+	node in/.style={nnode, green!20!black,draw=c7!30!black,fill=c7!25},
+	node hidden/.style={
+			nnode,
+			blue!20!black,
+			draw=myblue!30!black,
+			fill=myblue!20,
+		},
+	node out/.style={nnode, red!20!black, draw=myred!30!black,fill=myred!20},
+	]
+
+	% Exitron and Exon
+	\begin{scope}[local bounding box=exon, scale=0.75, transform shape]
+		\begin{scope}[start chain, node distance=0mm,
+				nodes/.style={inner sep=0, outer sep=0},
+			]
+			\node (exon-n1) [on chain] {ATT};
+			\node (exon-n2) [fill=c7, text=white, on chain] {GT\dots AG};
+			\node (exon-n3) [on chain] {TCGG};
+			\node (exon-n4) [fit=(exon-n1)(exon-n2)(exon-n3), draw=c7,  thick, inner sep=0] {};
+			\node (exitron-label) [above=1pt of exon-n4] {Exitron};
+			\node (exitron-label2) [above left= of exon-n4, xshift=4] {Exon};
+		\end{scope}
+		\node (left) [left= 15pt of exon-n1]  {};
+		\node (right) [right= 15pt of exon-n3]   {};
+		\path (left) edge[-, thick] node[left, xshift=-1em] {DNA}  (exon-n1)
+		(exon-n3) edge[-, thick] (right);
+	\end{scope}
+
+	% RNAseq Matrix
+	\begin{scope}[shift={(exon.center)}, yshift=-1.3cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.75, transform shape]
+		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
+			% column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
+			row 1 column 1/.style={nodes={fill=p1}},
+			row 1 column 2/.style={nodes={fill=p1}},
+			row 1 column 3/.style={nodes={fill=p3}},
+			row 1 column 4/.style={nodes={fill=p3}},
+			row 1 column 5/.style={nodes={fill=p1}},
+			row 1 column 6/.style={nodes={fill=p1}},
+			row 1 column 7/.style={nodes={fill=p1}},
+		] {
+			0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+			A & T & T & T & C & G & G \\
+		};
+		\node (rnaseq-label) [left=1pt of rnaseq-2-1] {RNA};
+		\node (label) [left=1pt of rnaseq-1-1] {Label};
+		\node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
+	\end{scope}
+
+	\begin{scope}[local bounding box=tokens, shift={(databox.south)}, yshift=-0.65cm]
+		\matrix (tokens1)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			column 1/.style={nodes={fill=c1}},
+			column 2/.style={nodes={fill=c2}},
+			column 3/.style={nodes={fill=c3}},
+			column 4/.style={nodes={fill=c4}},
+			column 5/.style={nodes={fill=c5}},
+			column 6/.style={nodes={fill=c6}},
+			column 7/.style={nodes={fill=c7}},
+		]
+		{
+			 &  &  &  &  &  & \\
+		};
+	\end{scope}
+
+	\node (lcglm) [below of=tokens1, yshift=0.2cm, block, fill=l1,  thick, minimum height = 3em] {Long-Context GLM};
+
+	\begin{scope}[shift={(lcglm.south)}, yshift=-0.2cm, xshift=3, local bounding box=features]
+		\begin{scope}[opacity=0.8]
+			\matrix (features1)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2,draw},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+
+		\begin{scope}[shift={(-0.1, -0.1)}, opacity=0.9]
+			\matrix (features2)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2, draw, outer sep=0pt},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+
+		\begin{scope}[shift={(-0.2, -0.2)}, opacity=1]
+			\matrix (features3)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2, draw, outer sep=0pt},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				column 1/.style={nodes={fill=c1}},
+				column 2/.style={nodes={fill=c2}},
+				column 3/.style={nodes={fill=c3}},
+				column 4/.style={nodes={fill=c4}},
+				column 5/.style={nodes={fill=c5}},
+				column 6/.style={nodes={fill=c6}},
+				column 7/.style={nodes={fill=c7}},
+			]
+			{
+				 &  &  &  &  &  & \\
+			};
+		\end{scope}
+	\end{scope}
+
+	\begin{scope}[shift={(lcglm)}, yshift=-0.6cm, x=2.2cm, y=1.4cm, local bounding box=mlp,
+			mynode/.style={thick, draw=c7,fill=c7!20, circle, minimum size=18},
+			rotate=-90,
+			scale=0.3,
+			transform shape,
+		]
+		\readlist\Nnod{3,4,2} % number of nodes per layer
+		% \Nnodlen = length of \Nnod (i.e. total number of layers)
+		% \Nnod[1] = element (number of nodes) at index 1
+		\foreachitem \N \in \Nnod{ % loop over layers
+			% \N     = current element in this iteration (i.e. number of nodes for this layer)
+			% \Ncnt  = index of current layer in this iteration
+			\foreach \i [evaluate={\x=\Ncnt; \y=\N/2-\i+0.5; \prev=int(\Ncnt-1);}] in {1,...,\N}{ % loop over nodes
+					\node[mynode] (N\Ncnt-\i) at (\x,\y) {};
+					\ifnum\Ncnt>1 % connect to previous layer
+						\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+								\draw[thick] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
+							}
+					\fi % else: nothing to connect first layer
+				}
+		}
+	\end{scope}
+
+
+	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-0.7cm]
+		\matrix (output)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			column 1/.style={nodes={fill=p1}},
+			column 2/.style={nodes={fill=p1}},
+			column 3/.style={nodes={fill=p3}},
+			column 4/.style={nodes={fill=p3}},
+			column 5/.style={nodes={fill=p1}},
+			column 6/.style={nodes={fill=p1}},
+			column 7/.style={nodes={fill=p1}},
+		]
+		{
+			 &  &  &  &  &  & \\
+		};
+	\end{scope}
+
+	\begin{scope}[shift={(output)}, yshift=-1cm, local bounding box=prediction]
+		\matrix (mprediction) [matrix of nodes, nodes in empty cells,
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			nodes={thin,  inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
+			row 1 column 3/.style={nodes={fill=p3, text=white}},
+			row 1 column 4/.style={nodes={fill=p3, text=white}},
+		] {
+			A & T & T & T & C & G & G \\
+		};
+	\end{scope}
+
+
+	\path
+	(exon) edge[connect] (databox)
+	(databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
+	(mlp) edge[connect] (output)
+	(output) edge["Predict", connect, font=\tiny \tt] (prediction)
+	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-7);
+
+
+	\begin{scope}[on background layer]
+		\node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
+		\node[inner sep=2pt, anchor=north west] at (modelbox.north west) {Model};
+	\end{scope}
+\end{tikzpicture}
+
+\end{document}
