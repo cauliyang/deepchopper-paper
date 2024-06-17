@@ -61,7 +61,7 @@
 				nodes/.style={inner sep=0, outer sep=0},
 			]
 			\node (exon-n1) [on chain] {ATT};
-			\node (exon-n2) [fill=c7, text=white, on chain] {GT\dots AG};
+			\node (exon-n2) [fill=c7, text=white, on chain] {GT$\cdots$AG};
 			\node (exon-n3) [on chain] {TCGG};
 			\node (exon-n4) [fit=(exon-n1)(exon-n2)(exon-n3), draw=c7,  thick, inner sep=0] {};
 			\node (exitron-label) [above=1pt of exon-n4] {Exitron};
@@ -74,23 +74,24 @@
 	\end{scope}
 
 	% RNAseq Matrix
-	\begin{scope}[shift={(exon.center)}, yshift=-1.3cm, xshift=9,  start chain=1 going below, node distance=0mm, scale=0.75, transform shape]
+	\begin{scope}[shift={(exon.center)},
+			yshift=-1.2cm, xshift=8,
+			start chain=1 going below,
+			node distance=0mm, scale=0.7, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
-			% column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
-			row 1 column 1/.style={nodes={fill=p1}},
-			row 1 column 2/.style={nodes={fill=p1}},
-			row 1 column 3/.style={nodes={fill=p3}},
+			column sep=-\pgflinewidth, row sep=1pt,
+			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+			row 1/.style={nodes={fill=p1}},
 			row 1 column 4/.style={nodes={fill=p3}},
-			row 1 column 5/.style={nodes={fill=p1}},
-			row 1 column 6/.style={nodes={fill=p1}},
-			row 1 column 7/.style={nodes={fill=p1}},
+			row 1 column 5/.style={nodes={fill=p3}},
+			row 1 column 6/.style={nodes={fill=p3}},
+			row 1 column 7/.style={nodes={fill=p3}},
+			row 1 column 8/.style={nodes={fill=p3}},
 		] {
-			0 & 0 & 1 & 1 & 0 & 0 & 0 \\
-			A & T & T & T & C & G & G \\
+			0 & 0 & 0 & 1 & 1 & $\cdots$ & 1 & 1 & 0 & 0 & 0 & 0 \\
+			A & T & T & G & T & $\cdots$ & A & G & T & C & G & G \\
 		};
-		\node (rnaseq-label) [left=1pt of rnaseq-2-1] {RNA};
+		\node (rnaseq-label) [left=1pt of rnaseq-2-1] {DNA};
 		\node (label) [left=1pt of rnaseq-1-1] {Label};
 		\node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
 	\end{scope}
@@ -191,7 +192,7 @@
 					\node[mynode] (N\Ncnt-\i) at (\x,\y) {};
 					\ifnum\Ncnt>1 % connect to previous layer
 						\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-								\draw[thick] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
+                            \draw[line width=0.6pt, -{Stealth[length=3pt, width=2pt]},  shorten >=0.5pt, shorten <=0.5pt] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
 							}
 					\fi % else: nothing to connect first layer
 				}
@@ -218,14 +219,17 @@
 		};
 	\end{scope}
 
-	\begin{scope}[shift={(output)}, yshift=-1cm, local bounding box=prediction]
+	\begin{scope}[shift={(output)}, yshift=-1cm, local bounding box=prediction, scale=1, transform shape]
 		\matrix (mprediction) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			nodes={thin,  inner sep=0pt, outer sep=0pt, minimum width=1em, minimum height=1em},
-			row 1 column 3/.style={nodes={fill=p3, text=white}},
+			nodes={thin,  inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
 			row 1 column 4/.style={nodes={fill=p3, text=white}},
+			row 1 column 5/.style={nodes={fill=p3, text=white}},
+			row 1 column 6/.style={nodes={fill=p3, text=white}},
+			row 1 column 7/.style={nodes={fill=p3, text=white}},
+			row 1 column 8/.style={nodes={fill=p3, text=white}},
 		] {
-			A & T & T & T & C & G & G \\
+			A & T & T & G & T & $\cdots$ & A & G & T & C & G & G \\
 		};
 	\end{scope}
 
@@ -235,7 +239,7 @@
 	(databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
 	(mlp) edge[connect] (output)
 	(output) edge["Predict", connect, font=\tiny \tt] (prediction)
-	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-7);
+	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
 
 
 	\begin{scope}[on background layer]
