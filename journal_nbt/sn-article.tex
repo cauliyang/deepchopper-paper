@@ -39,8 +39,7 @@
 %%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
 
 %%%% Standard Packages
-%%<additional latex packages if required can be included here>
-
+%% additional latex packages if required can be included here>
 \usepackage{graphicx}%
 \usepackage{multirow}%
 \usepackage{amsmath,amssymb,amsfonts}%
@@ -55,7 +54,6 @@
 \usepackage{algorithmicx}%
 \usepackage{algpseudocode}%
 \usepackage{listings}%
-%%%%
 
 \usepackage{xspace}
 \usepackage{standalone}
@@ -225,8 +223,7 @@ For example, recent studies have demonstrated the effectiveness of language mode
 The ability to process large contexts is particularly advantageous in these applications, where local and global sequence features are crucial for accurate predictions.
 
 In the context of \gls{drs}, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
-These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods.
-By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
+These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods. By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
 
 \begin{figure}
 	\begin{center}
@@ -236,7 +233,6 @@ By leveraging the extensive contextual understanding provided by \glspl{llm}, we
 \end{figure}
 
 \begin{figure}[!h]
-	%    \includegraphics[width=\linewidth]{figures/fas_len_ranges}
 	\includegraphics[height=0.6\columnwidth]{example-image-duck}
 	\caption{\bf This is figure 1.}
 	\label{fig:f1}
@@ -259,7 +255,6 @@ These findings suggest that \glspl{llm} can effectively handle the complexity an
 This not only enhances the quality of sequencing data but also opens up new possibilities for the application of language models in other areas of genomics and transcriptomics.
 
 % Conclusion
-
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of \gls{drs}.
 By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
 This showcases the broader applicability of language models in handling complex biological data, paving the way for advancements in genomics and transcriptomics.
@@ -313,7 +308,7 @@ Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \),
 where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilitiesis the true base.
 denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
-We trained the model on 2 A100 GPUs for a maximum of 1 million steps.
+We trained the model on 2 A100 \glspl{gpu} for a maximum of 1 million steps.
 The batch size was 128, so the model saw 128 million examples.
 Validation was performed every 2000 steps, and we selected the model with the highest validation F1 score for the base prediction task.
 The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters.
@@ -417,7 +412,6 @@ Please refer to Journal-level guidance for any specific requirements.
 
 
 	\printglossary[type=\acronymtype, title=Abbreviations]
-
 
 	\section{Section title of first appendix}\label{secA1}
 
