@@ -40,7 +40,7 @@
 
 
 \begin{tikzpicture}[
-	font=\scriptsize \tt,
+	font=\scriptsize \ttfamily,
 	block/.style={rectangle, text centered, rounded corners, minimum height=1em, minimum width=4em, fill=c6},
 	connect/.style={rounded corners, black!30, text=black, thick, -{latex[width=0.1mm]}, shorten >=1pt, shorten <=1pt},
 	skip loop/.style  2 args= {connect, to path={-- ++(#1, 0) |- node[right, sloped, pos=0.2, inner sep=1pt, fill=white] {#2} (\tikztotarget)}},
@@ -237,9 +237,9 @@
 
 	\path
 	(exon) edge[connect] (databox)
-	(databox) edge["Tokenizer", connect, font=\tiny \tt] (tokens)
+	(databox) edge["Tokenizer", connect, font=\tiny \ttfamily] (tokens)
 	(mlp) edge[connect] (output)
-	(output) edge["Predict", connect, font=\tiny \tt] (prediction)
+	(output) edge["Predict", connect, font=\tiny \ttfamily] (prediction)
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
 
 % (tokens) edge[connect] (lcglm)
