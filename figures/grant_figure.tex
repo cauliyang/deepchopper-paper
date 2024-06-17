@@ -192,7 +192,8 @@
 					\node[mynode] (N\Ncnt-\i) at (\x,\y) {};
 					\ifnum\Ncnt>1 % connect to previous layer
 						\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-                            \draw[line width=0.6pt, -{Stealth[length=3pt, width=2pt]},  shorten >=0.5pt, shorten <=0.5pt] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
+                            \draw[draw=black!90,  line width=0.6pt, -{Stealth[length=3pt, width=2pt]},
+                                shorten >=0.5pt, shorten <=0.5pt] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
 							}
 					\fi % else: nothing to connect first layer
 				}
@@ -241,6 +242,9 @@
 	(output) edge["Predict", connect, font=\tiny \tt] (prediction)
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
 
+% (tokens) edge[connect] (lcglm)
+	% (lcglm) edge[connect] (features)
+	% (features) edge[connect] (mlp)
 
 	\begin{scope}[on background layer]
 		\node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
