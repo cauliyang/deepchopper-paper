@@ -78,12 +78,11 @@
 		(exon-n3) edge[-, thick] (right);
 	\end{scope}
 
-    \node (dnalabel) [above=8pt of exon-n1, xshift=-11pt] {\tiny \ttfamily Ultra-long DNA};
+	\node (dnalabel) [above=8pt of exon-n1, xshift=-11pt] {\tiny \ttfamily Ultra-long DNA};
 
 	% RNAseq Matrix
 	\begin{scope}[shift={(exon.center)},
 			yshift=-1.1cm, xshift=8,
-			start chain=1 going below,
 			node distance=0mm, scale=0.7, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=1pt,
@@ -101,7 +100,7 @@
 		\node (rnaseq-label) [left=1pt of rnaseq-2-1] {DNA};
 		\node (label) [left=1pt of rnaseq-1-1] {Label};
 		\node (databox) [fit=(rnaseq)(rnaseq-label)(label), draw=c7, dashed, thick, inner sep=0] {};
-        % \node (rna-input-label) [above=1pt of databox] {\tiny \ttfamily Input};
+		% \node (rna-input-label) [above=1pt of databox] {\tiny \ttfamily Input};
 	\end{scope}
 
 
@@ -127,30 +126,30 @@
 	% \node (lcglm) [below of=tokens1, yshift=0.2cm, block, fill=l1, opacity=1,  thick, minimum height = 3em] {Long-Context GLM};
 
 
-    \begin{scope}[shift={(tokens1)}, yshift=-1.2cm, xshift=-1.35cm,
-        edge1/.style={black, line width=0.6pt, -{Stealth[length=3pt, width=2pt]}, shorten >=0.5pt, shorten <=0.5pt},
-        local bounding box=lcglm, scale=0.44, transform shape]
+	\begin{scope}[shift={(tokens1)}, yshift=-1.2cm, xshift=-1.35cm,
+		edge1/.style={black, line width=0.6pt, -{Stealth[length=3pt, width=2pt]}, shorten >=0.5pt, shorten <=0.5pt},
+		local bounding box=lcglm, scale=0.44, transform shape]
 		\graph [
-		grow right = 1cm,
-        edges = {edge1},
-        skip loop/.style={to path={ -- ++(1cm, 0) -| (\tikztotarget) \tikztonodes}},
-      hyena/.style ={rectangle, draw=c7, fill=c7!20, thick,  minimum height=5em, minimum width=2em},
-		residual/.style={circle, draw=c7, line width=0.6pt, inner sep=1, as=+},
-		block1/.style={rectangle, draw=c5, fill=c5!70, thick,   minimum height=3em, minimum width=1em, as=},
-		block2/.style={rectangle, draw=c6, fill=c6!70, thick,  minimum height=4em, minimum width=1em, as=},
+			grow right = 1cm,
+			edges = {edge1},
+			skip loop/.style={to path={ -- ++(1cm, 0) -| (\tikztotarget) \tikztonodes}},
+			hyena/.style ={rectangle, draw=c7, fill=c7!20, thick,  minimum height=5em, minimum width=2em},
+			residual/.style={circle, draw=c7, line width=0.6pt, inner sep=1, as=+},
+			block1/.style={rectangle, draw=c5, fill=c5!70, thick,   minimum height=3em, minimum width=1em, as=},
+			block2/.style={rectangle, draw=c6, fill=c6!70, thick,  minimum height=4em, minimum width=1em, as=},
 		] {
-            input [as=] -> hyena [hyena] -> r1 [residual] -> b1 [block1] -> b2 [block2] -> r2 [residual] -> b3 [block1];
+			input [as=] -> hyena [hyena] -> r1 [residual] -> b1 [block1] -> b2 [block2] -> r2 [residual] -> b3 [block1];
 		};
 
-        \draw[edge1]  ($(input) !.2! (hyena)$) |- ++(0,1) -| (r1);
-        \draw[edge1] ($(b1) !.4! (b2) $) |- ++(0,1) -| (r2);
+		\draw[edge1]  ($(input) !.2! (hyena)$) |- ++(0,1) -| (r1);
+		\draw[edge1] ($(b1) !.4! (b2) $) |- ++(0,1) -| (r2);
 	\end{scope}
 
 
-        \begin{pgfonlayer}{middle}
- 		\node (lcglmbox) [fit=(lcglm), fill=l1,  thick, inner ysep=6pt, inner xsep=2pt, yshift=5pt, opacity=0.7] {};
+	\begin{pgfonlayer}{middle}
+		\node (lcglmbox) [fit=(lcglm), fill=l1,  thick, inner ysep=6pt, inner xsep=2pt, yshift=5pt, opacity=0.7] {};
 		\node[inner sep=3pt, anchor=north west] at (lcglmbox.north west) {\tiny \ttfamily Long-Context GLM};
-        \end{pgfonlayer}
+	\end{pgfonlayer}
 
 
 	\begin{scope}[shift={(lcglmbox.south)}, yshift=-0.5cm, xshift=3, local bounding box=features]
@@ -210,6 +209,7 @@
 				 &  &  &  &  &  & \\
 			};
 		\end{scope}
+
 	\end{scope}
 
 	\begin{scope}[shift={(lcglm)}, yshift=-1.2cm, x=2.2cm, y=1.4cm, local bounding box=mlp,
@@ -236,7 +236,7 @@
 		}
 	\end{scope}
 
-    \node [left = of N2-1, xshift=-10pt, yshift=-2pt] {MLP};
+	\node [left = of N2-1, xshift=-10pt, yshift=-2pt] {MLP};
 
 
 	\begin{scope}[local bounding box=outputbox, shift={(mlp.south)}, yshift=-0.6cm]
@@ -258,7 +258,7 @@
 		};
 	\end{scope}
 
-    \node [left = of output, xshift=0.7cm, anchor=center] {\tiny \ttfamily Output};
+	\node [left = of output, xshift=0.7cm, anchor=center] {\tiny \ttfamily Output};
 
 	\begin{scope}[shift={(output)}, yshift=-0.8cm, local bounding box=prediction, scale=1, transform shape]
 		\matrix (mprediction) [matrix of nodes, nodes in empty cells,
@@ -284,9 +284,9 @@
 	(output) edge["Predict", connect, font=\tiny \ttfamily] (prediction)
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
 
-    \draw [connect] (tokens1.south) |- ++(-4.5em, -0.25em) |-  ($(input) + (0.1em, 0)$);
+	\draw [connect] (tokens1.south) |- ++(-4.5em, -0.25em) |-  ($(input) + (0.1em, 0)$);
 
-    \draw [connect] ($(b3.east) + (1pt, 0)$) -| ++ (0.5em, -1.3em)  -|   ($(features1) + (-0.3em, 0.3em)$);
+	\draw [connect] ($(b3.east) + (1pt, 0)$) -| ++ (0.5em, -1.3em)  -|   ($(features1) + (-0.3em, 0.3em)$);
 
 
 	\begin{scope}[on background layer]
