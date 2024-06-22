@@ -7,6 +7,8 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{matrix}
 \usetikzlibrary{fit}
+\usetikzlibrary{quotes}
+
 
 \usetikzlibrary {backgrounds}
 \usepackage{listofitems} % for \readlist to create arrays
@@ -49,11 +51,13 @@
 \colorlet{mydarkgreen}{green!30!black}
 
 \begin{tikzpicture}[
-	font=\scriptsize \ttfamily ,
+	font=\scriptsize \ttfamily,
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
-	connect/.style={rounded corners, black!50, text=black, ultra thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
+	connect/.style={rounded corners, black!40, text=black, ultra thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
+	input box/.style={draw=mygreen, dashed,  thick, rounded corners, inner sep=-2pt},
+	output box/.style={draw=q6,     dashed, thick, rounded corners, inner sep=-2pt},
 	]
-	\def\boxdist{1.5cm}
+	\def\boxdist{1cm}
 
 	% input
 	\begin{scope}[ yshift=1cm, local bounding box=inputbox]
@@ -62,26 +66,25 @@
 				column sep=-\pgflinewidth, row sep=3pt,
 				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
 				row 2/.style={nodes={fill=p1, draw=p1}},
+				row 2 column 6/.style={nodes={fill=p3, draw=p3}},
 				row 2 column 7/.style={nodes={fill=p3, draw=p3}},
 				row 2 column 8/.style={nodes={fill=p3, draw=p3}},
 				row 2 column 9/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 10/.style={nodes={fill=p3, draw=p3}},
 			] {
-				G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
-				0 & 0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
+				T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+				0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
 			};
 		};
 		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
 		% \node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
-
 		\begin{scope}[on background layer]
-			\node (intputoutline) [fit=(inputnode), draw=mygreen,  thick, dashed, rounded corners, inner sep=-2pt ] {};
+			\node (intputoutline) [fit=(inputnode), input box] {};
 		\end{scope}
 
 	\end{scope}
 
 	% token
-	\begin{scope}[shift={(inputbox.east)}, yshift=0cm, xshift=\boxdist, local bounding box=tokenbox]
+	\begin{scope}[shift={(inputbox.east)}, xshift=\boxdist * 1.5, local bounding box=tokenbox]
 		\matrix (tokens1)   [
 			matrix of nodes,
 			nodes in empty cells,
@@ -106,12 +109,15 @@
 	\end{scope}
 
 	% lcglm
-	\begin{scope}[shift={(tokenbox.east)}, yshift=0cm, xshift=\boxdist * 2.5, local bounding box=lcgmlbox]
-		\node [block] (lcgml) {Long-Context Pre-training Language Model};
+	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist * 2, local bounding box=lcgmlbox]
+		\node [block] (lcgml) {\tiny LC Pre-training GLM};
 	\end{scope}
 
 	% features
-	\begin{scope}[shift={(lcgmlbox.east)},  yshift=0cm, xshift=\boxdist, local bounding box=featuresbox]
+	\begin{scope}[shift={(lcgmlbox.east)},
+			yshift=0.1cm,
+			xshift=\boxdist,
+			local bounding box=featuresbox]
 		\begin{scope}[opacity=0.7]
 			\matrix (tokens1)   [
 				matrix of nodes,
@@ -187,13 +193,13 @@
 
 	% qual Block
 	\begin{scope}[shift={(featuresbox.south)}, yshift=-\boxdist, local bounding box=qualblockbox]
-    \node [block] (qualblock) {Quality Block};
+		\node [block] (qualblock) {Quality Block};
 	\end{scope}
 
 
 	% qual 
 	\begin{scope}[shift={(qualblockbox.west)},  xshift=-\boxdist, local bounding box=qualbox]
-	\matrix (qualtoken)   [
+		\matrix (qualtoken)   [
 			matrix of nodes,
 			nodes in empty cells,
 			nodes={draw=black, thin, outer sep=0pt},
@@ -235,7 +241,7 @@
 		};
 
 		\begin{scope}[on background layer]
-			\node (qualseqoutline) [fit=(qualseqnode), draw=mygreen, thick, dashed,  rounded corners, inner sep=-2pt] {};
+			\node (qualseqoutline) [fit=(qualseqnode),input box] {};
 		\end{scope}
 	\end{scope}
 
@@ -249,12 +255,12 @@
 		node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20},
 		node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
 		connect/.style={thick,mydarkblue}, %,line cap=round
-		connect arrow/.style={-{Latex[length=3,width=2.5]},thick,mydarkblue,shorten <=0.5,shorten >=1},
-		node 1/.style={node in},
+		connect arrow/.style={-{Latex[length=2,width=1.5]},line width=0.6pt,mydarkblue,shorten <=0.5,shorten >=1},
+		node 1/.style={node hidden},
 		node 2/.style={node hidden},
 		node 3/.style={node out},
 		rotate=180,
-		scale=0.5,
+		scale=0.3,
 		x=2.2cm,y=1.4cm,
 		transform shape,
 		local bounding box=mlpbox]
@@ -288,37 +294,54 @@
 
 	%  output
 	\begin{scope}[shift={(mlpbox.west)}, xshift=-\boxdist, local bounding box=outputbox]
-		\node (outputnode) [rotate=270] {
-			\tikz \matrix (outputmatrix) [matrix of nodes, nodes in empty cells,
-				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-				nodes={fill=c2, draw=black, thin, outer sep=0pt},
-				row 1/.style={nodes={fill=p1}},
-				row 1 column 5/.style={nodes={fill=p3}},
-				row 1 column 6/.style={nodes={fill=p3}},
-				row 1 column 7/.style={nodes={fill=p3}},
-				row 1 column 8/.style={nodes={fill=p3}},
-			] {
-				 &  &  &  &  & \\
-			};
+		\matrix (outputmatrix) [matrix of nodes, nodes in empty cells,
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column 1/.style={nodes={fill=p1}},
+			row  4/.style={nodes={fill=p3}},
+			row  5/.style={nodes={fill=p3}},
+			row  6/.style={nodes={fill=p3}},
+		] {
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
 		};
 	\end{scope}
 
 	% predict
 	\begin{scope}[shift={(outputbox.west)}, xshift=-\boxdist, local bounding box=predictbox]
-		\node [block] (predict) {Predict};
+		\node (predictnode) [rotate=270] {
+			\tikz \matrix (predictseq) [matrix of nodes,
+				nodes in empty cells,
+				column sep=-\pgflinewidth, row sep=3pt,
+				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+				row 1 column 6/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 7/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 8/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 9/.style={nodes={fill=p3, draw=p3}},
+			] {
+				T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+			};
+		};
+		\node (predictoutline) [fit=(predictnode), output box] {};
 	\end{scope}
 
 
 	\path [connect]
-	(inputbox)  edge (tokenbox)
+	(inputbox)  edge ["Tokenization", font=\tiny \ttfamily] (tokenbox)
 	(tokenbox) edge (lcgmlbox)
 	(lcgmlbox) edge (featuresbox)
 	(featuresbox) edge (qualblockbox)
 	(qualbox) edge (qualblockbox)
 	(mlpbox) edge (outputbox)
-	(outputbox) edge (predictbox)
 	(qualseqbox) edge (qualbox)
+	(outputmatrix-1-1)  edge["Loss", sloped, font=\tiny \ttfamily] (rnaseq-2-8)
 	;
+
+	\draw [connect] (outputbox) -- node[above,font=\tiny \ttfamily]{Predict} (predictbox) ;
 
 	\draw [connect] (qualblockbox) |- (mlpbox);
 \end{tikzpicture}
