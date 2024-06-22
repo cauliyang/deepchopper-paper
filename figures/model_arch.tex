@@ -1,4 +1,4 @@
-\documentclass[tikz,border=10pt]{standalone}
+\documentclass[tikz,border=3pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{xcolor}
 \usetikzlibrary{calc}
@@ -17,7 +17,6 @@
 
 \begin{document}
 
-
 \definecolor{c1}{RGB}{239,243,255}
 \definecolor{c2}{RGB}{198,219,239}
 \definecolor{c3}{RGB}{158,202,225}
@@ -26,25 +25,21 @@
 \definecolor{c6}{RGB}{33,113,181}
 \definecolor{c7}{RGB}{8,69,148}
 
-
 \definecolor{p1}{RGB}{254,224,210}
 \definecolor{p2}{RGB}{252,146,114}
 \definecolor{p3}{RGB}{222,45,38}
 
 \definecolor{l1}{RGB}{117,107,177}
 
-\colorlet{myred}{red!80!black}
-\colorlet{myblue}{blue!80!black}
-\colorlet{mygreen}{green!60!black}
+\definecolor{q1}{RGB}{242,240,247}
+\definecolor{q2}{RGB}{218,218,235}
+\definecolor{q3}{RGB}{188,189,220}
+\definecolor{q4}{RGB}{158,154,200}
+\definecolor{q5}{RGB}{117,107,177}
+\definecolor{q6}{RGB}{84,39,143}
 
-
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\definecolor{mygold}{HTML}{B8860B}
-\definecolor{mynavy}{HTML}{000080}
-\definecolor{olivegreen}{rgb}{0,0.6,0}
 
 \colorlet{myred}{red!80!black}
-
 \colorlet{myblue}{blue!80!black}
 \colorlet{mygreen}{green!60!black}
 
@@ -53,17 +48,16 @@
 \colorlet{mydarkblue}{blue!40!black}
 \colorlet{mydarkgreen}{green!30!black}
 
-
 \begin{tikzpicture}[
-	font=\ttfamily,
-	block/.style = {rectangle, draw, fill=c2, text centered, rounded corners, minimum height=4em, minimum width=4em},
+	font=\scriptsize \ttfamily ,
+	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!50, text=black, ultra thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
 	]
-	\def\boxdist{2cm}
+	\def\boxdist{1.5cm}
 
 	% input
-	\begin{scope}[ yshift=0cm, local bounding box=inputbox]
-		\node (input) [rotate=270] {
+	\begin{scope}[ yshift=1cm, local bounding box=inputbox]
+		\node (inputnode) [rotate=270] {
 			\tikz \matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 				column sep=-\pgflinewidth, row sep=3pt,
 				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
@@ -77,12 +71,13 @@
 				0 & 0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
 			};
 		};
-		\node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
-		\node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
+		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
+		% \node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
 
 		\begin{scope}[on background layer]
-			\node (intputoutline) [rotate=270, fit=(rnaseq), draw=mygreen,  thick, fill=mygreen!10, rounded corners, inner sep=1pt] {};
+			\node (intputoutline) [fit=(inputnode), draw=mygreen,  thick, dashed, rounded corners, inner sep=-2pt ] {};
 		\end{scope}
+
 	\end{scope}
 
 	% token
@@ -110,16 +105,13 @@
 		};
 	\end{scope}
 
-
 	% lcglm
 	\begin{scope}[shift={(tokenbox.east)}, yshift=0cm, xshift=\boxdist * 2.5, local bounding box=lcgmlbox]
 		\node [block] (lcgml) {Long-Context Pre-training Language Model};
 	\end{scope}
 
-
 	% features
 	\begin{scope}[shift={(lcgmlbox.east)},  yshift=0cm, xshift=\boxdist, local bounding box=featuresbox]
-
 		\begin{scope}[opacity=0.7]
 			\matrix (tokens1)   [
 				matrix of nodes,
@@ -195,20 +187,104 @@
 
 	% qual Block
 	\begin{scope}[shift={(featuresbox.south)}, yshift=-\boxdist, local bounding box=qualblockbox]
-		\node [block] (qualblock) {Qual Block};
+    \node [block] (qualblock) {Quality Block};
 	\end{scope}
+
 
 	% qual 
 	\begin{scope}[shift={(qualblockbox.west)},  xshift=-\boxdist, local bounding box=qualbox]
-		\node [block] (qual) {Qual};
+	\matrix (qualtoken)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={draw=black, thin, outer sep=0pt},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			row 1/.style={nodes={fill=q6}},
+			row 2/.style={nodes={fill=q5}},
+			row 3/.style={nodes={fill=q4}},
+			row 4/.style={nodes={fill=q3}},
+			row 5/.style={nodes={fill=q2}},
+			row 6/.style={nodes={fill=q1}},
+		]
+		{
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+		};
+
+	\end{scope}
+
+	% qual seq
+	\begin{scope}[shift={(qualbox.west)}, xshift=-\boxdist, local bounding box=qualseqbox]
+		\node (qualseqnode) [rotate=270] {
+			\tikz \matrix (qualseqmatrix) [
+				matrix of nodes,
+				nodes in empty cells,
+				column sep=-\pgflinewidth, row sep=3pt,
+				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+				row 2/.style={nodes={fill=p1, draw=p1}},
+				row 2 column 7/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 8/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 9/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 10/.style={nodes={fill=p3, draw=p3}},
+			] {
+				G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+			};
+		};
+
+		\begin{scope}[on background layer]
+			\node (qualseqoutline) [fit=(qualseqnode), draw=mygreen, thick, dashed,  rounded corners, inner sep=-2pt] {};
+		\end{scope}
 	\end{scope}
 
 
 	% mlp
-	\begin{scope}[shift={(qualbox.south)}, yshift=-\boxdist, local bounding box=mlpbox]
-		\node [block] (mlp) {MLP};
-	\end{scope}
+	\begin{scope}[shift={(qualbox.south)}, yshift=-\boxdist, xshift=\boxdist,
+		>=latex, % for default LaTeX arrow head
+		node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6},
+		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
+		node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20},
+		node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20},
+		node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
+		connect/.style={thick,mydarkblue}, %,line cap=round
+		connect arrow/.style={-{Latex[length=3,width=2.5]},thick,mydarkblue,shorten <=0.5,shorten >=1},
+		node 1/.style={node in},
+		node 2/.style={node hidden},
+		node 3/.style={node out},
+		rotate=180,
+		scale=0.5,
+		x=2.2cm,y=1.4cm,
+		transform shape,
+		local bounding box=mlpbox]
+		\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
 
+		\readlist\Nnod{3,4,2} % number of nodes per layer
+
+		\message{^^J  Layer}
+		\foreachitem \N \in \Nnod{ % loop over layers
+			\edef\lay{\Ncnt} % alias of index of current layer
+			\message{\lay,}
+			\pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+			\foreach \i [evaluate={\y=\N/2-\i; \x=\lay; \n=\nstyle;}] in {1,...,\N}{ % loop over nodes
+					% NODES
+					\node[node \n] (N\lay-\i) at (\x,\y) {};
+					%\node[circle,inner sep=2] (N\lay-\i') at (\x-0.15,\y) {}; % shifted node
+					%\draw[node] (N\lay-\i) circle (\R);
+
+					% CONNECTIONS
+					\ifnum\lay>1 % connect to previous layer
+						\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+								\draw[connect arrow] (N\prev-\j) -- (N\lay-\i); % connect arrows directly
+								%\draw[connect arrow] (N\prev-\j) -- (N\lay-\i'); % connect arrows to shifted node
+							}
+					\fi % else: nothing to connect first layer
+
+				}
+
+		}
+	\end{scope}
 
 	%  output
 	\begin{scope}[shift={(mlpbox.west)}, xshift=-\boxdist, local bounding box=outputbox]
@@ -222,7 +298,7 @@
 				row 1 column 7/.style={nodes={fill=p3}},
 				row 1 column 8/.style={nodes={fill=p3}},
 			] {
-				 &  &  &  &  &  &  & \\
+				 &  &  &  &  & \\
 			};
 		};
 	\end{scope}
@@ -233,267 +309,18 @@
 	\end{scope}
 
 
-	\path
-	(inputbox)  edge[connect] (tokenbox)
-	(tokenbox) edge[connect] (lcgmlbox)
-	(lcgmlbox) edge[connect] (featuresbox)
-	(featuresbox) edge[connect] (qualblockbox)
-	(qualbox) edge[connect] (qualblockbox)
-	(mlpbox) edge[connect] (outputbox)
-	(outputbox) edge[connect] (predictbox)
+	\path [connect]
+	(inputbox)  edge (tokenbox)
+	(tokenbox) edge (lcgmlbox)
+	(lcgmlbox) edge (featuresbox)
+	(featuresbox) edge (qualblockbox)
+	(qualbox) edge (qualblockbox)
+	(mlpbox) edge (outputbox)
+	(outputbox) edge (predictbox)
+	(qualseqbox) edge (qualbox)
 	;
 
-	\draw [connect] (qualblockbox) |- (mlp);
-\end{tikzpicture}
-
-
-\begin{tikzpicture}[
-		node/.style={thick,circle,draw=myblue,minimum size=12, inner sep=0.5,outer sep=0.6},
-		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
-		node hidden/.style={
-				node,
-				blue!20!black,
-				draw=myblue!30!black,
-				fill=myblue!20,
-			},
-		node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
-		connect/.style={-stealth, ultra thick, shorten <=2pt, shorten >=2pt},
-		every node/.style={font=\Large}
-	]
-
-
-	\begin{scope}[scale=1, local bounding box=seqbox]
-		\node (seq) at (0,0) {\tt GTGCATCTG\dots CCTG\textcolor{mymauve}{AGGAGTAG}};
-		\node (label) at (0,-0.5) {\tt 000000000\dots 0000\textcolor{mymauve}{11111111}};
-		\node (qual) at (0,-1) {\tt BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
-
-		% add name seq and label to the left part of the sequence
-		\node[left = 1em of seq] (seq_text)  {Sequence};
-		\node[left = 1em of label]  (label_text) {Label};
-		\node[left = 1em of qual] (qual_text)  {Quality};
-		% add a box around the sequence
-		\draw [myblue!40, fill=myblue, fill opacity=0.02,rounded corners=2]  ($(seq_text.north west) + (-0.5, 0.5)$) rectangle ($(qual.south east) + (0.5, -0.5)$);
-	\end{scope}
-
-
-	% add model architecture                             relu     residual ----------------
-	%                                                                                     | relu
-	% seq -> tokenization -> embedding ->  linear layer ------> + ------> linear layer -> + -----> output
-	%                                                           |
-	%                                                          qual
-	\begin{scope}[shift={($(seqbox.south)+(-2,-8)$)}, scale=1, local bounding box=modelbox1]
-		% define box size
-		\def\boxsize{6em}
-		\def\boxdist{9em}
-		\def\boxcolor{myblue}
-		\def\nodedist{1.7em}
-
-		% add seq -> tokenization
-		\node (seq) at (0,0) { \tt seq2: GTGCATCTG\dots CCTG\textcolor{mymauve}{AGGAGTAG}};
-		\node[below = 1pt of seq] (seq2)  { \tt seq3: GACCGT\dots A\textcolor{mymauve}{TGGGGACTGTGGTC}};
-		\node[above = 1pt of seq] (seq3)  { \tt seq1: ATAC\dots A\textcolor{mymauve}{AGTTAGAG}TA\dots AGT};
-
-		% draw a box around the sequence
-		\draw[olivegreen, dashed, rounded corners, very thick] ($(seq3.north west) + (-0.5, 0.5)$) rectangle ($(seq2.south east) + (0.5, -0.5)$);
-		\node[above = 3em of seq3, align=center] (seq_text) {Input Sequence};
-
-		% Draw the edge from seq to a point to the right (formerly 'token') and label it
-		\node[right = 2 * \boxdist of seq] (token) {}; % Define position without drawing the node
-		\node[right = 2 * \boxdist of token] (pretrain) {};
-		% add embedding as rectangle
-		\node[right = 4 * \boxdist of pretrain] (embed)  {};
-
-		% Draw the matrix directly at the position of the matrix node
-		\begin{scope}[shift={(token.center)}, yshift=-3em, scale=0.5, local bounding box=token_box]
-			% Draw the matrix contents as shades
-			\shade[left color=myorange, right color=mygreen, middle color=myred] (0,3) rectangle ++(6,1);
-			\shade[left color=mygreen, right color=myred, middle color=myorange] (0,2) rectangle ++(6,1);
-			\shade[left color=myred, right color=myorange, middle color=mygreen] (0,1) rectangle ++(6,1);
-			\shade[left color=black, right color=myorange, middle color=mygreen] (0,0) rectangle ++(6,1);
-			\draw [white] (0,0) grid (6,4);
-		\end{scope}
-
-		% add arrow from seq to token
-		\draw[connect] ($(seq.east) + (1, 0)$) -- node[midway, above] {Tokenization} (token);
-		% add arrow from token to embedding
-		\draw[connect] ($(token.east) + (3, 0)$) -- (pretrain);
-		\draw[connect] ($(pretrain.east) + (6, 0)$) -- (embed) node [midway, above] {Feature Extract};
-
-		% NEURAL NETWORK with coefficients, shifted
-		\begin{scope}[shift={(pretrain)}, yshift=1em, xshift=-2em, x=2.2cm, y=1.4cm, scale=0.6,
-			local bounding box=pretrain_box,
-			connect/.style={thick,mydarkblue}, %,line cap=round
-			connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1},
-			node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle
-			node 2/.style={node hidden},
-			node 3/.style={node out}
-			]
-			\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
-
-			\message{^^JNeural network, shifted}
-			\readlist\Nnod{4,5,5,5,3} % array of number of nodes per layer
-			\readlist\Nstr{n,m,m,m,k} % array of string number of nodes per layer
-			\readlist\Cstr{\strut x,a^{(\prev)},a^{(\prev)},a^{(\prev)},y} % array of coefficient symbol per layer
-			\def\yshift{0.5} % shift last node for dots
-
-			\message{^^J  Layer}
-			\foreachitem \N \in \Nnod{ % loop over layers
-				\def\lay{\Ncnt} % alias of index of current layer
-				\pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
-				\message{\lay,}
-				\foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
-							\index=(\i<\N?int(\i):"\Nstr[\lay]");
-							\x=\lay; \n=\nstyle;}] in {1,...,\N}{ % loop over nodes
-						% NODES
-						\node[node \n] (N\lay-\i) at (\x,\y) {};
-
-						% CONNECTIONS
-						\ifnum\lay>1 % connect to previous layer
-							\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-									\draw[connect,white,line width=1.2] (N\prev-\j) -- (N\lay-\i);
-									\draw[connect] (N\prev-\j) -- (N\lay-\i);
-									%\draw[connect] (N\prev-\j.0) -- (N\lay-\i.180); % connect to left
-								}
-						\fi % else: nothing to connect first layer
-
-					}
-				\path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.5] {$\vdots$};
-			}
-		\end{scope}
-
-		\node[above=  of pretrain_box, align=center] (nn_text) {Long-Context Pre-training Language Model};
-
-		\begin{scope}[shift={(embed.center)}, yshift=-2em, scale=0.5, local bounding box=embed_box]
-			\begin{scope}[opacity=0.3]
-				\shade[left color=myorange, right color=mygreen, middle color=myred] (0,3) rectangle ++(6,1);
-				\shade[left color=mygreen, right color=myred, middle color=myorange] (0,2) rectangle ++(6,1);
-				\shade[left color=myred, right color=myorange, middle color=mygreen] (0,1) rectangle ++(6,1);
-				\shade[left color=black, right color=myorange, middle color=mygreen] (0,0) rectangle ++(6,1);
-				\draw [white] (0,0) grid (6,4);
-			\end{scope}
-
-			\begin{scope}[shift={(0.5, -0.5)}, opacity=0.5]
-				\shade[left color=myorange, right color=mygreen, middle color=myred] (0,3) rectangle ++(6,1);
-				\shade[left color=mygreen, right color=myred, middle color=myorange] (0,2) rectangle ++(6,1);
-				\shade[left color=myred, right color=myorange, middle color=mygreen] (0,1) rectangle ++(6,1);
-				\shade[left color=black, right color=myorange, middle color=mygreen] (0,0) rectangle ++(6,1);
-				\draw [white] (0,0) grid (6,4);
-			\end{scope}
-
-			\begin{scope}[shift={(1, -1)}, opacity=0.7]
-				\shade[left color=myorange, right color=mygreen, middle color=myred] (0,3) rectangle ++(6,1);
-				\shade[left color=mygreen, right color=myred, middle color=myorange] (0,2) rectangle ++(6,1);
-				\shade[left color=myred, right color=myorange, middle color=mygreen] (0,1) rectangle ++(6,1);
-				\shade[left color=black, right color=myorange, middle color=mygreen] (0,0) rectangle ++(6,1);
-				\draw [white] (0,0) grid (6,4);
-			\end{scope}
-		\end{scope}
-
-
-		\node[\boxcolor, below =   0.5  *\boxdist of embed_box,  very thick, rounded corners, minimum size= 0.5 * \boxsize] (weight_layer1) {};
-		\node[node hidden, xshift= \nodedist] (w1n1) at (weight_layer1) {};
-		\node[node hidden, xshift=2* \nodedist] (w1n2) at (weight_layer1) {};
-		\node[node hidden, xshift=0 *\nodedist] (w1n3) at (weight_layer1) {};
-		\node[node hidden, xshift=- 1*\nodedist] (w1n4) at (weight_layer1) {};
-		\node[node hidden, xshift=- 2*\nodedist] (w1n5) at (weight_layer1) {};
-
-		% add a plus sign to show residual connection
-		\node[below = 0.5 *  \boxdist of w1n3, font=\Huge, minimum size= 0.5 * \boxsize] (add1) {$\oplus$};
-
-		% add weight layer 2
-		\node[\boxcolor, below left = 1.1 * \boxdist of add1, rectangle, very thick, rounded corners, minimum size= 0.5 * \boxsize] (weight_layer2) {};
-		% add 4 node hidden to weight_layer2
-		\node[node hidden, yshift=2.3em] (w2n1) at (weight_layer2.center) {};
-		\node[node hidden, yshift={(2.3em - \nodedist)}] (w2n2) at (weight_layer2.center) {};
-		\node[node hidden, yshift={(2.3em - 2*\nodedist)}] (w2n3) at (weight_layer2.center) {};
-		\node[node hidden, yshift={(2.3em - 3*\nodedist)}] (w2n4) at (weight_layer2.center) {};
-
-		\node[left= 0.6 * \boxdist of weight_layer2, font=\Huge, minimum size= 0.5 *\boxsize] (add2) {$\oplus$};
-
-		% add output box with two nodes
-		\node[minimum size= 0.5 * \boxsize, left = \boxdist of add2] (output) {};
-		\node[node hidden,  yshift=0.9em] (out1) at (output.center) {};
-		\node[node hidden,  yshift=-0.9em] (out2) at (output.center) {};
-
-		% add arrow from embedding to linear layer
-		\draw[connect] (embed_box) -- (w1n3);
-
-		% add qual under add1
-		\node[left= 1.4 * \boxdist of add1] (qual2) {\tt qual2: BABCJIBDF\dots ==@@\textcolor{mymauve}{ONI?=>QS}};
-		\node[above=1pt of qual2] (qual1) {\tt qual1: 5>SS\dots S\textcolor{mymauve}{,*\%\%\%\#\$,}SS\dots <HL};
-		\node[below=1pt of qual2] (qual3) {\tt qual3: *-)))(\dots =\textcolor{mymauve}{EEEEA?<:>=9;;9}};
-		% % draw a box around the qual
-		\draw[olivegreen, dashed, rounded corners, very thick] ($(qual1.north west) + (-0.5, 0.5)$) rectangle ($(qual3.south east) + (0.5, -0.5)$);
-
-		\node[left = 3em of qual2, align=center] (qual_text) {Input Quality};
-		\node[left =  2* \boxdist of output] (final_feature) {};
-
-		\draw[connect] (w1n3) -- (add1);
-		\draw[connect] (add1) |- (weight_layer2)  node[midway, above left] (residual_label) {Residual};
-		\draw[connect] (weight_layer2) -- (add2);
-		\draw[connect] (add2) -- (output) node[midway, above] { ReLU};
-		\draw[connect] (output) -- ([xshift=10em]final_feature.east) node[above, midway] {Softmax};
-		% add arrow from qual to add1
-		\draw[connect] ($(qual2) + (5.5,0)$) -- (add1) node[above, midway] {Standardization};
-
-		\draw[connect, dashed]
-		(residual_label) to[out=-90, in=-90, looseness=1]
-		node[below=2ex, midway, align=center] {skip connection\\(identity)}
-		node[above, midway] {$\vec x$}
-		(add2);
-
-		\begin{scope}[shift={(final_feature.center)},  yshift=-2em, scale=0.5, local bounding box=feature_box1]
-			% Draw the second matrix slightly shifted
-			\begin{scope}[shift={(0.5, -0.5)}, opacity=0.5]
-				\fill[myorange] (0,3) rectangle ++(6,1);
-				\fill[mygreen] (0,2) rectangle ++(6,1);
-				\fill[myred] (0,1) rectangle ++(6,1);
-				\fill[black] (0,0) rectangle ++(6,1);
-				\draw [white] (0,0) grid (6,4);
-			\end{scope}
-
-			% Draw the third matrix slightly more shifted
-			\begin{scope}[shift={(1, -1)}, opacity=0.7]
-				\fill[myorange] (0,3) rectangle ++(6,1);
-				\fill[mygreen] (0,2) rectangle ++(6,1);
-				\fill[myred] (0,1) rectangle ++(6,1);
-				\fill[black] (0,0) rectangle ++(6,1);
-				\draw [white] (0,0) grid (6,4);
-			\end{scope}
-		\end{scope}
-
-		\node[left = 2.5 * \boxdist of final_feature] (label) {};
-
-		\begin{scope}[shift={(label.center)}, scale=0.4, yshift=-4em, local bounding box=label_box]
-			% Draw the second matrix slightly shifted
-			\begin{scope}[opacity=1]
-				% Combine fill operations for each color
-				\fill[black!40]
-				(0, 2) rectangle ++(4, 1)
-				(7, 2) rectangle ++(3, 1)
-				(0, 1) rectangle ++(7, 1)
-				(0, 0) rectangle ++(5, 1);
-
-				\fill[mymauve]
-				(4, 2) rectangle ++(3, 1)
-				(7, 1) rectangle ++(3, 1)
-				(5, 0) rectangle ++(5, 1);
-				% Draw the grid
-				\draw [black] (0, 0) grid (10, 3);
-			\end{scope}
-		\end{scope}
-
-		\draw[connect] (final_feature) -- ($(label) + (4,0)$) node[above, midway]{Decoding};
-
-		\node[left = 1.5 * \boxdist of label ] (result) { \tt GTGCATCTG\dots CCTG};
-		\node[below = 1pt of result] (result2)  { \tt GACCGT\dots A};
-		\node[above = 1pt of result] (result3)  { \tt ATAC\dots A \; TA\dots AGT};
-
-		% draw a box around the result
-		\draw[myred, dashed, rounded corners, very thick] ($(result3.north west) + (-0.5, 0.5)$) rectangle ($(result2.south east) + (1.5, -0.5)$);
-		\node[above = 3em of result3, align=center] (result_text) {Output Sequence};
-		\draw[connect] (label) --  ($(result) + (3, 0)$) node[midway, above] {Chop};
-	\end{scope}
+	\draw [connect] (qualblockbox) |- (mlpbox);
 \end{tikzpicture}
 
 
