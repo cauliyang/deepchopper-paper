@@ -8,14 +8,11 @@
 \usetikzlibrary{matrix}
 \usetikzlibrary{fit}
 \usetikzlibrary{quotes}
-
-
 \usetikzlibrary {backgrounds}
 \usepackage{listofitems} % for \readlist to create arrays
 
 \pgfdeclarelayer{middle}
 \pgfsetlayers{background,middle, main}
-
 
 \begin{document}
 
@@ -109,7 +106,7 @@
 	\end{scope}
 
 	% lcglm
-	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist * 2, local bounding box=lcgmlbox]
+	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist * 1.5, local bounding box=lcgmlbox]
 		\node [block] (lcgml) {\tiny LC Pre-training GLM};
 	\end{scope}
 
@@ -286,9 +283,7 @@
 								%\draw[connect arrow] (N\prev-\j) -- (N\lay-\i'); % connect arrows to shifted node
 							}
 					\fi % else: nothing to connect first layer
-
 				}
-
 		}
 	\end{scope}
 
