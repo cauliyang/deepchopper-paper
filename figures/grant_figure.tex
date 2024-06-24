@@ -59,7 +59,7 @@
 	]
 
 	% Exitron and Exon
-	\begin{scope}[local bounding box=exon, scale=0.7, transform shape]
+	\begin{scope}[local bounding box=exon, scale=0.9, transform shape]
 		\begin{scope}[start chain, node distance=0mm,
 				nodes/.style={inner sep=0, outer sep=0},
 			]
@@ -71,18 +71,18 @@
 			\node (exitron-label2) [above right= of exon-n4, xshift=-7] {Exon};
 		\end{scope}
 
-		\node (left) [left= 16pt of exon-n1]  {};
-		\node (right) [right= 16pt of exon-n3]   {};
+		\node (left) [left= 20pt of exon-n1]  {};
+		\node (right) [right= 11pt of exon-n3]   {};
 
 		\path (left) edge[-, thick]  (exon-n1)
 		(exon-n3) edge[-, thick] (right);
+		\node (dnalabel) [above=8pt of exon-n1, xshift=-12pt] {Ultra-long DNA};
 	\end{scope}
 
-	\node (dnalabel) [above=8pt of exon-n1, xshift=-11pt] {\tiny \ttfamily Ultra-long DNA};
 
 	% RNAseq Matrix
 	\begin{scope}[shift={(exon.center)},
-			yshift=-1.1cm, xshift=8,
+			yshift=-1.2cm, xshift=8,
 			node distance=0mm, scale=0.7, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=1pt,
@@ -148,7 +148,7 @@
 
 	\begin{pgfonlayer}{middle}
 		\node (lcglmbox) [fit=(lcglm), fill=l1,  thick, inner ysep=6pt, inner xsep=2pt, yshift=5pt, opacity=0.7] {};
-		\node[inner sep=3pt, anchor=north west] at (lcglmbox.north west) {\tiny \ttfamily Long-Context GLM};
+		\node[inner sep=3pt, anchor=north west] at (lcglmbox.north west) {Long-Context GLM};
 	\end{pgfonlayer}
 
 
@@ -258,7 +258,7 @@
 		};
 	\end{scope}
 
-	\node [left = of output, xshift=0.7cm, anchor=center] {\tiny \ttfamily Output};
+	\node [left = of output, xshift=0.65cm, anchor=center] {Output};
 
 	\begin{scope}[shift={(output)}, yshift=-0.8cm, local bounding box=prediction, scale=1, transform shape]
 		\matrix (mprediction) [matrix of nodes, nodes in empty cells,
@@ -277,11 +277,11 @@
 
 	\path
 	(exon) edge[connect] (databox)
-	(databox) edge["Tokenizer", connect, font=\tiny \ttfamily] (tokens)
+	(databox) edge["Tokenizer", connect] (tokens)
 	(mlp) edge[connect] (output)
 	(features) edge[connect] (mlp)
 	% (lcglmbox) edge[connect] (features)
-	(output) edge["Predict", connect, font=\tiny \ttfamily] (prediction)
+	(output) edge["Predict", connect] (prediction)
 	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
 
 	\draw [connect] (tokens1.south) |- ++(-4.5em, -0.25em) |-  ($(input) + (0.1em, 0)$);
@@ -292,8 +292,8 @@
 	\begin{scope}[on background layer]
 		\node (modelbox) [fit=(tokens)(lcglm)(features)(mlp), fill=c2,  thick, inner sep=8pt] {};
 		\node[inner sep=2pt, anchor=north west] at (modelbox.north west) {Model};
-
 	\end{scope}
+
 \end{tikzpicture}
 
 \end{document}
