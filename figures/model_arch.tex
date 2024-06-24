@@ -37,7 +37,6 @@
 \definecolor{q5}{RGB}{117,107,177}
 \definecolor{q6}{RGB}{84,39,143}
 
-
 \colorlet{myred}{red!80!black}
 \colorlet{myblue}{blue!80!black}
 \colorlet{mygreen}{green!60!black}
@@ -50,9 +49,10 @@
 \begin{tikzpicture}[
 	font=\scriptsize \ttfamily,
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
+	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!60, text=black, thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
-	input box/.style={draw=mygreen, dashed,  thick, rounded corners, inner sep=-2pt},
-	output box/.style={draw=myred,  dashed, thick, rounded corners, inner sep=-2pt},
+	input box/.style={fill=mygreen, opacity=0.2,  thick, rounded corners, inner sep=-1pt},
+	output box/.style={fill=c7, opacity=0.2,  thick, rounded corners, inner sep=-1pt},
 	]
 	\def\boxdist{1cm}
 
@@ -83,7 +83,7 @@
 		\matrix (tokens1)   [
 			matrix of nodes,
 			nodes in empty cells,
-			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			nodes={fill=c2, draw=black, thin},
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			column 1/.style={nodes={fill=c1}},
 			column 2/.style={nodes={fill=c2}},
@@ -166,11 +166,10 @@
 		\end{scope}
 	\end{scope}
 
-	% qual Block
+	% qual block
 	\begin{scope}[shift={(featuresbox.east)}, xshift=\boxdist * 2, local bounding box=qualblockbox]
-		\node [block] (qualblock) {Quality Block};
+		\node [qual block] (qualblock) {Quality Block};
 	\end{scope}
-
 
 	% qual 
 	\begin{scope}[shift={(qualblockbox.north)},  yshift=\boxdist, local bounding box=qualbox]
@@ -208,14 +207,14 @@
 			G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
 		};
 
-		\begin{scope}[on background layer]
+		\begin{pgfonlayer}{middle}
 			\node (qualseqoutline) [fit=(qualseqmatrix), input box] {};
-		\end{scope}
+		\end{pgfonlayer}
 	\end{scope}
 
 
 	% mlp
-	\begin{scope}[shift={(qualbox.east)}, xshift=\boxdist, yshift=-\boxdist,
+	\begin{scope}[shift={(qualbox.east)}, xshift=\boxdist, yshift=-\boxdist * 1.5,
 		>=latex, % for default LaTeX arrow head
 		node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6},
 		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
@@ -229,7 +228,8 @@
 		node 3/.style={node out},
 		rotate=90,
 		scale=0.35,
-		x=2.2cm,y=1.4cm,
+		x=2.2cm,
+		y=1.4cm,
 		transform shape,
 		local bounding box=mlpbox]
 		\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
@@ -284,7 +284,7 @@
 			row 1 column 8/.style={nodes={fill=p3, draw=p3}},
 			row 1 column 9/.style={nodes={fill=p3, draw=p3}},
 		] {
-			T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+			T & G & $\cdots$ & A & A \\
 		};
 		\node (predictoutline) [fit=(predictseq), output box] {};
 	\end{scope}
@@ -297,13 +297,17 @@
 	(featuresbox) edge (qualblockbox)
 	(qualbox) edge (qualblockbox)
 	(mlpbox) edge (outputbox)
-	(qualseqbox) edge (qualbox)
-	% (outputmatrix-1-1)  edge["Loss", sloped, font=\tiny \ttfamily] (rnaseq-1-8)
-	;
+	(qualseqbox) edge (qualbox);
 
-	\draw [connect] (outputbox) -- node[right, font=\tiny \ttfamily]{Predict} (predictbox) ;
-
+	\draw [connect] (outputbox) -- node[right, font=\tiny \ttfamily]{Predict} (predictbox);
 	\draw [connect] (qualblockbox) -| (mlpbox);
+
+
+	\begin{scope}[on background layer]
+		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(qualbox)(qualbox)(mlpbox)(outputbox), rectangle, fill=c1] {};
+		\node[inner sep=2pt, anchor=south east] at (modeloutline.south east) {Model};
+	\end{scope}
+
 \end{tikzpicture}
 
 
