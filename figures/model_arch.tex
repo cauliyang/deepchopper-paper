@@ -52,13 +52,17 @@
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!60, text=black, thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
-	input box/.style={fill=mygreen, opacity=0.2,  thick, rounded corners, inner sep=-1pt},
-	output box/.style={fill=c7, opacity=0.2,  thick, rounded corners, inner sep=-1pt},
+	input box/.style={fill=mygreen, opacity=0.2,  thick, rounded corners, inner sep=1pt},
+	output box/.style={fill=c7, opacity=0.2,  thick, rounded corners, inner sep=1pt},
 	]
 	\def\boxdist{1cm}
 
+	\begin{scope}[local bounding box=nanoporebox]
+		\node (nanoporenode) [block, rotate=270] {Nanopore};
+	\end{scope}
+
 	% input
-	\begin{scope}[ yshift=1cm, local bounding box=inputbox]
+	\begin{scope}[shift={(nanoporebox.east)}, xshift=\boxdist, local bounding box=inputbox]
 		\node (rnaseqnode) [
 			rotate=270,
 		] {
@@ -66,21 +70,17 @@
 				column sep=-\pgflinewidth, row sep=3pt,
 				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
 				row 2/.style={nodes={fill=p1, draw=p1}},
+				row 2 column 4/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 5/.style={nodes={fill=p3, draw=p3}},
 				row 2 column 6/.style={nodes={fill=p3, draw=p3}},
 				row 2 column 7/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 8/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 9/.style={nodes={fill=p3, draw=p3}},
 			] {
-				T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
-				0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
+				T & $\cdot$ & C & A & A & T & G & T & $\cdot$ & G \\
+				0 & $\cdot$ & 0 & 1 & 1 & 1 & 1 & 0 & $\cdot$ & 0 \\
 			};
 		};
 		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
 		% \node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
-		\begin{scope}[on background layer]
-			\node (intputoutline) [fit=(rnaseqnode), input box] {};
-		\end{scope}
-
 	\end{scope}
 
 	% token
@@ -288,8 +288,8 @@
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={fill=c2, draw=black, thin, outer sep=0pt},
 			column 1/.style={nodes={fill=p1}},
-			row 4/.style={nodes={fill=p3}},
-			row 6/.style={nodes={fill=p3}},
+			row 3/.style={nodes={fill=p3}},
+			row 5/.style={nodes={fill=p3}},
 		] {
 			\\
 			\\
@@ -306,9 +306,9 @@
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={fill=c2, draw=black, thin, outer sep=0pt},
 			column 1/.style={nodes={fill=p1}},
+			row 3/.style={nodes={fill=p3}},
 			row 4/.style={nodes={fill=p3}},
 			row 5/.style={nodes={fill=p3}},
-			row 6/.style={nodes={fill=p3}},
 		] {
 			\\
 			\\
@@ -328,19 +328,15 @@
 				nodes in empty cells,
 				column sep=-\pgflinewidth, row sep=3pt,
 				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-				row 1 column 6/.style={nodes={fill=p3, draw=p3}},
-				row 1 column 7/.style={nodes={fill=p3, draw=p3}},
-				row 1 column 8/.style={nodes={fill=p3, draw=p3}},
-				row 1 column 9/.style={nodes={fill=p3, draw=p3}},
 			] {
-				T & G & $\cdots$ & A & A \\
+				T & $\cdots$ & C & T & $\cdots$ & G \\
 			};
 		};
-		\node (predictoutline) [fit=(predictseqnode), output box] {};
 	\end{scope}
 
 
 	\path [connect]
+	(nanoporebox) edge  (inputbox)
 	(inputbox)  edge ["Tokenization", font=\tiny \ttfamily] (tokenbox)
 	(tokenbox) edge (lcgmlbox)
 	(lcgmlbox) edge (featuresbox)
@@ -358,8 +354,11 @@
 
 
 	\begin{scope}[on background layer]
+		\node (intputoutline) [fit=(rnaseqnode)(nanoporenode), input box] {};
 		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), rectangle, fill=c1] {};
 		\node[inner sep=2pt, anchor=north west] at (modeloutline.north west) {Model};
+
+		\node (outputoutline) [fit=(predictbox)(smoutputbox), output box] {};
 	\end{scope}
 
 \end{tikzpicture}
