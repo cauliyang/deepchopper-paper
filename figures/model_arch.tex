@@ -1,4 +1,5 @@
 \documentclass[tikz,border=3pt]{standalone}
+
 \usepackage{amsmath,amssymb}
 \usepackage{xcolor}
 \usetikzlibrary{calc}
@@ -58,61 +59,39 @@
 
 	% input
 	\begin{scope}[ yshift=1cm, local bounding box=inputbox]
-		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
-			column sep=-\pgflinewidth, row sep=3pt,
-			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-			row 2/.style={nodes={fill=p1, draw=p1}},
-			row 2 column 6/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 7/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 8/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 9/.style={nodes={fill=p3, draw=p3}},
+		\node (rnaseqnode) [
+			rotate=270,
 		] {
-			T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
-			0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
+			\tikz \matrix (rnaseq) [matrix of nodes, nodes in empty cells,
+				column sep=-\pgflinewidth, row sep=3pt,
+				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+				row 2/.style={nodes={fill=p1, draw=p1}},
+				row 2 column 6/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 7/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 8/.style={nodes={fill=p3, draw=p3}},
+				row 2 column 9/.style={nodes={fill=p3, draw=p3}},
+			] {
+				T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+				0 & 0 & $\cdots$ & 0 & 0 & 1 & 1 & $\cdots$ & 1 \\
+			};
 		};
 		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
 		% \node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
 		\begin{scope}[on background layer]
-			\node (intputoutline) [fit=(rnaseq), input box] {};
+			\node (intputoutline) [fit=(rnaseqnode), input box] {};
 		\end{scope}
 
 	\end{scope}
 
 	% token
-	\begin{scope}[shift={(inputbox.south)}, yshift=-\boxdist, local bounding box=tokenbox]
-		\matrix (tokens1)   [
-			matrix of nodes,
-			nodes in empty cells,
-			nodes={fill=c2, draw=black, thin},
-			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			column 1/.style={nodes={fill=c1}},
-			column 2/.style={nodes={fill=c2}},
-			column 3/.style={nodes={fill=c3}},
-			column 4/.style={nodes={fill=c4}},
-			column 5/.style={nodes={fill=c5}},
-			column 6/.style={nodes={fill=c6}},
-			column 7/.style={nodes={fill=c7}},
-		]
-		{
-			 &  &  &  &  &  & \\
-		};
-	\end{scope}
-
-	% lcglm
-	\begin{scope}[shift={(tokenbox.south)}, yshift=-\boxdist * 1.5, local bounding box=lcgmlbox]
-		\node [block] (lcgml) {\tiny LC Pre-training GLM};
-	\end{scope}
-
-	% features
-	\begin{scope}[shift={(lcgmlbox.south)},
-			xshift=0.1cm,
-			yshift=-\boxdist,
-			local bounding box=featuresbox]
-		\begin{scope}[opacity=0.7]
-			\matrix (tokens1)   [
+	\begin{scope}[shift={(inputbox.east)}, xshift=\boxdist * 2, local bounding box=tokenbox]
+		\node (tokensnode) [
+			rotate=270,
+		] {
+			\tikz	\matrix (tokens)   [
 				matrix of nodes,
 				nodes in empty cells,
-				nodes={fill=c2, draw=black, thin, outer sep=0pt},
+				nodes={fill=c2, draw=black, thin},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 				column 1/.style={nodes={fill=c1}},
 				column 2/.style={nodes={fill=c2}},
@@ -124,6 +103,41 @@
 			]
 			{
 				 &  &  &  &  &  & \\
+			};
+		};
+	\end{scope}
+
+	% lcglm
+	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist * 1.5, local bounding box=lcgmlbox]
+		\node [block] (lcgml) {\tiny LC Pre-training GLM};
+	\end{scope}
+
+	% features
+	\begin{scope}[shift={(lcgmlbox.east)},
+			yshift=2pt,
+			xshift=\boxdist * 1.5,
+			local bounding box=featuresbox]
+		\begin{scope}[opacity=0.7]
+			\matrix (tokens1)   [
+				matrix of nodes,
+				nodes in empty cells,
+				nodes={fill=c2, draw=black, thin, outer sep=0pt},
+				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+				row 1/.style={nodes={fill=c1}},
+				row 2/.style={nodes={fill=c2}},
+				row 3/.style={nodes={fill=c3}},
+				row 4/.style={nodes={fill=c4}},
+				row 5/.style={nodes={fill=c5}},
+				row 6/.style={nodes={fill=c6}},
+				row 7/.style={nodes={fill=c7}},
+			]
+			{
+				\\
+				\\
+				\\
+				\\
+				\\
+				\\
 			};
 		\end{scope}
 
@@ -133,16 +147,21 @@
 				nodes in empty cells,
 				nodes={fill=c2, draw=black, thin, outer sep=0pt},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-				column 1/.style={nodes={fill=c1}},
-				column 2/.style={nodes={fill=c2}},
-				column 3/.style={nodes={fill=c3}},
-				column 4/.style={nodes={fill=c4}},
-				column 5/.style={nodes={fill=c5}},
-				column 6/.style={nodes={fill=c6}},
-				column 7/.style={nodes={fill=c7}},
+				row 1/.style={nodes={fill=c1}},
+				row 2/.style={nodes={fill=c2}},
+				row 3/.style={nodes={fill=c3}},
+				row 4/.style={nodes={fill=c4}},
+				row 5/.style={nodes={fill=c5}},
+				row 6/.style={nodes={fill=c6}},
+				row 7/.style={nodes={fill=c7}},
 			]
 			{
-				 &  &  &  &  &  & \\
+				\\
+				\\
+				\\
+				\\
+				\\
+				\\
 			};
 		\end{scope}
 
@@ -152,16 +171,21 @@
 				nodes in empty cells,
 				nodes={fill=c2, draw=black, thin, outer sep=0pt},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-				column 1/.style={nodes={fill=c1}},
-				column 2/.style={nodes={fill=c2}},
-				column 3/.style={nodes={fill=c3}},
-				column 4/.style={nodes={fill=c4}},
-				column 5/.style={nodes={fill=c5}},
-				column 6/.style={nodes={fill=c6}},
-				column 7/.style={nodes={fill=c7}},
+				row 1/.style={nodes={fill=c1}},
+				row 2/.style={nodes={fill=c2}},
+				row 3/.style={nodes={fill=c3}},
+				row 4/.style={nodes={fill=c4}},
+				row 5/.style={nodes={fill=c5}},
+				row 6/.style={nodes={fill=c6}},
+				row 7/.style={nodes={fill=c7}},
 			]
 			{
-				 &  &  &  &  &  & \\
+				\\
+				\\
+				\\
+				\\
+				\\
+				\\
 			};
 		\end{scope}
 	\end{scope}
@@ -171,50 +195,50 @@
 		\node [qual block] (qualblock) {Quality Block};
 	\end{scope}
 
-	% qual 
-	\begin{scope}[shift={(qualblockbox.north)},  yshift=\boxdist, local bounding box=qualbox]
-		\matrix (qualtoken)   [
-			matrix of nodes,
-			nodes in empty cells,
-			nodes={draw=black, thin, outer sep=0pt},
-			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			column 1/.style={nodes={fill=q6}},
-			column 2/.style={nodes={fill=q5}},
-			column 3/.style={nodes={fill=q4}},
-			column 4/.style={nodes={fill=q3}},
-			column 5/.style={nodes={fill=q2}},
-			column 6/.style={nodes={fill=q1}},
-		]
-		{
-			 &  &  &  &  &  & \\
-		};
+	% % qual 
+	% \begin{scope}[shift={(qualblockbox.north)},  yshift=\boxdist, local bounding box=qualbox]
+	% 	\matrix (qualtoken)   [
+	% 		matrix of nodes,
+	% 		nodes in empty cells,
+	% 		nodes={draw=black, thin, outer sep=0pt},
+	% 		column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+	% 		column 1/.style={nodes={fill=q6}},
+	% 		column 2/.style={nodes={fill=q5}},
+	% 		column 3/.style={nodes={fill=q4}},
+	% 		column 4/.style={nodes={fill=q3}},
+	% 		column 5/.style={nodes={fill=q2}},
+	% 		column 6/.style={nodes={fill=q1}},
+	% 	]
+	% 	{
+	% 		 &  &  &  &  &  & \\
+	% 	};
 
-	\end{scope}
+	% \end{scope}
 
-	% qual seq
-	\begin{scope}[shift={(qualbox.north)}, yshift=\boxdist, local bounding box=qualseqbox]
-		\matrix (qualseqmatrix) [
-			matrix of nodes,
-			nodes in empty cells,
-			column sep=-\pgflinewidth, row sep=3pt,
-			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-			row 2/.style={nodes={fill=p1, draw=p1}},
-			row 2 column 7/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 8/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 9/.style={nodes={fill=p3, draw=p3}},
-			row 2 column 10/.style={nodes={fill=p3, draw=p3}},
-		] {
-			G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
-		};
+	% % qual seq
+	% \begin{scope}[shift={(qualbox.north)}, yshift=\boxdist, local bounding box=qualseqbox]
+	% 	\matrix (qualseqmatrix) [
+	% 		matrix of nodes,
+	% 		nodes in empty cells,
+	% 		column sep=-\pgflinewidth, row sep=3pt,
+	% 		nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+	% 		row 2/.style={nodes={fill=p1, draw=p1}},
+	% 		row 2 column 7/.style={nodes={fill=p3, draw=p3}},
+	% 		row 2 column 8/.style={nodes={fill=p3, draw=p3}},
+	% 		row 2 column 9/.style={nodes={fill=p3, draw=p3}},
+	% 		row 2 column 10/.style={nodes={fill=p3, draw=p3}},
+	% 	] {
+	% 		G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
+	% 	};
 
-		\begin{pgfonlayer}{middle}
-			\node (qualseqoutline) [fit=(qualseqmatrix), input box] {};
-		\end{pgfonlayer}
-	\end{scope}
+	% 	\begin{pgfonlayer}{middle}
+	% 		\node (qualseqoutline) [fit=(qualseqmatrix), input box] {};
+	% 	\end{pgfonlayer}
+	% \end{scope}
 
 
 	% mlp
-	\begin{scope}[shift={(qualbox.east)}, xshift=\boxdist, yshift=-\boxdist * 1.5,
+	\begin{scope}[shift={(qualblockbox.east)}, xshift=\boxdist, yshift=0.25cm,
 		>=latex, % for default LaTeX arrow head
 		node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6},
 		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
@@ -226,7 +250,7 @@
 		node 1/.style={node hidden},
 		node 2/.style={node hidden},
 		node 3/.style={node out},
-		rotate=90,
+		rotate=0,
 		scale=0.35,
 		x=2.2cm,
 		y=1.4cm,
@@ -259,34 +283,60 @@
 	\end{scope}
 
 	%  output
-	\begin{scope}[shift={(mlpbox.north)}, yshift=\boxdist, local bounding box=outputbox]
+	\begin{scope}[shift={(mlpbox.east)}, xshift=\boxdist, local bounding box=outputbox]
 		\matrix (outputmatrix) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={fill=c2, draw=black, thin, outer sep=0pt},
-			row 1/.style={nodes={fill=p1}},
-			row 1 column 4/.style={nodes={fill=p3}},
-			row 1 column 5/.style={nodes={fill=p3}},
-			row 1 column 6/.style={nodes={fill=p3}},
-			row 1 column 7/.style={nodes={fill=p3}},
+			column 1/.style={nodes={fill=p1}},
+			row 4/.style={nodes={fill=p3}},
+			row 6/.style={nodes={fill=p3}},
 		] {
-			 &  &  &  &  &  & \\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+		};
+	\end{scope}
+
+	%  smoutput
+	\begin{scope}[shift={(outputbox.east)}, xshift=\boxdist, local bounding box=smoutputbox]
+		\matrix (smoutputmatrix) [matrix of nodes, nodes in empty cells,
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			column 1/.style={nodes={fill=p1}},
+			row 4/.style={nodes={fill=p3}},
+			row 5/.style={nodes={fill=p3}},
+			row 6/.style={nodes={fill=p3}},
+		] {
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
 		};
 	\end{scope}
 
 	% predict
-	\begin{scope}[shift={(outputbox.north)}, yshift=\boxdist, local bounding box=predictbox]
-		\matrix (predictseq) [matrix of nodes,
-			nodes in empty cells,
-			column sep=-\pgflinewidth, row sep=3pt,
-			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-			row 1 column 6/.style={nodes={fill=p3, draw=p3}},
-			row 1 column 7/.style={nodes={fill=p3, draw=p3}},
-			row 1 column 8/.style={nodes={fill=p3, draw=p3}},
-			row 1 column 9/.style={nodes={fill=p3, draw=p3}},
+	\begin{scope}[shift={(smoutputbox.east)}, xshift=\boxdist, local bounding box=predictbox]
+		\node (predictseqnode)[
+			rotate=270,
 		] {
-			T & G & $\cdots$ & A & A \\
+			\tikz	\matrix (predictseq) [matrix of nodes,
+				nodes in empty cells,
+				column sep=-\pgflinewidth, row sep=3pt,
+				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+				row 1 column 6/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 7/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 8/.style={nodes={fill=p3, draw=p3}},
+				row 1 column 9/.style={nodes={fill=p3, draw=p3}},
+			] {
+				T & G & $\cdots$ & A & A \\
+			};
 		};
-		\node (predictoutline) [fit=(predictseq), output box] {};
+		\node (predictoutline) [fit=(predictseqnode), output box] {};
 	\end{scope}
 
 
@@ -295,17 +345,21 @@
 	(tokenbox) edge (lcgmlbox)
 	(lcgmlbox) edge (featuresbox)
 	(featuresbox) edge (qualblockbox)
-	(qualbox) edge (qualblockbox)
 	(mlpbox) edge (outputbox)
-	(qualseqbox) edge (qualbox);
+	(outputbox) edge["Polish", above, font=\tiny \ttfamily] (smoutputbox)
+	(smoutputbox) edge["Predict", above, font=\tiny \ttfamily] (predictbox)
+	(qualblockbox) edge (mlpbox)
+	;
 
-	\draw [connect] (outputbox) -- node[right, font=\tiny \ttfamily]{Predict} (predictbox);
-	\draw [connect] (qualblockbox) -| (mlpbox);
+	% ;
+
+	% \draw [connect] (smoutputbox) -- node[above, font=\tiny \ttfamily]{Predict} (predictbox);
+	% \draw [connect] (qualblockbox) - (mlpbox);
 
 
 	\begin{scope}[on background layer]
-		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(qualbox)(qualbox)(mlpbox)(outputbox), rectangle, fill=c1] {};
-		\node[inner sep=2pt, anchor=south east] at (modeloutline.south east) {Model};
+		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), rectangle, fill=c1] {};
+		\node[inner sep=2pt, anchor=north west] at (modeloutline.north west) {Model};
 	\end{scope}
 
 \end{tikzpicture}
