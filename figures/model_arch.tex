@@ -47,6 +47,7 @@
 \colorlet{mydarkblue}{blue!40!black}
 \colorlet{mydarkgreen}{green!30!black}
 
+
 \begin{tikzpicture}[
 	font=\scriptsize \ttfamily,
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
@@ -346,11 +347,6 @@
 	(smoutputbox) edge["Predict", above, font=\tiny \ttfamily] (predictbox)
 	(qualblockbox) edge (mlpbox)
 	;
-
-	% ;
-
-	% \draw [connect] (smoutputbox) -- node[above, font=\tiny \ttfamily]{Predict} (predictbox);
-	% \draw [connect] (qualblockbox) - (mlpbox);
 
 
 	\begin{scope}[on background layer]

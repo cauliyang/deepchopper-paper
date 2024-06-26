@@ -64,7 +64,7 @@
 	]
 
 	% Exitron and Exon
-	\begin{scope}[local bounding box=exon, scale=0.9, transform shape]
+	\begin{scope}[local bounding box=exon, scale=1, transform shape]
 		\begin{scope}[start chain, node distance=0mm,
 				nodes/.style={inner sep=0, outer sep=0},
 			]
@@ -77,7 +77,7 @@
 		\end{scope}
 
 		\node (left) [left= 20pt of exon-n1]  {};
-		\node (right) [right= 11pt of exon-n3]   {};
+		\node (right) [right= 10pt of exon-n3]   {};
 
 		\path (left) edge[-, thick]  (exon-n1)
 		(exon-n3) edge[-, thick] (right);
@@ -87,8 +87,8 @@
 
 	% RNAseq Matrix
 	\begin{scope}[shift={(exon.center)},
-			yshift=-1.2cm, xshift=8,
-			node distance=0mm, scale=0.7, transform shape]
+			yshift=-1.2cm, xshift=12,
+			node distance=0mm, scale=1, transform shape]
 		\matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=1pt,
 			nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
@@ -131,9 +131,9 @@
 	% \node (lcglm) [below of=tokens1, yshift=0.2cm, block, fill=l1, opacity=1,  thick, minimum height = 3em] {Long-Context GLM};
 
 
-	\begin{scope}[shift={(tokens1)}, yshift=-1.2cm, xshift=-1.35cm,
+	\begin{scope}[shift={(tokens1)}, yshift=-1.2cm, xshift=-1.5cm,
 		edge1/.style={black, line width=0.6pt, -{Stealth[length=3pt, width=2pt]}, shorten >=0.5pt, shorten <=0.5pt},
-		local bounding box=lcglm, scale=0.44, transform shape]
+		local bounding box=lcglm, scale=0.5, transform shape]
 		\graph [
 			grow right = 1cm,
 			edges = {edge1},
@@ -287,11 +287,11 @@
 	(features) edge[connect] (mlp)
 	% (lcglmbox) edge[connect] (features)
 	(output) edge["Predict", connect] (prediction)
-	edge[blue,  skip loop={18mm}{Loss}] (rnaseq-1-12);
+	edge[blue,  skip loop={20mm}{Loss}] (rnaseq-1-12);
 
-	\draw [connect] (tokens1.south) |- ++(-4.5em, -0.25em) |-  ($(input) + (0.1em, 0)$);
+	\draw [connect] (tokens1.south) |- ++(-5em, -0.1em) |-  ($(input) + (0.1em, 0)$);
 
-	\draw [connect] ($(b3.east) + (1pt, 0)$) -| ++ (0.5em, -1.3em)  -|   ($(features1) + (-0.3em, 0.3em)$);
+	\draw [connect] ($(b3.east) + (1pt, 0)$) -| ++ (0.5em, -1.45em)  -|   ($(features1) + (-0.3em, 0.3em)$);
 
 
 	\begin{scope}[on background layer]
