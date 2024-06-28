@@ -74,21 +74,25 @@
 			rotate=270,
 		] {
 			\tikz \matrix (rnaseq) [matrix of nodes, nodes in empty cells,
-				column sep=-\pgflinewidth * 3, row sep=3pt,
+				column sep=-\pgflinewidth * 3, row sep=1pt,
 				nodes={thin, inner sep=1pt,  minimum size=0.8em, anchor=center},
-				row 3/.style={nodes={fill=p1}},
-				row 3 column 4/.style={nodes={fill=p3, draw=p3}},
+                column 1/.style={nodes={anchor=east}},
+				row 3 column 2/.style={nodes={fill=p1, draw=p1}},
+				row 3 column 3/.style={nodes={fill=p1, draw=p1}},
+				row 3 column 4/.style={nodes={fill=p1, draw=p1}},
 				row 3 column 5/.style={nodes={fill=p3, draw=p3}},
 				row 3 column 6/.style={nodes={fill=p3, draw=p3}},
 				row 3 column 7/.style={nodes={fill=p3, draw=p3}},
+				row 3 column 8/.style={nodes={fill=p3, draw=p3}},
+				row 3 column 9/.style={nodes={fill=p1, draw=p1}},
+				row 3 column 10/.style={nodes={fill=p1, draw=p1}},
+				row 3 column 11/.style={nodes={fill=p1, draw=p1}},
 			] {
-				T & . & C & A & A & T & G & T & . & G \\
-				T & . & C & A & A & T & G & T & . & G \\
-				0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
+                Seq  & [6pt] T & . & C & A & A & T & G & T & . & G \\
+				Qual &  T & . & C & A & A & T & G & T & . & G \\
+				Label &0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
 			};
 		};
-		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
-		% \node (labellabel) [rotate=270, above =1.9cm of rnaseq-2-1, yshift=0.8cm] {Label:};
 	\end{scope}
 
 	% token
@@ -233,11 +237,10 @@
 	\begin{scope}[shift={(featuresbox.east)}, xshift=\boxdist  * 1.5, yshift=-0.1cm, local bounding box=qualblockbox,
         scale=1.1,
         transform shape,
-        qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=1em, minimum width=4em},
-        resuidual block/.style = {rectangle, fill=q5, text centered, rounded corners, minimum height=4em, minimum width=4em},
-        seq block/.style = {rectangle, fill=q6, text centered, rounded corners, minimum height=1em, minimum width=4em},
+        qual block/.style = {rectangle, fill=q3, text centered, rounded corners, minimum height=1em, minimum width=4em},
+        resuidual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
+        seq block/.style = {rectangle, fill=q5, text centered, rounded corners, minimum height=1em, minimum width=4em},
         ]
-
         \node [seq block, rotate=270] (sblock) {seq};
         \node [resuidual block, right=8pt of sblock, yshift=20pt] (rblock) {residual};
 		\node [qual block, below=1pt of rblock] (qblock) {qual};
@@ -332,7 +335,7 @@
 	\end{scope}
 
 	% predict
-	\begin{scope}[shift={(smoutputbox.east)}, xshift=\boxdist, local bounding box=predictbox]
+	\begin{scope}[shift={(smoutputbox.east)}, xshift=\boxdist * 1.5, local bounding box=predictbox]
 		\node (predictseqnode)[
 			rotate=270,
 		] {
@@ -349,20 +352,20 @@
 
 	\path [connect]
 	(nanoporebox) edge  (inputbox)
-	(inputbox)  edge ["Tokenization", font=\tiny] (tokenbox)
+	(inputbox)  edge ["\rotatebox{0}{Tokenization}"] (tokenbox)
 	(tokenbox) edge (lcgmlbox)
 	(lcgmlbox) edge (featuresbox)
 	(featuresbox) edge (qualblockbox)
 	(mlpbox) edge (outputbox)
-	(outputbox) edge["Polish", above, font=\tiny] (smoutputbox)
-	(smoutputbox) edge["Predict", above, font=\tiny] (predictbox)
+	(outputbox) edge["\rotatebox{0}{Polish}", above] (smoutputbox)
+	(smoutputbox) edge["\rotatebox{0}{Predict}", above] (predictbox)
 	(qualblockbox) edge (mlpbox)
 	;
 
 
 	\begin{scope}[on background layer]
 		\node (intputoutline) [fit=(rnaseqnode)(nanoporenode), input box] {};
-		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), model box] {};
+		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), model box , inner sep=10pt] {};
 		\node[inner sep=5pt, anchor=north west] at (modeloutline.north west) {Model};
 		\node (outputoutline) [fit=(predictbox)(smoutputbox), output box] {};
 
@@ -371,7 +374,9 @@
         \node (outputlabel) [above=4pt of outputoutline] {Output};
 	\end{scope}
 
-    \draw [connect]  ($(intputoutline.south) + (24pt, 0)$) -- ++(0, -18pt)  -| ($(qblock) + (0, -14pt)$);
+    \draw [connect]  ($(intputoutline.south) + (30pt, 10pt)$) -- ++(0, -12pt)  -| ($(qblock) + (0, -14pt)$);
+
+    \draw [connect]  ($(intputoutline.north) + (20pt, -10pt)$) -- ++(0, 16pt)  -| node [pos=0.25, fill=white, inner sep=0]{Loss} ($(outputbox.north) + (0, 1pt)$);
 
 \end{tikzpicture}
 
