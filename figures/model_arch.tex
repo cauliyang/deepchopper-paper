@@ -57,8 +57,9 @@
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!60, text=black, very thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
-	input box/.style={fill=mygreen!20,  thick, rounded corners, inner sep=5pt},
-	output box/.style={fill=c7!20,  thick, rounded corners, inner sep=5pt},
+    model box/.style={rectangle, draw=black!40, thick, rounded corners, inner sep=10pt, inner ysep=3pt, fill=c1},
+	input box/.style={fill=c1, draw=black!40,  thick, rounded corners, inner sep=5pt},
+	output box/.style={fill=c1, draw=black!40, thick, rounded corners, inner sep=5pt},
 	token node/.style={ draw=black, line width=0.5pt, minimum size=1.2em},
 	]
 	\def\boxdist{1cm}
@@ -68,22 +69,22 @@
 	\end{scope}
 
 	% input
-	\begin{scope}[shift={(nanoporebox.east)}, xshift=\boxdist, local bounding box=inputbox]
+	\begin{scope}[shift={(nanoporebox.east)}, xshift=\boxdist * 1.5, local bounding box=inputbox]
 		\node (rnaseqnode) [
 			rotate=270,
 		] {
 			\tikz \matrix (rnaseq) [matrix of nodes, nodes in empty cells,
-				column sep=-\pgflinewidth, row sep=3pt,
-				nodes={thin, inner sep=0pt,  minimum width=0.6em, minimum height=0.6em, anchor=center},
-				row 3/.style={nodes={fill=p1, draw=p1}},
+				column sep=-\pgflinewidth * 3, row sep=3pt,
+				nodes={thin, inner sep=1pt,  minimum size=0.8em, anchor=center},
+				row 3/.style={nodes={fill=p1}},
 				row 3 column 4/.style={nodes={fill=p3, draw=p3}},
 				row 3 column 5/.style={nodes={fill=p3, draw=p3}},
 				row 3 column 6/.style={nodes={fill=p3, draw=p3}},
 				row 3 column 7/.style={nodes={fill=p3, draw=p3}},
 			] {
-				T & $\cdot$ & C & A & A & T & G & T & $\cdot$ & G \\
-				T & $\cdot$ & C & A & A & T & G & T & $\cdot$ & G \\
-				0 & $\cdot$ & 0 & 1 & 1 & 1 & 1 & 0 & $\cdot$ & 0 \\
+				T & . & C & A & A & T & G & T & . & G \\
+				T & . & C & A & A & T & G & T & . & G \\
+				0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
 			};
 		};
 		% \node (seqlabel) [rotate=270, above=1.5cm of rnaseq-1-1, yshift=1.1cm] {Seq:};
@@ -361,8 +362,8 @@
 
 	\begin{scope}[on background layer]
 		\node (intputoutline) [fit=(rnaseqnode)(nanoporenode), input box] {};
-		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), rectangle, inner sep=10pt, inner ysep=3pt, fill=c1] {};
-		\node[inner sep=1pt, anchor=north west] at (modeloutline.north west) {Model};
+		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), model box] {};
+		\node[inner sep=5pt, anchor=north west] at (modeloutline.north west) {Model};
 		\node (outputoutline) [fit=(predictbox)(smoutputbox), output box] {};
 
         \node (mlplabel) [above=4pt of mlpbox] {MLP};
