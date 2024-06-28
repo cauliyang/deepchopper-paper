@@ -57,8 +57,8 @@
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!60, text=black, very thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
-	input box/.style={fill=mygreen, opacity=0.2,  thick, rounded corners, inner sep=1pt},
-	output box/.style={fill=c7, opacity=0.2,  thick, rounded corners, inner sep=1pt},
+	input box/.style={fill=mygreen!20,  thick, rounded corners, inner sep=5pt},
+	output box/.style={fill=c7!20,  thick, rounded corners, inner sep=5pt},
 	token node/.style={ draw=black, line width=0.5pt, minimum size=1.2em},
 	]
 	\def\boxdist{1cm}
@@ -127,7 +127,7 @@
 			block1/.style={rectangle, draw=c5, fill=c5!70, thick,   minimum height=3em, minimum width=1em, as=},
 			block2/.style={rectangle, draw=c6, fill=c6!70, thick,  minimum height=4em, minimum width=1em, as=},
 		] {
-			input [as=] -> hyena [hyena] -> r1 [residual] -> b1 [block1] -> b2 [block2] -> r2 [residual] -> b3 [block1];
+			input [inner sep=0, as=] -> hyena [hyena] -> r1 [residual] -> b1 [block1] -> b2 [block2] -> r2 [residual] -> b3 [block1];
 		};
 
 		\draw[edge1]  ($(input) !.2! (hyena)$) |- ++(0,1) -| (r1);
@@ -312,7 +312,7 @@
 	\end{scope}
 
 	%  smoutput
-	\begin{scope}[shift={(outputbox.east)}, xshift=\boxdist, local bounding box=smoutputbox]
+	\begin{scope}[shift={(outputbox.east)}, xshift=\boxdist * 1.5, local bounding box=smoutputbox]
 		\matrix (smoutputmatrix) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 			nodes={token node, fill=c2},
