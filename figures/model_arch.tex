@@ -88,7 +88,7 @@
 				row 3 column 10/.style={nodes={fill=p1, draw=p1}},
 				row 3 column 11/.style={nodes={fill=p1, draw=p1}},
 			] {
-                Seq  & [6pt] T & . & C & A & A & T & G & T & . & G \\
+                Seq  & [6pt] T & . & C & A & A & T & G & T & . & G \\ [2mm]
 				Qual &  T & . & C & A & A & T & G & T & . & G \\
 				Label &0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 \\
 			};
@@ -376,7 +376,7 @@
 
     \draw [connect]  ($(intputoutline.south) + (30pt, 10pt)$) -- ++(0, -12pt)  -| ($(qblock) + (0, -14pt)$);
 
-    \draw [connect]  ($(intputoutline.north) + (20pt, -10pt)$) -- ++(0, 16pt)  -| node [pos=0.25, fill=white, inner sep=0]{Loss} ($(outputbox.north) + (0, 1pt)$);
+    \draw [connect]  ($(outputbox.north) + (0, 1pt)$) --  ++(0, 28pt)  -|  node [pos=0.25, fill=white, inner sep=0]{Loss} ($(intputoutline.north) + (20pt, -10pt)$);
 
 \end{tikzpicture}
 

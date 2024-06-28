@@ -46,6 +46,13 @@
 \colorlet{mygreen}{green!60!black}
 
 
+
+% We propose a deep learning model for analyzing ultra-long DNA sequences using a Long-Context Genomic Language Model (GLM) to predict exitron existence from DNA sequences. The methodology is outlined in several key steps (Figure 1A).
+
+% The input consists of ultra-long sequences, which may include exons and exitrons, with specific nucleotide patterns marked in Figure 1A. During the training phase, sequences are encoded with labels, where exitron sequences are labeled as 1 and other sequences as 0. Sequencing data is processed by a tokenizer, which converts the sequence data into tokens. These tokens are represented by a series of colored blocks in Figure 1A. The tokenized data is then input into a long-context GLM, a model designed to handle long-range dependencies and consider distant relationships within the sequence (Figure 1A).
+
+% The GLM can extract concise features and help us understand long sequences better. These extracted features are subsequently fed into a Multi-Layer Perceptron (MLP). The processed features from the MLP are directed to the output layer, where the final predictions are made. The output is compared with the original sequencing labels to compute the loss and update the model parameters accordingly. In conclusion, the model extracts sequencing features using a sophisticated long-context GLM as well as effectively analyzing ultra-long DNA sequences to predict exitron existence  (Figure 1A).
+
 \begin{tikzpicture}[
 	font=\scriptsize,
 	block/.style={rectangle, text centered, rounded corners, minimum height=1em, minimum width=4em, fill=c6},
