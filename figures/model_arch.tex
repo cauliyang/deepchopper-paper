@@ -9,11 +9,15 @@
 \usetikzlibrary{matrix}
 \usetikzlibrary{fit}
 \usetikzlibrary{quotes}
+\usetikzlibrary{graphs}
+\usetikzlibrary{intersections}
 \usetikzlibrary {backgrounds}
 \usepackage{listofitems} % for \readlist to create arrays
 
 \pgfdeclarelayer{middle}
-\pgfsetlayers{background,middle, main}
+\pgfdeclarelayer{middle2}
+
+\pgfsetlayers{background,middle2,  middle,  main}
 
 \begin{document}
 
@@ -49,12 +53,13 @@
 
 
 \begin{tikzpicture}[
-	font=\scriptsize \ttfamily,
+	font=\small,
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
-	connect/.style={rounded corners, black!60, text=black, thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
+	connect/.style={rounded corners, black!60, text=black, very thick, -{Stealth[length=5pt, width=4pt]}, shorten >=1pt, shorten <=1pt},
 	input box/.style={fill=mygreen, opacity=0.2,  thick, rounded corners, inner sep=1pt},
 	output box/.style={fill=c7, opacity=0.2,  thick, rounded corners, inner sep=1pt},
+	token node/.style={ draw=black, line width=0.5pt, minimum size=1.2em},
 	]
 	\def\boxdist{1cm}
 
@@ -69,13 +74,14 @@
 		] {
 			\tikz \matrix (rnaseq) [matrix of nodes, nodes in empty cells,
 				column sep=-\pgflinewidth, row sep=3pt,
-				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-				row 2/.style={nodes={fill=p1, draw=p1}},
-				row 2 column 4/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 5/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 6/.style={nodes={fill=p3, draw=p3}},
-				row 2 column 7/.style={nodes={fill=p3, draw=p3}},
+				nodes={thin, inner sep=0pt,  minimum width=0.6em, minimum height=0.6em, anchor=center},
+				row 3/.style={nodes={fill=p1, draw=p1}},
+				row 3 column 4/.style={nodes={fill=p3, draw=p3}},
+				row 3 column 5/.style={nodes={fill=p3, draw=p3}},
+				row 3 column 6/.style={nodes={fill=p3, draw=p3}},
+				row 3 column 7/.style={nodes={fill=p3, draw=p3}},
 			] {
+				T & $\cdot$ & C & A & A & T & G & T & $\cdot$ & G \\
 				T & $\cdot$ & C & A & A & T & G & T & $\cdot$ & G \\
 				0 & $\cdot$ & 0 & 1 & 1 & 1 & 1 & 0 & $\cdot$ & 0 \\
 			};
@@ -86,31 +92,62 @@
 
 	% token
 	\begin{scope}[shift={(inputbox.east)}, xshift=\boxdist * 2, local bounding box=tokenbox]
-		\node (tokensnode) [
-			rotate=270,
-		] {
-			\tikz	\matrix (tokens)   [
-				matrix of nodes,
-				nodes in empty cells,
-				nodes={fill=c2, draw=black, thin},
-				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-				column 1/.style={nodes={fill=c1}},
-				column 2/.style={nodes={fill=c2}},
-				column 3/.style={nodes={fill=c3}},
-				column 4/.style={nodes={fill=c4}},
-				column 5/.style={nodes={fill=c5}},
-				column 6/.style={nodes={fill=c6}},
-				column 7/.style={nodes={fill=c7}},
-			]
-			{
-				 &  &  &  &  &  & \\
-			};
+		\matrix (tokens)   [
+			matrix of nodes,
+			nodes in empty cells,
+			nodes={token node, fill=c2},
+			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+			row 1/.style={nodes={fill=c1}},
+			row 2/.style={nodes={fill=c2}},
+			row 3/.style={nodes={fill=c3}},
+			row 4/.style={nodes={fill=c4}},
+			row 5/.style={nodes={fill=c5}},
+			row 6/.style={nodes={fill=c6}},
+			row 7/.style={nodes={fill=c7}},
+		]
+		{
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
 		};
 	\end{scope}
 
-	% lcglm
-	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist * 1.5, local bounding box=lcgmlbox]
-		\node [block] (lcgml) {\tiny LC Pre-training GLM};
+	\begin{scope}[shift={(tokenbox.east)}, xshift=\boxdist, yshift=-0.4cm,
+		edge1/.style={black, line width=0.8pt, -{Stealth[length=3pt, width=3pt]}, shorten >=0.5pt, shorten <=0.5pt},
+		local bounding box=lcgmlbox, scale=1, transform shape]
+		\graph [
+			grow right = 0.8cm,
+			edges = {edge1},
+			skip loop/.style={to path={ -- ++(1cm, 0) -| (\tikztotarget) \tikztonodes}},
+			hyena/.style ={rectangle, draw=c7, fill=c7!20, thick,rotate=270,  minimum height=2em, minimum width=5em, font=\large},
+			residual/.style={circle, draw=c7, line width=1pt, inner sep=0.1, as=+},
+			block1/.style={rectangle, draw=c5, fill=c5!70, thick,   minimum height=3em, minimum width=1em, as=},
+			block2/.style={rectangle, draw=c6, fill=c6!70, thick,  minimum height=4em, minimum width=1em, as=},
+		] {
+			input [as=] -> hyena [hyena] -> r1 [residual] -> b1 [block1] -> b2 [block2] -> r2 [residual] -> b3 [block1];
+		};
+
+		\draw[edge1]  ($(input) !.2! (hyena)$) |- ++(0,1) -| (r1);
+		\draw[edge1] ($(b1) !.4! (b2) $) |- ++(0,1) -| (r2);
+
+
+		\begin{pgfonlayer}{middle}
+		\node (lcgmlboxoutline) [fit=(lcgmlbox), fill=l1, draw, rounded corners,  thick, inner sep=6pt, inner ysep=12pt] {};
+        		\node[inner sep=3pt, anchor=north west] at (lcgmlboxoutline.north west) {Hyena Block};
+        \end{pgfonlayer}
+
+		\begin{pgfonlayer}{middle2}
+			% Calculate the position and size of the second rectangle
+			\coordinate (lcgmlboxoutline_center) at (lcgmlboxoutline.center);
+			\path let \p1 = (lcgmlboxoutline.south west), \p2 = (lcgmlboxoutline.north east) in
+			node (lcgmlboxoutline2) [draw, fill=l1, thick,rounded corners, minimum width=\x2-\x1, minimum height=\y2-\y1, opacity=0.9]
+			at ([shift={(0.2, 0.2)}]lcgmlboxoutline_center) {};
+		\end{pgfonlayer}
+
+        \node (lcgmlboxoutline2label) [above=4pt of lcgmlboxoutline2] {Long-Context GLM};
 	\end{scope}
 
 	% features
@@ -122,7 +159,7 @@
 			\matrix (tokens1)   [
 				matrix of nodes,
 				nodes in empty cells,
-				nodes={fill=c2, draw=black, thin, outer sep=0pt},
+				nodes={token node, fill=c2},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 				row 1/.style={nodes={fill=c1}},
 				row 2/.style={nodes={fill=c2}},
@@ -146,7 +183,7 @@
 			\matrix (tokens1)   [
 				matrix of nodes,
 				nodes in empty cells,
-				nodes={fill=c2, draw=black, thin, outer sep=0pt},
+				nodes={token node, fill=c2},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 				row 1/.style={nodes={fill=c1}},
 				row 2/.style={nodes={fill=c2}},
@@ -170,7 +207,7 @@
 			\matrix (tokens1)   [
 				matrix of nodes,
 				nodes in empty cells,
-				nodes={fill=c2, draw=black, thin, outer sep=0pt},
+				nodes={token node, fill=c2},
 				column sep=-\pgflinewidth, row sep=-\pgflinewidth,
 				row 1/.style={nodes={fill=c1}},
 				row 2/.style={nodes={fill=c2}},
@@ -192,54 +229,28 @@
 	\end{scope}
 
 	% qual block
-	\begin{scope}[shift={(featuresbox.east)}, xshift=\boxdist * 2, local bounding box=qualblockbox]
-		\node [qual block] (qualblock) {Quality Block};
+	\begin{scope}[shift={(featuresbox.east)}, xshift=\boxdist  * 1.5, yshift=-0.1cm, local bounding box=qualblockbox,
+        scale=1.1,
+        transform shape,
+        qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=1em, minimum width=4em},
+        resuidual block/.style = {rectangle, fill=q5, text centered, rounded corners, minimum height=4em, minimum width=4em},
+        seq block/.style = {rectangle, fill=q6, text centered, rounded corners, minimum height=1em, minimum width=4em},
+        ]
+
+        \node [seq block, rotate=270] (sblock) {seq};
+        \node [resuidual block, right=8pt of sblock, yshift=20pt] (rblock) {residual};
+		\node [qual block, below=1pt of rblock] (qblock) {qual};
+
+        \begin{pgfonlayer}{middle}
+        \node (qualblockoutline) [fit=(qblock)(rblock)(sblock), fill=c1, draw, rounded corners,  thick, inner sep=6pt] {};
+        \end{pgfonlayer}
+
+        \node (qualblockoutlinelabel) [above=4pt of qualblockoutline] {Quality Block};
 	\end{scope}
-
-	% % qual 
-	% \begin{scope}[shift={(qualblockbox.north)},  yshift=\boxdist, local bounding box=qualbox]
-	% 	\matrix (qualtoken)   [
-	% 		matrix of nodes,
-	% 		nodes in empty cells,
-	% 		nodes={draw=black, thin, outer sep=0pt},
-	% 		column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-	% 		column 1/.style={nodes={fill=q6}},
-	% 		column 2/.style={nodes={fill=q5}},
-	% 		column 3/.style={nodes={fill=q4}},
-	% 		column 4/.style={nodes={fill=q3}},
-	% 		column 5/.style={nodes={fill=q2}},
-	% 		column 6/.style={nodes={fill=q1}},
-	% 	]
-	% 	{
-	% 		 &  &  &  &  &  & \\
-	% 	};
-
-	% \end{scope}
-
-	% % qual seq
-	% \begin{scope}[shift={(qualbox.north)}, yshift=\boxdist, local bounding box=qualseqbox]
-	% 	\matrix (qualseqmatrix) [
-	% 		matrix of nodes,
-	% 		nodes in empty cells,
-	% 		column sep=-\pgflinewidth, row sep=3pt,
-	% 		nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
-	% 		row 2/.style={nodes={fill=p1, draw=p1}},
-	% 		row 2 column 7/.style={nodes={fill=p3, draw=p3}},
-	% 		row 2 column 8/.style={nodes={fill=p3, draw=p3}},
-	% 		row 2 column 9/.style={nodes={fill=p3, draw=p3}},
-	% 		row 2 column 10/.style={nodes={fill=p3, draw=p3}},
-	% 	] {
-	% 		G & T & G & $\cdots$ & A & A & T & G & $\cdots$ & G \\
-	% 	};
-
-	% 	\begin{pgfonlayer}{middle}
-	% 		\node (qualseqoutline) [fit=(qualseqmatrix), input box] {};
-	% 	\end{pgfonlayer}
-	% \end{scope}
 
 
 	% mlp
-	\begin{scope}[shift={(qualblockbox.east)}, xshift=\boxdist, yshift=0.25cm,
+	\begin{scope}[shift={(qualblockbox.east)}, xshift=\boxdist  * 0.1, yshift=0.4cm,
 		>=latex, % for default LaTeX arrow head
 		node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6},
 		node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25},
@@ -247,12 +258,11 @@
 		node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20},
 		node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20},
 		connect/.style={thick,mydarkblue}, %,line cap=round
-		connect arrow/.style={-{Latex[length=2,width=1.5]},line width=0.6pt,mydarkblue,shorten <=0.5,shorten >=1},
+		connect arrow/.style={-{Latex[length=3,width=2]}, line width=0.8pt, mydarkblue,shorten <=0.5,shorten >=1},
 		node 1/.style={node hidden},
 		node 2/.style={node hidden},
 		node 3/.style={node out},
-		rotate=0,
-		scale=0.35,
+		scale=0.54,
 		x=2.2cm,
 		y=1.4cm,
 		transform shape,
@@ -287,7 +297,7 @@
 	\begin{scope}[shift={(mlpbox.east)}, xshift=\boxdist, local bounding box=outputbox]
 		\matrix (outputmatrix) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			nodes={token node, fill=c2},
 			column 1/.style={nodes={fill=p1}},
 			row 3/.style={nodes={fill=p3}},
 			row 5/.style={nodes={fill=p3}},
@@ -305,7 +315,7 @@
 	\begin{scope}[shift={(outputbox.east)}, xshift=\boxdist, local bounding box=smoutputbox]
 		\matrix (smoutputmatrix) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=-\pgflinewidth,
-			nodes={fill=c2, draw=black, thin, outer sep=0pt},
+			nodes={token node, fill=c2},
 			column 1/.style={nodes={fill=p1}},
 			row 3/.style={nodes={fill=p3}},
 			row 4/.style={nodes={fill=p3}},
@@ -328,7 +338,7 @@
 			\tikz	\matrix (predictseq) [matrix of nodes,
 				nodes in empty cells,
 				column sep=-\pgflinewidth, row sep=3pt,
-				nodes={thin, inner sep=0pt, outer sep=0pt, minimum width=0.6em, minimum height=0.6em, anchor=center},
+				nodes={thin, inner sep=0pt,  minimum width=0.6em, minimum height=0.6em, anchor=center},
 			] {
 				T & $\cdots$ & C & T & $\cdots$ & G \\
 			};
@@ -338,24 +348,29 @@
 
 	\path [connect]
 	(nanoporebox) edge  (inputbox)
-	(inputbox)  edge ["Tokenization", font=\tiny \ttfamily] (tokenbox)
+	(inputbox)  edge ["Tokenization", font=\tiny] (tokenbox)
 	(tokenbox) edge (lcgmlbox)
 	(lcgmlbox) edge (featuresbox)
 	(featuresbox) edge (qualblockbox)
 	(mlpbox) edge (outputbox)
-	(outputbox) edge["Polish", above, font=\tiny \ttfamily] (smoutputbox)
-	(smoutputbox) edge["Predict", above, font=\tiny \ttfamily] (predictbox)
+	(outputbox) edge["Polish", above, font=\tiny] (smoutputbox)
+	(smoutputbox) edge["Predict", above, font=\tiny] (predictbox)
 	(qualblockbox) edge (mlpbox)
 	;
 
 
 	\begin{scope}[on background layer]
 		\node (intputoutline) [fit=(rnaseqnode)(nanoporenode), input box] {};
-		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), rectangle, fill=c1] {};
-		\node[inner sep=2pt, anchor=north west] at (modeloutline.north west) {Model};
-
+		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), rectangle, inner sep=10pt, inner ysep=3pt, fill=c1] {};
+		\node[inner sep=1pt, anchor=north west] at (modeloutline.north west) {Model};
 		\node (outputoutline) [fit=(predictbox)(smoutputbox), output box] {};
+
+        \node (mlplabel) [above=4pt of mlpbox] {MLP};
+        \node (inputlabel) [above=4pt of intputoutline] {Input};
+        \node (outputlabel) [above=4pt of outputoutline] {Output};
 	\end{scope}
+
+    \draw [connect]  ($(intputoutline.south) + (24pt, 0)$) -- ++(0, -18pt)  -| ($(qblock) + (0, -14pt)$);
 
 \end{tikzpicture}
 
