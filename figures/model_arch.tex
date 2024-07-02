@@ -120,7 +120,7 @@
 		};
 	\end{scope}
 
-	\begin{scope}[shift={(tokenbox.south)}, yshift=-\boxdist * 2,
+	\begin{scope}[shift={(tokenbox.south)}, yshift=-\boxdist * 2.5,
         xshift=-7.4em,
 		edge1/.style={black, line width=1pt, -{Stealth[length=3pt, width=3pt]}, shorten >=0.5pt, shorten <=0.5pt},
 		local bounding box=lcgmlbox, scale=1, transform shape]
@@ -224,8 +224,8 @@
 			scale=1.5,
 			transform shape,
 			qual block/.style = {rectangle, fill=q3, text centered, rounded corners, minimum height=1em, minimum width=4em},
-			resuidual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
-			seq block/.style = {rectangle, fill=q5, text centered, rounded corners, minimum height=1em, minimum width=4em},
+			resuidual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=6em},
+			seq block/.style = {rectangle, fill=q5, text centered, rounded corners, minimum height=1em, minimum width=6em},
 		]
 		\node [seq block] (sblock) {seq};
 		\node [resuidual block, below=1pt of sblock] (rblock) {residual};
@@ -340,12 +340,11 @@
 	\begin{scope}[on background layer]
 		\node (intputoutline) [fit=(rnaseq)(nanoporenode), input box] {};
 		\node (modeloutline) [fit=(tokenbox)(lcgmlbox)(qualblockbox)(mlpbox)(outputbox), model box , inner sep=10pt] {};
-		% \node[inner sep=5pt, anchor=north west] at (modeloutline.north west) {Model};
+		\node[anchor=north west] at (modeloutline.north west) {Model};
 		\node (outputoutline) [fit=(predictbox)(smoutputbox), output box] {};
-
-		% \node (mlplabel) [above=4pt of mlpbox] {MLP};
-		% \node (inputlabel) [above=4pt of intputoutline] {Input};
-		% \node (outputlabel) [above=4pt of outputoutline] {Output};
+		\node (mlplabel) [left=4pt of mlpbox] {MLP};
+        \node (inputlabel) [anchor=north west] at (intputoutline.north west) {Input};
+        \node (outputlabel) [anchor=north west] at  (outputoutline.north west) {Output};
 	\end{scope}
 
 	% \draw [connect]  ($(intputoutline.south) + (55pt, 10pt)$) -- ++(0, -12pt)  -| ($(qblock) + (0, -14pt)$);
