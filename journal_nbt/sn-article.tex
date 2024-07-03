@@ -57,12 +57,8 @@
 
 \usepackage{xspace}
 \usepackage{standalone}
-\usepackage{tikz}
-\usetikzlibrary{calc}
-\usetikzlibrary{positioning}
-\usetikzlibrary{arrows.meta}
-\usetikzlibrary{decorations.pathreplacing}
-\usepackage{listofitems} % for \readlist to create arrays
+\usepackage{svg}
+
 
 %% my package
 \usepackage[detect-all=true]{siunitx}
@@ -86,10 +82,10 @@
 \newacronym{gpt}{GPT}{Generative Pre-trained Transformer}
 
 \newacronym{ide}{IDE}{Integrated Development Environment}
-\newacronym{gil}{GIL}{Global Interpreter Lock}
-\newacronym{ci}{CI}{Continuous Integration}
 \newacronym{cd}{CD}{Continuous Development}
 \newacronym{ucsc}{UCSC}{UCSC Genome Browser}
+\newacronym{glm}{GLM}{Genomic Language Model}
+\newacronym{lcglm}{LCGLM}{Long-Context Genomic Language Model}
 
 % define macros
 % chopper = DeepChopper
@@ -225,12 +221,6 @@ The ability to process large contexts is particularly advantageous in these appl
 In the context of \gls{drs}, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
 These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods. By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
 
-\begin{figure}
-	\begin{center}
-		\includestandalone[scale=0.3]{figures/model_arch}
-	\end{center}
-	\caption{Model Architecture}\label{fig:model}
-\end{figure}
 
 \begin{figure}[!h]
 	\includegraphics[height=0.6\columnwidth]{example-image-duck}
@@ -266,9 +256,9 @@ Future research can explore additional applications and further optimize these m
 	\label{fig:f2}
 \end{figure}
 
-\section{Methods}\label{sec2}
+\section{Methods}\label{sec:methods}
 
-\subsection{Language Model Architecture}
+\subsection{Language Model Architecture}\label{ssec:lm}
 
 We adapted a transformer-based language model architecture, fine-tuning it for biological sequences.
 The model was trained to predict  artifitial sequences based on the contextual information present in the RNA sequences.
@@ -281,26 +271,25 @@ Training the model involved using a corpus of \gls{drs} sequences, including ann
 The model was pretrained on a large dataset of general RNA sequences before fine-tuning on the specific task of adapter prediction.
 This approach allowed the model to leverage general RNA sequence patterns while focusing on the nuances of adapter sequences during fine-tuning.
 
-\subsection{Data Preparation}
+\subsection{Data Preparation}\label{ssec:data}
 
-\gls{drs} datasets were obtained from publicly available repositories, ensuring a comprehensive representation of diverse RNA sequences.
-These datasets included both raw sequencing reads and annotated adapters.
 The dataset for this study comprised publicly available \gls{drs} data, supplemented with manually annotated adapter sequences.
+We obtain artificial sequence in terms of softclip after alignment.
+The dataset consist of positive and negative data, in which there is no artificial sequence.
 Preprocessing involved quality control steps such as read filtering and trimming to ensure high-quality data.
-Adapter sequences were identified and labeled, creating a training set with positive (adapter) and negative (non-adapter) examples.
-To further enhance the dataset, synthetic adapters were generated based on known sequences, providing additional training examples and improving the model's generalization capability.
 
+The positive data include terminal and  internal adapter with ratio of 1:1 respectively.
+The ratio between  positive data  and negative data is 9:1.
+The dataset was split into training, validation, and test sets, with a balanced distribution of adapter and non-adapter sequences.
 
-\subsection{Training Procedure}
+\subsection{Training Procedure}\label{ssec:training}
 
 The model was trained using supervised learning, with sequences annotated for adapter regions serving as the training data.
-Various data augmentation techniques were employed to enhance model robustness and generalization.
-Training was conducted on a high-performance computing cluster, utilizing \glspl{gpu} to expedite the process.
+Training was conducted on a high-performance computing cluster, utilizing two A100 \glspl{gpu} to expedite the process.
 The model was trained using the Adam optimization algorithm, with a learning rate of \num{1e-4}.
-The training process involved multiple epochs, with early stopping criteria based on validation performance to prevent overfitting.
+The training process involved \num{60} epochs, with early stopping criteria based on validation performance to prevent overfitting.
 Evaluation metrics included accuracy, precision, recall, and F1 score, with cross-validation to ensure robustness.
 The final model was selected based on the best performance on the validation set, and its predictions were compared against a baseline model using traditional methods.
-
 
 We perform multi-task learning to find the optimal model’s parameters.
 The total loss for one window is the sum of the losses from each supported position.
