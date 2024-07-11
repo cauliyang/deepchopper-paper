@@ -250,3 +250,5 @@ TSWLatexianTemp*
 .aider*
 .ipynb_checkpoints/
 *fq.gz
+.RData
+.Rhistory

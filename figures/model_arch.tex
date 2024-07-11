@@ -1,5 +1,9 @@
 \documentclass[tikz,border=3pt]{standalone}
 
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+\usepackage[T1]{fontenc}
+
 \usepackage{amsmath,amssymb}
 \usepackage{xcolor}
 \usetikzlibrary{calc}
@@ -79,9 +83,9 @@
 
 \begin{tikzpicture}[
 	font=\small,
-	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em}, 
-    qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em}, 
-    connect/.style={rounded corners, black!40, text=black, line width=2pt, -{Stealth[length=8pt, width=6pt]}, shorten >=1pt, shorten <=1pt},
+	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
+	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
+	connect/.style={rounded corners, black!40, text=black, line width=2pt, -{Stealth[length=8pt, width=6pt]}, shorten >=1pt, shorten <=1pt},
 	model box/.style={rectangle, draw=black!40, thick, rounded corners, inner sep=5pt, fill=c1, minimum width=7cm},
 	input box/.style={fill=c1, draw=black!40,  thick, rounded corners, inner sep=5pt, minimum width=7cm},
 	output box/.style={fill=c1, draw=black!40, thick, rounded corners, inner sep=5pt,

@@ -86,6 +86,8 @@
 \newacronym{ucsc}{UCSC}{UCSC Genome Browser}
 \newacronym{glm}{GLM}{Genomic Language Model}
 \newacronym{lcglm}{LCGLM}{Long-Context Genomic Language Model}
+\newacronym{snp}{SNP}{single nucleotide polymorphism}
+\newacronym{fm}{FM}{Foundational Model}
 
 % define macros
 % chopper = DeepChopper
@@ -171,25 +173,57 @@
 
 \section{Main}\label{sec1}
 
-% Introduction
+
+%Long Context Strategies in Genomic
+
+%To achieve longer context, genomic models have relied on two strategies: i. tokenization and ii. dilation and downsampling.
+%Tokenization is a necessary step in masked language modeling (MLM) with bidirectional Transformer architectures (BERT) (Devlin et al., 2018), a common model in genomics.
+%These tokenizers use fixed k-mers (short overlapping sequences of length k) or frequency-based byte pair encoding (BPE), that attempt to aggregate DNA into meaningful units (Ji et al., 2021; Zaheer et al., 2020).
+%Consequently, these aggregation techniques create large new vocabularies (compared to the natural vocabulary of 4 nucleotides) that are less generalizable (Tay et al., 2021).
+%The second strategy uses dilated convolutions and downsampling, both of which essentially average or skip elements between weights (Fournier et al., 2021).
+%A canonical example is the Enformer, which uses dilation and downsampling to reach context lengths of 100k nucleotides to predict gene expression tracks (Avsec et al., 2021).
+%Common across tokenization, dilation, and downsampling is the sacrifice of single nucleotide resolution to reach longer context.
+
+
+% Outline 
+% 1. Sequencing history
+% 2. Genomics LLM history
+% 3. Challenges of LLM 
+    % 3.1 long range 
+    % 3.2 single nucleotide resolution 
+% 4. Cons of drs
+% 5. Our method 
+% 6. Results
+% 7. Conclusion
 
 The advent of \glspl{llm} has revolutionized natural language processing, enabling unprecedented advancements in tasks requiring the comprehension of extensive contexts.
-This breakthrough holds significant promise for the field of bioinformatics, where biological sequences often exhibit complex and lengthy patterns.
-Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
-
-Nanopore sequencing, particularly direct RNA sequencing, provides a detailed view of RNA molecules, capturing a wide range of sequence information including modifications.
+This breakthrough holds significant promise for the field of bioinformatics, where biological sequences often exhibit complex and lengthy patterns~\cite{consens2023transformers}.
+Nanopore sequencing, particularly \gls{drs}, provides a detailed view of RNA molecules, capturing a wide range of sequence information including modifications.
 However, accurately identifying adapters within these sequences is a critical challenge that impacts the overall data quality and subsequent analysis.
 Traditional methods often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 
+Long-range token interactions is still changing in tansformer-basd language model,
+though the efficient breakthrough has been achieved in transformer architecture~\cite{tay2022efficient}.
+Transformer-based genomic models  inherent the limitations, and have used 512 to 4k tokens as context (<0.001\% of the human genome), significantly limiting the modeling of long-range interactions in DNA~\cite{dalla2023nucleotide, zhou2023dnabert2, ji2021dnabert}.
+
+
+Single nuleotide resolution is crucial for understanding the complexities of biological sequences especially for tasks e.g. predicting errorus and special region.
+
+In addition, these methods rely on tokenizers or fixed k-mers to aggregate meaningful units, losing single nucleotide resolution (i.e. DNA "characters") where subtle genetic variations can completely alter protein function via \glspl{snp}.
+
+
+Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
+
+
 To address this, we developed \chopper, a language model tailored for biological sequences, leveraging the architecture and training paradigms of state-of-the-art \glspl{llm}.
 Our model was trained on extensive \gls{drs} datasets, learning to predict artifitial sequences with high accuracy.
-The application of such a model not only enhances the precision of artifitial sequences identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications and errorous base detection.
+The application of such a model not only enhances the precision of artifitial sequences identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications and erroneous base detection.
 
 The core of our approach lies in the ability of \glspl{llm} to understand and generate sequences based on context.
-By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict  artifitial sequences embedded within long sequences.
+By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict  artificial sequences embedded within long sequences.
 This method significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences.
 
-Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying  artifitial sequences with remarkable accuracy.
+Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying  artificial sequences with remarkable accuracy.
 This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
 Moreover, the flexibility of \glspl{llm} allows for adaptation to various other tasks within bioinformatics, such as m6A detection, gene prediction, variant calling, and functional annotation.
 
@@ -256,24 +290,29 @@ Future research can explore additional applications and further optimize these m
 	\label{fig:f2}
 \end{figure}
 
+
 \section{Methods}\label{sec:methods}
 
 \subsection{Language Model Architecture}\label{ssec:lm}
 
-We adapted a transformer-based language model architecture, fine-tuning it for biological sequences.
+We adapted a genomics \gls{fm} HyenaDNA as components of model in order to extract  features~\cite{nguyen2024hyenadna}.
+We design a qual block to use quality of the input sequence to predict output.
+The qual block accept the quality of the input sequence and the extracted features of sequences.
+The qual block include a bulk of dense and residual connection.
+Then, a classification head is used to predict probability of artificial sequence for every token (Figure~\ref{fig:f1}).
+
 The model was trained to predict  artifitial sequences based on the contextual information present in the RNA sequences.
 The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
-We design a qual block to use quality of the input sequence to predict output.
-The backbone is used to conduct feature extration, and help us better understand the biological sequnces.
-Specifically, we employed a model with \num{24} layers, \num{16} attention heads, and a hidden size of \num{1024}.
+The backbone is used to conduct feature extraction, and help us better understand the biological sequences.
+
 This configuration was chosen to balance performance and computational feasibility.
 Training the model involved using a corpus of \gls{drs} sequences, including annotated ar regions.
-The model was pretrained on a large dataset of general RNA sequences before fine-tuning on the specific task of adapter prediction.
+The model was pre-trained on a large dataset of general RNA sequences before fine-tuning on the specific task of adapter prediction.
 This approach allowed the model to leverage general RNA sequence patterns while focusing on the nuances of adapter sequences during fine-tuning.
 
 \subsection{Data Preparation}\label{ssec:data}
 
-The dataset for this study comprised publicly available \gls{drs} data, supplemented with manually annotated adapter sequences.
+The dataset for this study comprised publicly available \gls{drs} data including A549, HCT116, HepG2, K562, and MCF7, supplemented with manually annotated adapter sequences.
 We obtain artificial sequence in terms of softclip after alignment.
 The dataset consist of positive and negative data, in which there is no artificial sequence.
 Preprocessing involved quality control steps such as read filtering and trimming to ensure high-quality data.
@@ -281,6 +320,11 @@ Preprocessing involved quality control steps such as read filtering and trimming
 The positive data include terminal and  internal adapter with ratio of 1:1 respectively.
 The ratio between  positive data  and negative data is 9:1.
 The dataset was split into training, validation, and test sets, with a balanced distribution of adapter and non-adapter sequences.
+
+\subsection{Tokenization}\label{ssec:tokenization}
+
+We used a tokenization strategy that converts the RNA sequences into tokens at the single nucleotide level.
+The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the basic units, allowing the model to capture the fine-grained details of the sequences.
 
 \subsection{Training Procedure}\label{ssec:training}
 
@@ -294,17 +338,21 @@ The final model was selected based on the best performance on the validation set
 We perform multi-task learning to find the optimal model’s parameters.
 The total loss for one window is the sum of the losses from each supported position.
 Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with :
-where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilitiesis the true base.
+where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
 denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
 We trained the model on 2 A100 \glspl{gpu} for a maximum of 1 million steps.
-The batch size was 128, so the model saw 128 million examples.
+
+The batch size was \num{128}, so the model saw \num{128} million examples.
 Validation was performed every 2000 steps, and we selected the model with the highest validation F1 score for the base prediction task.
 The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters.
 We used a cosine learning rate scheduler with an initial learning rate of \( 3 \times 10^{-4} \).
 Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\)-norm with a maximum norm value of 1.
 The dropout value in transformer was set to \num{0.1}.
-The complete list of hyperparameters can be found in Supplementary Table 11
+The complete list of hyperparameters can be found in Supplementary Table.
+
+The primary hyperparameters we sweep across include: learning rate, global batch size, dropout, weight decay, and a reverse complement augmentation.
+See Tab. A.3 for ranges of hyperparamters used.
 
 \subsection{Evaluation Metrics and Analysis}
 
@@ -313,6 +361,14 @@ These metrics provided a comprehensive view of the model's ability to correctly 
 Statistical analysis was conducted to compare the performance of our language model with traditional methods, using paired t-tests to determine the significance of improvements.
 Additionally, the model's predictions were visualized using confusion matrices and precision-recall curves, highlighting its effectiveness in different scenarios.
 The results were further validated by testing the model on an independent dataset, demonstrating its generalizability and robustness.
+
+\subsection{Sliding Window Polish}
+
+We use sliding windows and vote method to polish the predictions generated by \chopper , allowing the prediction region  to be more smooth.
+That obey the logistics of artificial sequences in  the \gls{drs} data.
+The range of sliding window is \num{21}.
+After we remove predicted region, we filter the region with length less than \num{20} and output left sequences and related quality to fastq records.
+
 
 % \section{Tables}\label{sec5}
 
@@ -367,8 +423,37 @@ The results were further validated by testing the model on an independent datase
 % Please refer to Journal-level guidance for any specific requirements.
 \bmhead{Data Availability}
 
-The sources of HiFi, ONT and CLR reads of the six family datasets and HCC1395 normal-tumor paired cell are listed.
 The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38\_reference\_genome/}.
+
+
+\begin{table}
+	\small
+	\centering
+	\caption{Hyperparameter ranges used}
+	\vspace{10pt}
+	\begin{tabular}{lc}
+		\toprule
+		                                    & {$\sf \chopper$}                  \\
+		\midrule
+		Layers                              & 2                                 \\
+		Width                               & 256                               \\
+		Parameters                          & 1.6M                              \\
+		Optimizer                           & AdamW                             \\
+		Optimizer momentum                  & $\beta_1$, $\beta_2$ = 0.9, 0.999 \\
+		Training epoch                      & 100                               \\
+		Batch size                          & 256-1024                          \\
+		Learning rate                       & 2e-4 to 1e-3                      \\
+		LR scheduler                        & Cosine decay                      \\
+		Weight decay (model)                & 0-0.2                             \\
+		Weight decay ({$\sf Hyena$} layers) & 0                                 \\
+		Embed dropout                       & 0-0.2                             \\
+		Resid dropout                       & 0-0.2                             \\
+		Sequence lengths                    & 32769                             \\
+		\midrule
+	\end{tabular}
+	\label{tab:nucleotideTRX_hyperparameter}
+\end{table}
+
 
 \bmhead{Code Availability}
 
@@ -441,12 +526,12 @@ Please refer to Journal-level guidance for any specific requirements.
 					Mamba~\cite{gu2023mamba}                               & Apache 2.0                                                                         \\
 					HuggingFace~\cite{wolf2019huggingface}                 & Apache 2.0                                                                         \\
 					Hydra~\cite{Yadan2019Hydra}                            & MIT                                                                                \\
-					HyenaDNA~\cite{nguyen2023hyenadna}                     & Apache 2.0                                                                         \\
+					HyenaDNA~\cite{nguyen2024hyenadna}                     & Apache 2.0                                                                         \\
 					NumPy~\cite{harris2020array}                           & \href{https://numpy.org/doc/stable/license.html}{NumPy license}                    \\
 					Matplotlib~\cite{Hunter2007}                           & \href{https://matplotlib.org/stable/users/project/license.html}{Matplotib license} \\
 					OmegaConf                                              & BSD 3-Clause                                                                       \\
 					Pandas \cite{reback2020pandas}                         & BSD 3-Clause ``New" or ``Revised"                                                  \\
-					PyTorch~\cite{Paszke_PyTorch_An_Imperative_2019}       & BSD-3 Clause                                                                       \\
+					PyTorch~\cite{paszke2019pytorch}                       & BSD-3 Clause                                                                       \\
 					PyTorch Lightning~\cite{Falcon_PyTorch_Lightning_2019} & Apache 2.0                                                                         \\
 					Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\ \bottomrule
 				\end{tabular}
