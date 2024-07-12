@@ -1,8 +1,9 @@
+% !TeX program = lualatex
+
 \documentclass[tikz,border=3pt]{standalone}
 
-\usepackage[scaled]{helvet}
-\renewcommand\familydefault{\sfdefault} 
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\setmainfont{Arial}
 
 \usepackage{amsmath,amssymb}
 \usepackage{xcolor}
@@ -45,7 +46,6 @@
 \definecolor{t5}{RGB}{197,27,138}
 \definecolor{t6}{RGB}{122,1,119}
 
-
 % token colors
 \definecolor{c1}{RGB}{239,243,255}
 \definecolor{c2}{RGB}{198,219,239}
@@ -82,7 +82,7 @@
 
 
 \begin{tikzpicture}[
-	font=\small,
+	font=\normalsize,
 	block/.style = {rectangle, draw, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	qual block/.style = {rectangle, fill=q4, text centered, rounded corners, minimum height=4em, minimum width=4em},
 	connect/.style={rounded corners, black!40, text=black, line width=2pt, -{Stealth[length=8pt, width=6pt]}, shorten >=1pt, shorten <=1pt},
@@ -278,7 +278,7 @@
 
 	% mlp
 	\begin{scope}[shift={(qualblockbox.south)},
-		yshift=18pt,
+		yshift=10pt,
 		xshift=1.6em,
 		>=latex, % for default LaTeX arrow head
 		node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6},
@@ -291,10 +291,10 @@
 		node 1/.style={node hidden},
 		node 2/.style={node hidden},
 		node 3/.style={node out},
-		scale=0.75,
+		scale=0.6,
 		rotate=270,
-		x=2.2cm,
-		y=1.4cm,
+		x=2.0cm,
+		y=1.8cm,
 		transform shape,
 		local bounding box=mlpbox]
 		\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
@@ -401,39 +401,57 @@
 
 		\node (featureboxlabel) [right=10pt of featuresbox, rotate=270,, xshift=-22pt] {Features};
 		\node (lcgmlboxlabel) [right=10pt of lcgmlbox, rotate=270, xshift=-22pt] {LCGLM};
-
-
 	\end{scope}
 
-	\draw [connect]  ($(rnaseq-1-1) + (-25pt, 0)$) -| ($(qblock) + (-52pt, 0)$) -- (qblock);
+	\draw [connect]  ($(rnaseq-1-1) + (-25pt, 0)$) -| node [pos=0.75, fill=white, inner sep=5pt, rotate=270]{Qual} ($(qblock) + (-62pt, 0)$) -- (qblock);
 
-	\node (qualnode1) [left=20pt of modeloutline, rotate=270] {
+	% \node (qualnode1) [left=50pt of modeloutline, rotate=270] {
+	% 	\tikz  \matrix (rnaseq11) [matrix of nodes, nodes in empty cells,
+	% 		column sep=-\pgflinewidth, row sep=2pt,
+	% 		nodes={thin, inner sep=0pt,  minimum size=0.8em, anchor=center},
+	% 		column 1/.style={nodes={anchor=east}},
+	% 		row 1 column 1/.style={nodes={fill=q8}},
+	% 		row 1 column 2/.style={nodes={fill=q7}},
+	% 		row 1 column 3/.style={nodes={fill=q6}},
+	% 		row 1 column 4/.style={nodes={fill=q5}},
+	% 		row 1 column 5/.style={nodes={fill=q4}},
+	% 		row 1 column 6/.style={nodes={fill=q3}},
+	% 		row 1 column 7/.style={nodes={fill=q3}},
+	% 		row 1 column 8/.style={nodes={fill=q3}},
+	% 		row 1 column 9/.style={nodes={fill=q3}},
+	% 		row 1 column 10/.style={nodes={fill=q3}},
+	% 		row 1 column 11/.style={nodes={fill=q4}},
+	% 		row 1 column 12/.style={nodes={fill=q5}},
+	% 		row 1 column 13/.style={nodes={fill=q6}},
+	% 		row 1 column 14/.style={nodes={fill=q7}},
+	% 		row 1 column 15/.style={nodes={fill=q8}},
+	% 	] {
+	% 		 &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+	% 	};
+	% };
+
+	\node (qualnode1) [left=50pt of modeloutline, rotate=270] {
 		\tikz  \matrix (rnaseq11) [matrix of nodes, nodes in empty cells,
 			column sep=-\pgflinewidth, row sep=2pt,
 			nodes={thin, inner sep=0pt,  minimum size=0.8em, anchor=center},
 			column 1/.style={nodes={anchor=east}},
-			row 1 column 1/.style={nodes={fill=q8}},
-			row 1 column 2/.style={nodes={fill=q7}},
-			row 1 column 3/.style={nodes={fill=q6}},
-			row 1 column 4/.style={nodes={fill=q5}},
-			row 1 column 5/.style={nodes={fill=q4}},
-			row 1 column 6/.style={nodes={fill=q3}},
-			row 1 column 7/.style={nodes={fill=q3}},
-			row 1 column 8/.style={nodes={fill=q3}},
-			row 1 column 9/.style={nodes={fill=q3}},
-			row 1 column 10/.style={nodes={fill=q3}},
-			row 1 column 11/.style={nodes={fill=q4}},
-			row 1 column 12/.style={nodes={fill=q5}},
-			row 1 column 13/.style={nodes={fill=q6}},
-			row 1 column 14/.style={nodes={fill=q7}},
-			row 1 column 15/.style={nodes={fill=q8}},
+			row 1 column 1/.style={nodes={fill=q7}},
+			row 1 column 2/.style={nodes={fill=q6}},
+			row 1 column 3/.style={nodes={fill=q5}},
+			row 1 column 4/.style={nodes={fill=q4}},
+			row 1 column 5/.style={nodes={fill=q3}},
+			row 1 column 6/.style={nodes={fill=q4}},
+			row 1 column 7/.style={nodes={fill=q5}},
+			row 1 column 8/.style={nodes={fill=q6}},
+			row 1 column 9/.style={nodes={fill=q7}},
 		] {
-			 &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+			 &  &  &   &  &  &  &  & \\
 		};
 	};
 
 
-	\draw [connect]  ($(outputbox.east)$)  -| node [pos=0.75, fill=white, inner sep=1pt, rotate=270]{Loss} ($(intputoutline.east) + (4pt, -70pt)$) -- ++(-15pt, 0);
+
+	\draw [connect]  ($(outputbox.east)$)  -| node [pos=0.75, fill=white, inner sep=5pt, rotate=270]{Loss} ($(intputoutline.east) + (10pt, -70pt)$) -- ++(-15pt, 0);
 	% } 
 \end{tikzpicture}
 
