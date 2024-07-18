@@ -17,7 +17,7 @@
 \usetikzlibrary{chains}
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{shapes.multipart}
-\usetikzlibrary {backgrounds}
+\usetikzlibrary{backgrounds}
 
 \usepackage{listofitems} % for \readlist to create arrays
 
@@ -44,8 +44,6 @@
 \colorlet{myred}{red!80!black}
 \colorlet{myblue}{blue!80!black}
 \colorlet{mygreen}{green!60!black}
-
-
 
 % We propose a deep learning model for predicting exitron existence from ultra-long DNA sequences by using a Long-Context Genomic Language Model (GLM) to extract features. The methodology is outlined in several key steps (Figure 1A).
 
@@ -89,6 +87,7 @@
 
 		\path (left) edge[-, thick]  (exon-n1)
 		(exon-n3) edge[-, thick] (right);
+
 		\node (dnalabel) [above=8pt of exon-n1, xshift=-6pt] {Ultra-long DNA};
 	\end{scope}
 
