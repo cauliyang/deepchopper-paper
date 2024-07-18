@@ -144,6 +144,9 @@
 \author[1]{\fnm{Tingyou} \sur{Wang}}\email{tingyou.wang@northwestern.edu}
 \equalcont{These authors contributed equally to this work.}
 
+\author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
+
+
 \author*[1,2]{\fnm{Rendong} \sur{Yang}}\email{rendong.yang@northwestern.edu}
 
 \affil[1]{\orgdiv{Department of Urology}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{303 E Superior St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
@@ -201,7 +204,7 @@ Nanopore sequencing, particularly \gls{drs}, provides a detailed view of RNA mol
 However, accurately identifying adapters within these sequences is a critical challenge that impacts the overall data quality and subsequent analysis.
 Traditional methods often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 
-Long-range token interactions is still changing in tansformer-basd language model,
+Long-range token interactions is still changing in tansformer-based language model,
 though the efficient breakthrough has been achieved in transformer architecture~\cite{tay2022efficient}.
 Transformer-based genomic models  inherent the limitations, and have used 512 to 4k tokens as context (<0.001\% of the human genome), significantly limiting the modeling of long-range interactions in DNA~\cite{dalla2023nucleotide, zhou2023dnabert2, ji2021dnabert}.
 
@@ -214,16 +217,17 @@ In addition, these methods rely on tokenizers or fixed k-mers to aggregate meani
 Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
 
 
+
 To address this, we developed \chopper, a language model tailored for biological sequences, leveraging the architecture and training paradigms of state-of-the-art \glspl{llm}.
-Our model was trained on extensive \gls{drs} datasets, learning to predict artifitial sequences with high accuracy.
-The application of such a model not only enhances the precision of artifitial sequences identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications and erroneous base detection.
+Our model was trained on extensive \gls{drs} datasets, learning to predict artificial sequences with high accuracy.
+The application of such a model not only enhances the precision of artificial sequences identification but also opens new avenues for analyzing other complex patterns in genomic data, such as m6A modifications and erroneous base detection.
 
 The core of our approach lies in the ability of \glspl{llm} to understand and generate sequences based on context.
 By treating biological sequences as a form of language, the model captures the underlying biological grammar, enabling it to predict  artificial sequences embedded within long sequences.
 This method significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences.
 
 Our findings indicate that the \chopper can effectively parse through vast amounts of sequencing data, identifying  artificial sequences with remarkable accuracy.
-This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
+This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyzes.
 Moreover, the flexibility of \glspl{llm} allows for adaptation to various other tasks within bioinformatics, such as m6A detection, gene prediction, variant calling, and functional annotation.
 
 In conclusion, the integration of \glspl{llm} into bioinformatics presents a powerful tool for advancing genomic research.
@@ -266,7 +270,7 @@ $$a = b +c$$
 
 \gls{drs} allows for real-time, high-throughput sequencing of RNA molecules, providing a comprehensive view of the transcriptome.
 However, the presence of adapter sequences, necessary for sequencing, poses a challenge for data analysis.
-Accurate prediction of these adapters is crucial for aligning reads and ensuring the reliability of downstream analyses.
+Accurate prediction of these adapters is crucial for aligning reads and ensuring the reliability of downstream analyzes.
 
 In this study, we employed a large language model to predict adapter sequences in \gls{drs} data.
 Our model was trained on a diverse dataset of RNA sequences, including various adapter types and configurations.
@@ -291,6 +295,44 @@ Future research can explore additional applications and further optimize these m
 \end{figure}
 
 \section{Methods}\label{sec:methods}
+
+\subsection{Cell culture}
+
+VCaP cell lines were obtained from the American Type Culture Collection (ATCC) and cultured under sterile conditions to maintain optimal growth and viability.
+The cells were grown in Dulbecco's Modified Eagle Medium (DMEM, high glucose; Gibco, Cat\# 11-965-092) supplemented with 10\% fetal bovine serum (FBS Opti-Gold, Performance Enhanced, US Origin; Gendepot, Cat\# F0900-050) to provide essential growth factors.
+Additionally, the culture medium was enriched with \SI{5}{\ml} of 100 mM 100X Sodium Pyruvate (Gendepot, Cat\# CA017-010) to support cellular metabolism and 5 mL of Antibiotics-Antimycotics (100X) (Gendepot, Cat\# CA002-010) to prevent microbial contamination.
+Cells were cultured in 100 mm cell culture treated dishes (Thermo Fisher Scientific, Cat\# 12-556-002) and incubated at 37°C in a humidified atmosphere containing 5\% CO2, with media changes performed every 72 hours to ensure nutrient availability and waste removal.
+Cell confluency was regularly monitored, and subculturing was done before reaching 80\% confluency to maintain healthy growth conditions and prevent over-confluence stress.
+
+\subsection{RNA extraction and quantification}
+
+Total RNA was extracted using the miRNeasy Mini Kit (Qiagen, Cat\# 217004) according to the manufacturer’s protocol.
+The quality and concentration of RNA were assessed using an Agilent 2100 Bioanalyzer.
+Poly(A)+ RNA was then enriched from the total RNA using the Dynabeads\textsuperscript{tm} mRNA Purification Kit (Invitrogen, Cat\# 65001), which utilizes oligo(dT) beads for selective mRNA binding.
+The mRNA was quantified using a Qubit 4 fluorometer and a Qubit RNA HS Assay Kit (Thermo Fisher Scientific, Cat\# Q32852).
+The mRNA preparations were either immediately used to prepare a sequencing library or frozen and stored at \num{-80} °C until further use.
+
+\subsection{Nanopore Sequencing}
+
+
+We performed nanopore sequencing of the enriched mRNA using two different chemistries: the DNA-nanopore (R9 chemistry; "RNA002" kit) and the RNA-nanopore chemistry (RNA chemistry; "RNA004" kit).
+For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, Oxford Nanopore Technologies) following the manufacturer's instructions.
+Direct RNA nanopore sequencing employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
+The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
+For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, Oxford Nanopore Technologies) according to the manufacturer's protocol.
+The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
+
+
+\subsection{Data processing}
+
+The raw sequencing data were obtained in fast5 format from the RNA002 run and pod5 format from the RNA004 run.
+For basecalling, we used Dorado (v0.7.1) for both datasets.
+The RNA002 data were processed using the rna002\_70bps\_hac model, while the RNA004 data were basecalled using the rna004\_130bps\_hac model.
+
+After basecalling, we removed short reads (<50 bases) using SeqKit (v2.4.0).
+The resulting fastq files were then aligned to the human reference genome (GRCh38) using Minimap2 (v2.26) with the -ax splice -uf -k7 configuration for direct RNA reads.
+We converted the resulting sam files to bam files, indexed, and sorted them using SAMtools (v1.17) to obtain the genome coverage distribution.
+
 
 \subsection{Language Model Architecture}\label{ssec:lm}
 
@@ -336,7 +378,7 @@ The final model was selected based on the best performance on the validation set
 
 We perform multi-task learning to find the optimal model’s parameters.
 The total loss for one window is the sum of the losses from each supported position.
-Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with :
+Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with
 where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
 denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
