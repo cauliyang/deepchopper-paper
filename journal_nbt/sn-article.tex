@@ -171,7 +171,6 @@
 	This showcases the potential for broader applications of \glspl{llm} in genomics and transcriptomics, offering a powerful tool for the biotechnology field.}
 
 \maketitle
-
 \section{Main}\label{sec1}
 
 %Long Context Strategies in Genomic
@@ -183,7 +182,6 @@
 %The second strategy uses dilated convolutions and downsampling, both of which essentially average or skip elements between weights (Fournier et al., 2021).
 %A canonical example is the Enformer, which uses dilation and downsampling to reach context lengths of 100k nucleotides to predict gene expression tracks (Avsec et al., 2021).
 %Common across tokenization, dilation, and downsampling is the sacrifice of single nucleotide resolution to reach longer context.
-
 
 % Outline
 % 1. Sequencing history
@@ -307,7 +305,6 @@ The mRNA preparations were either immediately used to prepare a sequencing libra
 
 \subsection{Nanopore Sequencing}
 
-
 We performed nanopore sequencing of the enriched mRNA using two different chemistries: the DNA-nanopore (R9 chemistry; "RNA002" kit) and the RNA-nanopore chemistry (RNA chemistry; "RNA004" kit).
 For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, Oxford Nanopore Technologies) following the manufacturer's instructions.
 Direct RNA nanopore sequencing employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
@@ -315,26 +312,25 @@ The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenc
 For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, Oxford Nanopore Technologies) according to the manufacturer's protocol.
 The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
 
-
 \subsection{Data processing}
 
 The raw sequencing data were obtained in fast5 format from the RNA002 run and pod5 format from the RNA004 run.
-For basecalling, we used Dorado (v0.7.1) for both datasets.
+For base calling, we used Dorado (v0.7.1) for both datasets.
 The RNA002 data were processed using the rna002\_70bps\_hac model, while the RNA004 data were basecalled using the rna004\_130bps\_hac model.
 
-After basecalling, we removed short reads (<50 bases) using SeqKit (v2.4.0).
+After base calling, we removed short reads (<50 bases) using SeqKit (v2.4.0).
 The resulting fastq files were then aligned to the human reference genome (GRCh38) using Minimap2 (v2.26) with the -ax splice -uf -k7 configuration for direct RNA reads.
 We converted the resulting sam files to bam files, indexed, and sorted them using SAMtools (v1.17) to obtain the genome coverage distribution.
 
 \subsection{Language Model Architecture}\label{ssec:lm}
 
 We adapted a genomics \gls{fm} HyenaDNA as components of model in order to extract  features~\cite{nguyen2024hyenadna}.
-We design a qual block to use quality of the input sequence to predict output.
-The qual block accept the quality of the input sequence and the extracted features of sequences.
-The qual block include a bulk of dense and residual connection.
+We design a quality block to use quality of the input sequence to predict output.
+The quality block accepts the quality of the input sequence and the extracted features of sequences.
+The quality block includes a bulk of dense and residual connection.
 Then, a classification head is used to predict probability of artificial sequence for every token (Figure~\ref{fig:f1}).
 
-The model was trained to predict  artifitial sequences based on the contextual information present in the RNA sequences.
+The model was trained to predict  artificial sequences based on the contextual information present in the RNA sequences.
 The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
 The backbone is used to conduct feature extraction, and help us better understand the biological sequences.
 
@@ -346,7 +342,7 @@ This approach allowed the model to leverage general RNA sequence patterns while 
 \subsection{Data Preparation}\label{ssec:data}
 
 The dataset for this study comprised publicly available \gls{drs} data including A549, HCT116, HepG2, K562, and MCF7, supplemented with manually annotated adapter sequences.
-We obtain artificial sequence in terms of softclip after alignment.
+We obtain artificial sequence in terms of soft clip after alignment.
 The dataset consist of positive and negative data, in which there is no artificial sequence.
 Preprocessing involved quality control steps such as read filtering and trimming to ensure high-quality data.
 
@@ -361,6 +357,7 @@ The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the ba
 
 \subsection{Training Procedure}\label{ssec:training}
 
+We have Different training strategies for different models.
 The model was trained using supervised learning, with sequences annotated for adapter regions serving as the training data.
 Training was conducted on a high-performance computing cluster, utilizing two A100 \glspl{gpu} to expedite the process.
 The model was trained using the Adam optimization algorithm, with a learning rate of \num{1e-4}.
@@ -368,7 +365,7 @@ The training process involved \num{60} epochs, with early stopping criteria base
 Evaluation metrics included accuracy, precision, recall, and F1 score, with cross-validation to ensure robustness.
 The final model was selected based on the best performance on the validation set, and its predictions were compared against a baseline model using traditional methods.
 
-We perform multi-task learning to find the optimal model's parameters.
+We perform multitask learning to find the optimal model's parameters.
 The total loss for one window is the sum of the losses from each supported position.
 Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with
 where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
