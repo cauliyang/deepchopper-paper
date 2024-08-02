@@ -246,8 +246,6 @@ The ability to process large contexts is particularly advantageous in these appl
 In the context of \gls{drs}, the application of \glspl{llm} can address specific challenges such as predicting adapter sequences.
 These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods. By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
 
-$$a = b +c$$
-
 \begin{figure}[!h]
 	\includegraphics[height=0.6\columnwidth]{example-image-duck}
 	\caption{\bf This is figure 1.}
@@ -311,75 +309,83 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 
 \subsection{Data processing}
 
+% refered to tingyou
 The raw sequencing data were obtained in fast5 format from the RNA002 run and pod5 format from the RNA004 run.
-For base calling, we used Dorado (v0.7.1) for both datasets.
+For base calling, we used Dorado (v0.7.1) for both datasets~\cite{2024nanoporetech}.
 The RNA002 data were processed using the rna002\_70bps\_hac model, while the RNA004 data were basecalled using the rna004\_130bps\_hac model.
-
 After base calling, we removed short reads (< 50 bases) using SeqKit (v2.4.0).
-The resulting fastq files were then aligned to the human reference genome (GRCh38) using Minimap2 (v2.26) with the -ax splice -uf -k7 configuration for direct RNA reads.
-We converted the resulting sam files to bam files, indexed, and sorted them using SAMtools (v1.17) to obtain the genome coverage distribution.
-
-\subsection{Language Model Architecture}\label{ssec:lm}
-
-We adapted a genomics \gls{fm} HyenaDNA as components of model in order to extract  features~\cite{nguyen2024hyenadna}.
-We design a quality block to use quality of the input sequence to predict output.
-The quality block accepts the quality of the input sequence and the extracted features of sequences.
-The quality block includes a bulk of dense and residual connection.
-Then, a classification head is used to predict probability of artificial sequence for every token (Figure~\ref{fig:f1}).
-
-The model was trained to predict  artificial sequences based on the contextual information present in the RNA sequences.
-The language model used in this study is based on the transformer architecture, which has been highly successful in natural language processing.
-The backbone is used to conduct feature extraction, and help us better understand the biological sequences.
-
-This configuration was chosen to balance performance and computational feasibility.
-Training the model involved using a corpus of \gls{drs} sequences, including annotated ar regions.
-The model was pre-trained on a large dataset of general RNA sequences before fine-tuning on the specific task of adapter prediction.
-This approach allowed the model to leverage general RNA sequence patterns while focusing on the nuances of adapter sequences during fine-tuning.
+The resulting fastq files were then aligned to the human reference genome (GRCh38) using Minimap2 (v2.26) with the \emph{-ax splice -uf -k7} configuration for direct RNA reads~\cite{li2018minimap2}.
+We converted the resulting sam files to bam files, indexed, and sorted them using SAMtools (v1.17) to obtain the genome coverage distribution~\cite{li2009sequence}.
 
 \subsection{Data Preparation}\label{ssec:data}
 
-The dataset for this study comprised publicly available \gls{drs} data including A549, HCT116, HepG2, K562, and MCF7, supplemented with manually annotated adapter sequences.
-We obtain artificial sequence in terms of soft clip after alignment.
+The dataset for this study comprised publicly available \gls{drs} data from the SG-NEx data, which was accessed on 2024 at \url{registry.opendata.aws/sg-nex-data}~\cite{chen2021systematic}.
+The SG-NEx data contain six samples including A549, HCT116, HepG2, K562, and MCF7.
+We obtain artificial sequence in terms of soft clip from alignment data.
 The dataset consist of positive and negative data, in which there is no artificial sequence.
-Preprocessing involved quality control steps such as read filtering and trimming to ensure high-quality data.
-
-The positive data include terminal and  internal adapter with ratio of 1:1 respectively.
-The ratio between  positive data  and negative data is 9:1.
-The dataset was split into training, validation, and test sets, with a balanced distribution of adapter and non-adapter sequences.
+The positive data include terminal and  internal adapters with ratio of 1:1 respectively.
+The ratio between positive data  and negative data is 9:1.
+Totally, we generated \num{120} million data points for training.
+The dataset was split into training, validation, and test sets with ration \num{0.8}, \num{0.1}, and \num{0.1} respectively.
+Then, we have \num{96} million data points for training, \num{12} million for validation, and \num{12} million for test.
 
 \subsection{Tokenization}\label{ssec:tokenization}
 
-We used a tokenization strategy that converts the RNA sequences into tokens at the single nucleotide level.
+We used a tokenization strategy that converts the biological sequences into tokens at the single nucleotide level.
 The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the basic units, allowing the model to capture the fine-grained details of the sequences.
+
+\subsection{Language Model Architecture}\label{ssec:lm}
+
+We design the model for token classification task, which means the model is able to predict the region of artificial sequences.
+We adapted a genomics \gls{fm} HyenaDNA as components of model, which is used to conduct feature extraction, and help us better understand the biological sequences~\cite{nguyen2024hyenadna}.
+Following the feature extractor, we add a quality block to combine quality of the input sequence to predict output precisely.
+The quality block includes a bulk of dense and residual connection.
+The quality block accepts the quality of the input sequence and the extracted features from sequences.
+Then, a classification head is used to predict probability of artificial sequence for every token (Figure~\ref{fig:f1}).
+The model was trained to predict  artificial sequences based on the contextual information present in the biological sequences.
+
 
 \subsection{Training Procedure}\label{ssec:training}
 
-We have Different training strategies for different models.
-The model was trained using supervised learning, with sequences annotated for adapter regions serving as the training data.
+The model was trained using supervised learning, with sequences annotated for artificial sequences.
 Training was conducted on a high-performance computing cluster, utilizing two A100 \glspl{gpu} to expedite the process.
-The model was trained using the Adam optimization algorithm, with a learning rate of \num{1e-4}.
+The batch size was \num{64}, so the model saw \num{96} million examples.
+Validation was performed every \num{20000} steps, and we selected the model with the highest validation F1 score for the base prediction task.
+The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters~\cite{kingma2014adam}.
+We use a learning rate scheduler to reduce the learning rate when the validation loss stops improving, and initial learning rate is \num{0.00002}.
+
+We use cross entropy loss to update the model parameters.
+
+\[
+	\ell(x, y) = L = \{l_1,\dots,l_N\}^\top, \quad
+	l_n = - w_{y_n} \log \frac{\exp(x_{n,y_n})}{\sum_{c=1}^C \exp(x_{n,c})}
+	\cdot \mathbb{1}\{y_n \not= \text{ignore\_index}\}
+\]
+where \( x \) is the input, \( y \) is the target, \( w \) is the weight,
+\( C \) is the number of classes, and \( N \) spans the minibatch dimension as well as
+\( d_1, \cdots, d_k \) for the K-dimensional case.
+
+\[
+	\ell(x, y) =   \sum_{n=1}^N \frac{1}{\sum_{n=1}^N w_{y_n} \cdot \mathbb{1}\{y_n \not= \mathrm{ignore\_index}\}} l_n
+	.\]
+
 The training process involved \num{60} epochs, with early stopping criteria based on validation performance to prevent overfitting.
+
 Evaluation metrics included accuracy, precision, recall, and F1 score, with cross-validation to ensure robustness.
 The final model was selected based on the best performance on the validation set, and its predictions were compared against a baseline model using traditional methods.
 
 We perform multitask learning to find the optimal model's parameters.
 The total loss for one window is the sum of the losses from each supported position.
 Total loss for supported position  \( i \), where \( i  \in {1,2, \ldots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with
-where is the cross-entropy loss,  is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
+where is the cross-entropy loss, is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
 denotes the predicted probability that a
 position is informative, and is the indicator function that equals to 1, and 0 otherwise.
 We trained the model on 2 A100 \glspl{gpu} for a maximum of 1 million steps.
 
-The batch size was \num{128}, so the model saw \num{128} million examples.
-Validation was performed every 2000 steps, and we selected the model with the highest validation F1 score for the base prediction task.
-The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters.
-We used a cosine learning rate scheduler with an initial learning rate of \( 3 \times 10^{-4} \).
-Weight decay was set to 0.1 and gradients were clipped using the \( \ell^{2}\)-norm with a maximum norm value of 1.
-The dropout value in transformer was set to \num{0.1}.
 The complete list of hyperparameters can be found in Supplementary Table.
-
 The primary hyperparameters we sweep across include: learning rate, global batch size, dropout, weight decay, and a reverse complement augmentation.
 See Tab. A.3 for ranges of hyperparameters used.
+
 
 \subsection{Evaluation Metrics and Analysis}
 
@@ -397,7 +403,6 @@ In each window, we adapt vote method to polish the predictions.
 
 The range of sliding window is \num{21}.
 After we remove predicted region, we filter the region with length less than \num{20} and output left sequences and related quality to fastq records.
-
 
 % \section{Tables}\label{sec5}
 
