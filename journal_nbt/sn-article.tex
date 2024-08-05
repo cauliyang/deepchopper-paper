@@ -188,7 +188,7 @@
 % Outline
 % 1. Sequencing history
 % 2. Genomics LLM history
-% 3. Challenges of LLM
+% 3. Challenges of LLM / efficiency of transformer and improvements (hyena)
 % 3.1 long range
 % 3.2 single nucleotide resolution
 % 4. Cons of drs
@@ -295,7 +295,7 @@ Cell confluency was regularly monitored, and subculturing was done before reachi
 
 \subsection{RNA extraction and quantification}
 
-Total RNA was extracted using the miRNeasy Mini Kit (Qiagen, Cat\# 217004) according to the manufacturer's protocol.
+Total RNA was extracted using the miRNeasy Mini Kit (Qiagen, Cat\# 217004) according to the protocol of manufacturer.
 The quality and concentration of RNA were assessed using an Agilent 2100 Bioanalyzer.
 Poly(A)+ RNA was then enriched from the total RNA using the Dynabeads\textsuperscript{tm} mRNA Purification Kit (Invitrogen, Cat\# 65001), which utilizes oligo (dT) beads for selective mRNA binding.
 The mRNA was quantified using a Qubit 4 fluorometer and a Qubit RNA HS Assay Kit (Thermo Fisher Scientific, Cat\# Q32852).
@@ -332,6 +332,9 @@ Then, we have \num{480000} data points for training, \num{60000} for validation,
 
 \subsection{Language model architecture}\label{ssec:lm}
 
+We formulate the problem as a token classification task, where the model predicts the region of artificial sequences.
+For each token, the model predicts two classes of artificial sequences: positive and negative, which means the token is or is not in artificial sequences.
+
 We design the model for token classification task, which means the model is able to predict the region of artificial sequences.
 We adapted a genomics \gls{fm} HyenaDNA as components of model, which is used to conduct feature extraction, and help us better understand the biological sequences~\cite{nguyen2024hyenadna}.
 Following the feature extractor, we add a quality block to combine quality of the input sequence to predict output precisely.
@@ -347,8 +350,7 @@ The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the ba
 
 The model was trained using supervised learning, with sequences annotated for artificial sequences.
 Training was conducted on a high-performance computing cluster, utilizing two A100 \glspl{gpu} to expedite the process.
-The batch size was \num{64}, so the model saw \num{96} million examples.
-Validation was performed every \num{20000} steps, and we selected the model with the highest validation F1 score for the base prediction task.
+The batch size was \num{64}, validation was performed every \num{20000} steps, and we selected the model with the highest validation F1 score for the base prediction task.
 The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters~\cite{kingma2014adam}.
 We use a learning rate scheduler to reduce the learning rate when the validation loss stops improving, and initial learning rate is \num{0.00002}.
 
@@ -357,14 +359,14 @@ We use cross entropy loss to update the model parameters.
 \[
 	\ell(x, y) = L = \{l_1,\cdots,l_N\}^\top, \quad
 	l_n = - w_{y_n} \log \frac{\exp(x_{n,y_n})}{\sum_{c=1}^C \exp(x_{n,c})}
-	\cdot \mathbb{1}\{y_n \not= \text{ignore\_index}\}
+	\cdot \textrm{1}\{y_n \not= \textrm{ignore\_index}\}
 \]
 where \( x \) is the input, \( y \) is the target, \( w \) is the weight,
 \( C \) is the number of classes, and \( N \) spans the minibatch dimension as well as
 \( d_1, \cdots, d_k \) for the K-dimensional case.
 
 \[
-	\ell(x, y) =   \sum_{n=1}^N \frac{1}{\sum_{n=1}^N w_{y_n} \cdot \mathbb{1}\{y_n \not= \mathrm{ignore\_index}\}} l_n
+	\ell(x, y) =   \sum_{n=1}^N \frac{1}{\sum_{n=1}^N w_{y_n} \cdot \textrm{1}\{y_n \not= \textrm{ignore\_index}\}} l_n
 	.\]
 
 The training process involved \num{60} epochs, with early stopping criteria based on validation performance to prevent overfitting.
@@ -389,7 +391,6 @@ We trained the model on 2 A100 \glspl{gpu} for a maximum of 1 million steps.
 The complete list of hyperparameters can be found in Supplementary Table.
 The primary hyperparameters we sweep across include: learning rate, global batch size, dropout, weight decay, and a reverse complement augmentation.
 
-
 \subsection{Polishing predictions with sliding window}
 
 We use sliding windows to smooth predictions, which allow longer prediction region and reduce choppy noise.
@@ -413,7 +414,6 @@ The results were further validated by testing the model on an independent datase
 
 \textit{Real Data Evaluation.} We use the Vcap002 dataset to evaluate the performance of the model.
 We sub-sample the dataset to 1 millions reads, and use the model to predict the artificial sequences.
-
 
 
 
