@@ -1,3 +1,5 @@
 fastq
 HyenaDNA
 minibatch
+nanopore
+Nanopore
