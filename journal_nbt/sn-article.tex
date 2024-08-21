@@ -271,6 +271,10 @@ Figures 1 and 2 illustrate the comparison between our model's predictions and th
 These findings suggest that \glspl{llm} can effectively handle the complexity and variability of biological sequences, making them a valuable tool for improving the accuracy of \gls{drs}.
 This not only enhances the quality of sequencing data but also opens up new possibilities for the application of language models in other areas of genomics and transcriptomics.
 
+
+In the VCaP cell line, genes in the FP group exhibited significantly higher expression levels compared to reference genes (p-value < 2.2 x 10⁻¹⁶) (Figure 2A), despite displaying similar gene lengths (Figure 2B). To further explore the functional roles of FP group genes, we conducted Gene Ontology (GO) enrichment analysis across six cell lines—VCaP, A549, K562, HepG2, MCF7, and HCT116 (Figure S2A-S2F). Interestingly, despite distinct input gene sets, these cell lines converged on common housekeeping functions, including translation, ribosomal small subunit biogenesis, and rRNA processing, etc. (Figure 2C).
+
+
 % Conclusion
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of \gls{drs}.
 By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
@@ -311,6 +315,10 @@ For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library pre
 The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
 
 \subsection{Training data preparation}\label{ssec:data}
+
+
+We obtained ONT directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116). FASTQ files were generated using Dorado (version 0.5.2) with adapter trimming disabled (“--no-trim”). Reads were then aligned to the human reference genome (hg38) using minimap2 (version 2.24) with optimized ONT directRNA parameters (“-ax splice -uf -k14”). During the adapter extraction step, we selected primary alignments that lacked supplementary alignments; the 3′ soft-clipped regions of these alignments were treated as adapter sequences, while the aligned portions were considered non-adapter sequences. To create artificial chimeric reads for model training, we randomly selected two non-adapter sequences from the repository and one adapter sequence from the adapter repository, repeating this process multiple times to generate the chimeric dataset.
+
 
 % refered to tingyou
 The raw sequencing data were obtained in fast5 format from the RNA002 run and pod5 format from the RNA004 run.
