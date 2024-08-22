@@ -3,3 +3,4 @@ HyenaDNA
 minibatch
 nanopore
 Nanopore
+Nanopore

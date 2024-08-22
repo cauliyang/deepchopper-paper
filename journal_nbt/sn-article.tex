@@ -59,7 +59,6 @@
 \usepackage{standalone}
 \usepackage{svg}
 
-
 %% my package
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
@@ -95,7 +94,7 @@
 
 % define macros
 % chopper = DeepChopper
-\newcommand{\chopper}{ProjectX\xspace}
+\newcommand{\chopper}{DeepChopper\xspace}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -149,7 +148,6 @@
 \equalcont{These authors contributed equally to this work.}
 
 \author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
-
 \author*[1,2]{\fnm{Rendong} \sur{Yang}}\email{rendong.yang@northwestern.edu}
 
 \affil[1]{\orgdiv{Department of Urology}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{303 E Superior St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
@@ -206,7 +204,7 @@ Long-range token interactions is still changing in transformer-based language mo
 though the efficient breakthrough has been achieved in transformer architecture~\cite{tay2022efficient}.
 Transformer-based genomic models  inherent the limitations, and have used 512 to 4k tokens as context (\(<0.001\%\) of the human genome), significantly limiting the modeling of long-range interactions in DNA~\cite{dalla2023nucleotide, zhou2023dnabert2, ji2021dnabert}.
 
-Single nuleotide resolution is crucial for understanding the complexities of biological sequences especially for tasks e.g. predicting errors and special region.
+Single nucleotide resolution is crucial for understanding the complexities of biological sequences especially for tasks e.g. predicting errors and special region.
 In addition, these methods rely on tokenizers or fixed k-mers to aggregate meaningful units, losing single nucleotide resolution (i.e. DNA ``characters'') where subtle genetic variations can completely alter protein function via \glspl{snp}.
 Here, we present \chopper, a novel application of \glspl{llm} in predicting adapters in \gls{drs} data, demonstrating the potential of these models to handle long-context biological sequences and their applicability to other problems such as m6A detection in long reads.
 
@@ -251,7 +249,7 @@ In the context of \gls{drs}, the application of \glspl{llm} can address specific
 These sequences, which are essential for the correct alignment of reads, making accurate prediction difficult with traditional methods. By leveraging the extensive contextual understanding provided by \glspl{llm}, we can improve the accuracy of these predictions, leading to better sequencing outcomes.
 
 \begin{figure}[!h]
-	\includegraphics[height=0.6\columnwidth]{example-image-duck}
+	\includegraphics[height=0.8\columnwidth]{figures/finals/figure1}
 	\caption{\bf This is figure 1.}
 	\label{fig:f1}
 \end{figure}
@@ -313,6 +311,7 @@ Direct RNA nanopore sequencing employs a reverse transcriptase adapter (RTA) tha
 The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
 For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, Oxford Nanopore Technologies) according to the protocol of manufacturer.
 The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
+
 
 \subsection{Training data preparation}\label{ssec:data}
 
@@ -408,7 +407,7 @@ In each window, we adapt vote method to polish the predictions.
 The range of sliding window is \num{21}.
 After we remove predicted region, we filter the region with length less than \num{20} and output left sequences and related quality to fastq records.
 
-\subsection{Evaluating artificial sequences detection with Vcap002}
+\subsection{Evaluating artificial sequences detection with VCap002}
 
 \textit{Evaluation metrics and analysis.} On the basis of the numbers of \gls{tp} and \gls{fn}, the evaluation metrics used to assess the performance of  model included precision, recall, and F1 score:
 
@@ -416,13 +415,10 @@ These metrics provided a comprehensive view of the model's ability to identify a
 Statistical analysis was conducted to compare the performance of our language model with traditional methods, using paired t-tests to determine the significance of improvements.
 The results were further validated by testing the model on an independent dataset, demonstrating its generalizability and robustness.
 
-
 \textit{Simulation Data Evaluation.}
-
 
 \textit{Real Data Evaluation.} We use the Vcap002 dataset to evaluate the performance of the model.
 We sub-sample the dataset to 1 millions reads, and use the model to predict the artificial sequences.
-
 
 % \section{Tables}\label{sec5}
 
