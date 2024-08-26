@@ -97,7 +97,7 @@
 % chopper = DeepChopper
 \newcommand{\chopper}{DeepChopper\xspace}
 
-\newcommand{\figref}[2]{Figure~\hyperref[#1]{\ref*{#1}#2}}
+\newcommand{\figref}[2]{Fig.~\hyperref[#1]{\ref*{#1}#2}}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -168,10 +168,13 @@
 %%==================================%%
 
 \abstract{
-	\glspl{llm} have revolutionized natural language processing and are now poised to transform biological sequence analysis.
-	This study explores the application of \glspl{llm} to \gls{drs} data, focusing on predicting adapters.
-	Our results demonstrate that \glspl{llm} can effectively handle long contexts in biological sequences, providing accurate and efficient predictions.
-	This showcases the potential for broader applications of \glspl{llm} in genomics and transcriptomics, offering a powerful tool for the biotechnology field.}
+    The accurate identification of chimeric reads is critical for ensuring the reliability of nanopore \gls{drs} data, which has emerged as a powerful tool for sequencing full-length RNA molecules while preserving native RNA modifications. Despite its potential, \gls{drs} is susceptible to the generation of chimeric reads, where fragments of distinct RNA molecules are incorrectly joined together, complicating downstream analyses such as transcriptome assembly and gene fusion detection.
+
+    In this study, we present \chopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, \chopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio cDNA, and PacBio CapTrap.
+
+    Our results demonstrate that \chopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms. Additionally, \chopper effectively identified low-quality artificial sequences based on base quality scores and \gls{blat} identity, further enhancing the accuracy of \gls{drs} data.
+
+    This study highlights the potential of \chopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomic analyses and broadening the applicability of genomics language models in bioinformatics.}
 
 \maketitle
 \section{Main}\label{sec1}
@@ -198,31 +201,31 @@
 % 6. Results
 % 7. Conclusion
 
+
 The advent of high-throughput sequencing technologies has revolutionized genomics, providing unprecedented insights into the genetic underpinnings of biological processes.
-Among these technologies, Oxford \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules, with the unique advantage of preserving native RNA modifications.
-However, despite its transformative potential, \gls{drs} faces a significant challenge: the generation of chimeric artificial reads, where fragments of distinct RNA molecules are incorrectly joined together.
+Among these technologies, Oxford \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules with the unique advantage of preserving native RNA modifications.
+However, despite its transformative potential, \gls{drs} faces a significant challenge: the generation of chimeric artificial reads where fragments of distinct RNA molecules are incorrectly joined together~\cite{smith2020molecular}.
 Accurately identifying these chimeric sequences is critical, as their presence compromises data quality and hinders downstream analyses, including transcriptome assembly, quantification, and gene fusion detection.
 
 In recent years, \glspl{llm} have made remarkable strides across various fields, including \gls{nlp} and, more recently, genomics.
-Genomic \glspl{llm}, trained on vast amounts of sequencing data, have demonstrated an unprecedented ability to capture complex sequence patterns and predict functional elements~\cite{nguyen2024hyenadna, dalla2023nucleotide, zhou2023dnabert2}.
+Genomic \glspl{llm}, trained on vast amounts of sequencing data, have demonstrated an unprecedented ability to capture complex sequence patterns and predict functional elements~\cite{dalla2023nucleotide, zhou2023dnabert2}.
 However, their application to genomics is not without challenges, particularly when addressing the long-range dependencies inherent in sequencing data and achieving single-nucleotide resolution.
-
 
 Traditional methods  often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 Transformers, which form the backbone of most \gls{llm}, excel at modeling long-range dependencies, but their quadratic scaling with sequence length poses efficiency challenges in processing genomic data~\cite{tay2022efficient}.
-While transformer-based genomic models can handle sequences up to 4k tokens, this represents less than $0.001\%$ of the human genome, significantly limiting their capacity to model long-range interactions in DNA~\cite{dalla2023nucleotide, zhou2023dnabert2, ji2021dnabert}.
-Although innovations like the Hyena architecture have optimized long-range attention mechanisms, offering improved efficiency and scalability, single-nucleotide resolution remains elusive—a crucial aspect for understanding the complexities of biological sequences, where subtle variations can profoundly impact protein function~\cite{poli2023hyena, nguyen2024hyenadna}.
+While transformer-based genomic models can handle sequences up to 4k tokens, this represents less than $0.001\%$ of the human genome, significantly limiting their capacity to model long-range interactions in DNA~\cite{dalla2023nucleotide, zhou2023dnabert2, ji2021dnabert, nguyen2024hyenadna}.
+Single-nucleotide resolution remains elusive—a crucial aspect for understanding the complexities of biological sequences, where subtle variations can profoundly impact protein function; however innovations like the Hyena architecture have optimized long-range attention mechanisms, offering improved efficiency and scalability.~\cite{poli2023hyena, nguyen2024hyenadna}.
 
-Despite advances in \gls{drs}, the technology remains susceptible to the formation of chimeric reads, particularly in long-read sequencing, complicating the accurate interpretation of results.
-Addressing this issue is critical for ensuring the reliability of DRS data in both research and clinical applications.
+Despite advances in \gls{drs}, the technology remains susceptible to the formation of chimeric reads, particularly in long-read sequencing, complicating the accurate interpretation of results~\cite{smith2020molecular}.
+Addressing this issue is critical for ensuring the reliability of \gls{drs} data in both research and clinical applications.
 
 In response to these challenges, we developed \chopper, a language model specifically tailored for biological sequences.
 Leveraging state-of-the-art \gls{llm} architectures and training paradigms, our model was trained on extensive \gls{drs} datasets to predict artificial sequences with high accuracy.
 Unlike traditional methods, which rely on tokenizers or fixed k-mers and often lose single-nucleotide resolution, \chopper treats biological sequences as a form of language, capturing the underlying biological grammar and enabling it to predict artificial sequences embedded within long reads.
 
-Traditional hard clipping methods can only predict terminal adapters—artificial sequences at the ends of reads.
-In contrast, \chopper excels at identifying chimeric reads formed by artificial sequences located in the middle of reads.
-Our model significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences.
+Traditional hard clipping methods can only predict artificial sequences at the ends of reads (terminal adapters).
+In contrast, \chopper excels at identifying chimeric reads formed by artificial sequences located in the middle of reads (internal adapters).
+Our model significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences (Supplementary Fig 1).
 
 Our findings demonstrate that DeepChopper can effectively parse vast amounts of sequencing data, identifying artificial sequences with remarkable accuracy.
 This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
@@ -232,46 +235,45 @@ This study, exemplified by \chopper, paves the way for broader applications of \
 
 % Result
 
+%Model Architecture Overview (Fig 1a)
 
-%Model Architecture Overview (Fig 1A)
-
-\figref{fig:f1}{a} provides an overview of the \chopper model architecture, highlighting its key components designed for the detection of chimeric reads in \gls{drs} data.
-The model employs a HyenaDNA as Feature Extactor, incorporating advanced tokenization and sequence quality assessment mechanisms to handle long-range dependencies inherent in sequencing data~\cite{nguyen2024hyenadna}.
+We provide an overview of the \chopper model architecture, highlighting its key components designed for the detection of artificial sequences in \gls{drs} data (\figref{fig:f1}{a}).
+The model employs a HyenaDNA as a feature extactor, incorporating advanced tokenization and sequence quality assessment mechanisms to handle long-range dependencies inherent in sequencing data~\cite{nguyen2024hyenadna}.
 The architecture is specifically tailored to biological sequences, enabling it to differentiate between true biological reads and chimeric artifacts with high accuracy.
 By leveraging residual connections and long-range attention mechanisms, \chopper is optimized for processing large volumes of sequencing data efficiently, making it a powerful tool for improving data quality in genomic research. This foundational architecture underpins the superior performance of \chopper (\figref{fig:f1}{a}).
 
 
-% Analysis of Predicted Artifact Lengths
-
+% Analysis of Predicted Artifact Lengths Fig 1b
+We conducted analysis of predicted artifact lengths in VCaP 002.
 The distribution of the lengths of predicted artifacts revealed that \chopper is particularly effective at identifying artifacts within a critical length range, which is often associated with chimeric reads.
-The frequency analysis indicated that the majority of the artifacts detected by \chopper were shorter than 250 base pairs, a range where traditional methods tend to struggle due to the ambiguous nature of such sequences (\figref{fig:f1}{b}).
+The frequency analysis indicated that the majority of the artifacts detected by \chopper were around 70 bp, a range where traditional methods tend to struggle due to the ambiguous nature of such sequences (\figref{fig:f1}{b}).
 
-% Positional Bias in Chimeric Read Prediction
+% Positional Bias in Chimeric Read Prediction Fig 1c
 
 An interesting pattern emerged when analyzing the relative positions of the predicted chimeric artifacts.
 \chopper showed a consistent ability to identify chimeric sequences not only at the ends of reads (typically addressed by traditional clipping methods) but also those embedded within the middle of long reads (\figref{fig:f1}{c}).
-This capability is particularly crucial for long-read sequencing platforms, where chimeric reads often appear in internal regions, leading to significant errors in downstream analyses.
+This capability is particularly crucial for \gls{drs} data, where chimeric reads often appear in internal regions, leading to significant errors in downstream analyses.
 
-% The number of prediction intervals
+% The number of prediction intervals Fig 1d
 
-We analyzed the number of prediction intervals identified by \chopper in VCaP 002.
+We analyzed the number of prediction intervals identified by \chopper in the VCaP 002 dataset.
 A prediction interval is defined as a contiguous sequence within a read where the model predicts the presence of artificial sequences.
-The number of such intervals provides insight into the frequency and distribution of artificial sequences in every chimeric read.
-Our results revealed a distinct distribution pattern in the number of prediction intervals, with the majority of reads containing between 2 and 5 intervals (\figref{fig:f1}{d}).
-This finding suggests that chimeric artifacts are often not confined to a single region within a read but are spread across multiple locations.
-The ability of \chopper to detect multiple prediction intervals within the same read highlights its sensitivity in identifying fragmented chimeric sequences that might be missed by traditional methods.
-By capturing multiple intervals, \chopper provides a more detailed and accurate characterization of these artifacts, which is crucial for downstream applications such as transcriptome assembly and gene fusion detection.
+The number of intervals per read offers insight into the frequency and distribution of these sequences.
+In most cases, DeepChopper predicted a single interval, typically located internally or at the end of the read.
+We focused on reads with two or more prediction intervals, as these may indicate artificial chimeric reads.
+Our results showed a distinct distribution pattern, with the majority of reads containing between 1 and 5 intervals (\figref{fig:f1}{d}).
+This suggests that chimeric artifacts often follow expected patterns and can be reliably detected.
+\chopper's ability to detect multiple prediction intervals within a single read highlights its sensitivity in identifying fragmented chimeric sequences that might be missed by traditional methods.
 
-% Chimeric Read Detection Across Sequencing Platforms Fig 1 E
 
-We observed that \chopper consistently outperformed Dorado, both with and without trimming, in detecting chimeric reads in the VCaP 002 dataset.
-\chopper achieved a 91\% reduction in the total count of chimeric reads, highlighting its effectiveness in minimizing these artifacts.
-To further validate this capability, we used ONT PCR cDNA data (\figref{fig:f1}{e}).
-The results showed that \chopper identified significantly fewer unsupported reads compared to baseline methods, indicating its superior accuracy in filtering out chimeric artifacts.
-Notably, \chopper reduced the number of unsupported reads by nearly 94\% and achieved  supporting rate 47\% compared 5\%, demonstrating its exceptional ability to distinguish true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
+% Chimeric Read Detection Across Sequencing Platforms Fig 1e
+We observed that \chopper consistently outperformed Dorado, both with and without trimming, in detecting chimeric reads in the VCaP 002 dataset, achieving a 91\% reduction in the total count of chimeric reads.
+To further validate this capability, we used ONT PCR cDNA data (\figref{fig:f1}{e}) to verify the chimeric reads detected by our model.
+The results showed that DeepChopper identified significantly fewer unsupported reads compared to baseline methods, demonstrating superior accuracy in filtering out chimeric artifacts. Notably, \chopper reduced the number of unsupported reads by nearly 94\% and achieved a supporting rate of 47\% compared to 5\%, underscoring its exceptional ability to distinguish true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
 
-% Base Quality of Detected Artificial Sequences (Fig 1F)
-We analyzed the base quality of artificial sequences detected by \chopper, as identified in \figref{fig:f1}{e}.
+
+% Base Quality of Detected Artificial Sequences (Fig 1f)
+We analyzed the base quality of artificial sequences detected by \chopper, as identified in \figref{fig:f1}{f}.
 The base quality score is a critical metric for assessing the reliability of sequencing data, with higher scores indicating greater confidence in the accuracy of the detected bases.
 The results revealed that the artificial sequences identified by \chopper consistently exhibited lower base quality scores compared to true biological sequences (\figref{fig:f1}{f}).
 This finding underscores the model's ability to differentiate between high-confidence true reads and low-confidence artificial sequences.
@@ -280,23 +282,23 @@ The clear distinction in base quality between supported and unsupported reads fu
 By maintaining a high level of precision in detecting these lower-quality sequences, \chopper enhances the overall integrity of the sequencing data, ensuring that downstream analyses are based on more accurate and reliable reads.
 
 
-% BLAT Identity of Detected Artificial Sequences (Fig 1G)
-\figref{fig:f1}{g} evaluates the \gls{blat} identity of the artificial sequences detected by \chopper, as identified in \figref{fig:f1}{e}.
+% BLAT Identity of Detected Artificial Sequences (Fig 1g)
+We evaluated the \gls{blat} identity of the artificial sequences detected by \chopper (\figref{fig:f1}{g}).
 \gls{blat} identity measures the similarity of the sequences to known reference sequences, with lower identity scores indicating potential chimeric or erroneous reads.
-The results show that the artificial sequences identified by \chopper consistently have lower BLAT identity compared to true biological sequences.
+The results show that the artificial sequences identified by \chopper consistently have lower BLAT identities compared to true biological sequences.
 This finding highlights the model's proficiency in detecting sequences that diverge from expected reference sequences, further confirming their artificial nature.
 
-% Chimeric Read Detection Across Multiple Samples (Fig 1H)
-\figref{fig:f1}{h} presents the results of chimeric read detection across five different samples including A549, HCT116, HepG2, K562 and MCF7, mirroring the analysis shown in \figref{fig:f1}{e}.
+% Chimeric Read Detection Across Multiple Samples (Fig 1h)
+We present the results of chimeric read detection across five different samples, including A549, HCT116, HepG2, K562, and MCF7, mirroring the analysis shown in \figref{fig:f1}{e}.
 Each subfigure  illustrates the performance of \chopper in identifying and filtering out chimeric reads in different datasets.
-Consistently across all samples, \chopper significantly reduced the number of chimeric reads compared to baseline methods ( 62\% - 84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
+Consistently across all samples, \chopper significantly reduced the number of chimeric reads compared to baseline methods ( 62\%-84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
 The supporting rate of Dorado with trimming was 8\% to 19\%, while \chopper achieved a supporting rate from 43\% to 55\%.
 The reduction rates were comparable to those observed in \figref{fig:f1}{e}, further validating DeepChopper’s superior capability to distinguish true biological sequences from chimeric constructs across various sample types.
 These consistent results across multiple samples underscore the model's broad applicability and effectiveness.
 
-% Supporting Read Analysis Across Multiple Datasets (Fig 1I)
-\figref{fig:f1}{i} focuses on the analysis of supporting reads in the wtc11 sample, utilizing five different datasets: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap.
-Our model reduce the number of chimeric reads by 54\% compare Dorado with trim for wtc11.
+% Supporting Read Analysis Across Multiple Datasets (Fig 1i)
+Besides, we focus on the analysis of supporting reads in the wtc11 sample, utilizing five different sequencing platforms: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap (\figref{fig:f1}{i}) to verify the chiremic read detected from data processed by \chopper.
+Our model reduces the number of chimeric reads by 54\% compare to Dorado with trim for wtc11.
 Each subfigure illustrates the proportion of supporting reads (51\% to 66\%) detected by \chopper across these datasets, and the rate of supporting reads of Dorado with trimming (26\% to 37\%).
 Despite the variation in sequencing platforms and protocols, \chopper consistently achieved high support rates in identifying true biological sequences while effectively filtering out chimeric reads.
 The results demonstrate the model's versatility and accuracy across diverse datasets, confirming its capability to maintain data integrity across different sequencing conditions.
@@ -313,10 +315,11 @@ These findings suggest that \glspl{llm} can effectively handle the complexity an
 This not only enhances the quality of sequencing data but also opens up new possibilities for the application of language models in other areas of genomics and transcriptomics.
 
 
+% Figure 2 result
 
-In the VCaP cell line, genes in the FP group exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{A}), despite displaying similar gene lengths (\figref{fig:f2}{B}).
-To further explore the functional roles of FP group genes, we conducted Gene Ontology (GO) enrichment analysis across six cell lines—VCaP, A549, K562, HepG2, MCF7, and HCT116 (Figure S2A-S2F).
-Interestingly, despite distinct input gene sets, these cell lines converged on common housekeeping functions, including translation, ribosomal small subunit biogenesis, and rRNA processing, etc. (\figref{fig:f2}{C}).
+In the VCaP cell line, genes in the \gls{fp} group exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{a}), despite displaying similar gene lengths (\figref{fig:f2}{b}).
+To further explore the functional roles of FP group genes, we conducted Gene Ontology (GO) enrichment analysis across six cell lines—VCaP, A549, K562, HepG2, MCF7, and HCT116 (Figure S2a-S2f).
+Interestingly, despite distinct input gene sets, these cell lines converged on common housekeeping functions, including translation, ribosomal small subunit biogenesis, and rRNA processing, etc. (\figref{fig:f2}{c}).
 
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of \gls{drs}.
 By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
@@ -359,57 +362,51 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 
 \subsection{Training data preparation}\label{ssec:data}
 
+We obtained ONT directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
+FASTQ files were generated using Dorado (version 0.7.3) with adapter trimming disabled (``--no-trim'')~\cite{dorado2023}.
+Reads were then aligned to the human reference genome (GRCh38) using minimap2 (version 2.26-r1209) with optimized ONT directRNA parameters (``-ax splice -uf -k14'')~\cite{li2018minimap2}.
 
-We obtained ONT directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116).
-FASTQ files were generated using Dorado (version 0.5.2) with adapter trimming disabled (``--no-trim'').
-Reads were then aligned to the human reference genome (hg38) using minimap2 (version 2.24) with optimized ONT directRNA parameters (``-ax splice -uf -k14'').
-During the adapter extraction step, we selected primary alignments that lacked supplementary alignments; the 3 soft-clipped regions of these alignments were treated as adapter sequences, while the aligned portions were considered non-adapter sequences.
-To create artificial chimeric reads for model training, we randomly selected two non-adapter sequences from the repository and one adapter sequence from the adapter repository, repeating this process multiple times to generate the chimeric dataset.
+During the adapter extraction step, we selected primary alignments that lacked supplementary alignments.
+The 3' soft-clipped regions of these alignments were treated as adapter sequences, while the aligned portions were considered non-adapter sequences.
+To create artificial chimeric reads for model training, we randomly selected two non-adapter sequences from the repository and one adapter sequence from the adapter repository, repeating this process to generate the chimeric dataset.
+The resulting SAM files were converted to BAM files, indexed, and sorted using SAMtools (version 1.19.2) to obtain the genome coverage distribution~\cite{li2009sequence}.
 
 
+The dataset consists of both positive and negative examples.
+Positive data includes terminal and internal adapters in a \( 1:1 \) ratio, while negative data contains no artificial sequences.
+The ratio of positive to negative data is \( 9:1 \).
+In total, we generated \num{600000} data points for training.
+The dataset was split into training, validation, and test sets with a ratio of  \num{0.8}, \num{0.1}, and \num{0.1}, resulting in \num{480000} data points for training, \num{60000} for validation, and \num{60000} for testing.
 
-The raw sequencing data were obtained in fast5 format from the RNA002 run and pod5 format from the RNA004 run.
-For base calling, we used Dorado (v0.7.1) for both datasets~\cite{dorado2023}.
-The RNA002 data were processed using the rna002\_70bps\_hac model, while the RNA004 data were basecalled using the rna004\_130bps\_hac model.
-After base calling, we removed short reads (\( < 50 \) bases) using SeqKit (v2.4.0).
-The resulting fastq files were then aligned to the human reference genome (GRCh38) using Minimap2 (v2.26) with the \textit{-ax splice -uf -k7} configuration for direct RNA reads~\cite{li2018minimap2}.
-We converted the resulting sam files to bam files, indexed, and sorted them using SAMtools (v1.17) to obtain the genome coverage distribution~\cite{li2009sequence}.
-
-The dataset for this study comprised publicly available \gls{drs} data from the SG-NEx data, which was accessed on 2024 at \url{registry.opendata.aws/sg-nex-data}~\cite{chen2021systematic}.
-The SG-NEx data contain six samples including A549, HCT116, HepG2, K562, and MCF7.
-We obtain artificial sequence in terms of soft clip from alignment data.
-The dataset consist of positive and negative data, in which there is no artificial sequence.
-The positive data include terminal and  internal adapters with ratio of \( 1:1 \) respectively.
-The ratio between positive data  and negative data is \( 9:1 \).
-Totally, we generated \num{600000} data points for training.
-The dataset was split into training, validation, and test sets with ration \num{0.8}, \num{0.1}, and \num{0.1} respectively.
-Then, we have \num{480000} data points for training, \num{60000} for validation, and \num{60000} million for test.
 
 \subsection{Language model architecture}\label{ssec:lm}
 
-We formulate the problem as a token classification task, where the model predicts the region of artificial sequences.
-For each token, the model predicts two classes of artificial sequences: positive and negative, which means the token is or is not in artificial sequences.
+We formulated the problem as a token classification task, where the model predicts whether each token belongs to an artificial sequence.
+The model classifies tokens into two categories: positive (part of an artificial sequence) or negative (not part of an artificial sequence).
 
-We design the model for token classification task, which means the model is able to predict the region of artificial sequences.
-We adapted a genomics \gls{fm} HyenaDNA as components of model, which is used to conduct feature extraction, and help us better understand the biological sequences~\cite{nguyen2024hyenadna}.
-Following the feature extractor, we add a quality block to combine quality of the input sequence to predict output precisely.
-The quality block includes a bulk of dense and residual connection.
-The quality block accepts the quality of the input sequence and the extracted features from sequences.
-Then, a classification head is used to predict probability of artificial sequence for every token (Figure~\ref{fig:f1}).
-The model was trained to predict  artificial sequences based on the contextual information present in the biological sequences.
+
+To achieve this, we designed the model specifically for token classification, enabling it to accurately predict the regions of artificial sequences.
+We adapted the HyenaDNA framework, a genomic model architecture, as the core feature extractor, which helps in understanding and processing biological sequences effectively.
+
+Following the feature extraction stage, we incorporated a quality block to integrate sequence quality information into the prediction process.
+This quality block consists of dense layers and residual connections, allowing it to combine the quality scores with extracted features.
+The output from the quality block is then passed to a classification head, which predicts the probability of each token being part of an artificial sequence.
+The model was trained to leverage the contextual information in the biological sequences, ensuring accurate prediction of artificial sequences.
+
 
 \subsection{Model training}\label{ssec:training}
 
-\textit{Sequence tokenization.} We used a tokenization strategy that converts the biological sequences into tokens at the single nucleotide level.
+\textit{Sequence tokenization.} We used a tokenization strategy that converts the biological sequences into single-nucleotide tokens.
 The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the basic units, allowing the model to capture the fine-grained details of the sequences.
 
 The model was trained using supervised learning, with sequences annotated for artificial sequences.
-Training was conducted on a high-performance computing cluster, utilizing two A100 \glspl{gpu} to expedite the process.
+Training was conducted on a high-performance computing cluster using two A100 \glspl{gpu}.
 The batch size was \num{64}, validation was performed every \num{20000} steps, and we selected the model with the highest validation F1 score for the base prediction task.
 The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters~\cite{kingma2014adam}.
 We use a learning rate scheduler to reduce the learning rate when the validation loss stops improving, and initial learning rate is \num{0.00002}.
 
-We use cross entropy loss to update the model parameters.
+Cross-entropy loss was used to update the model parameters:
+
 
 \[
 	\ell(x, y) = L = \{l_1,\cdots,l_N\}^\top, \quad
@@ -425,7 +422,7 @@ where \( x \) is the input, \( y \) is the target, \( w \) is the weight,
 	\ell(x, y) =   \sum_{n=1}^N \frac{1}{\sum_{n=1}^N w_{y_n} \cdot 1\{y_n \not= \textrm{ignore\_index}\}} l_n
 	.\]
 
-The training process involved \num{60} epochs, with early stopping criteria based on validation performance to prevent overfitting.
+Training was conducted for \num{60} epochs with early stopping based on validation performance to prevent overfitting.
 
 Evaluation metrics included accuracy, precision, recall, and F1 score with the following equations:
 \begin{align*}
@@ -434,28 +431,45 @@ Evaluation metrics included accuracy, precision, recall, and F1 score with the f
 	\textrm{F1}        & = 2 \times \frac{\textrm{Precision} \times \textrm{Recall}}{\textrm{Precision} + \textrm{Recall}}
 \end{align*}
 
-The final model was selected based on the best performance on the validation set, and its predictions were compared against a baseline model using traditional methods.
-
-We perform multitask learning to find the optimal model's parameters.
+The final model was selected based on the best performance on the validation set.
+We use Hydra to find the optimal model's parameters~\cite{Yadan2019Hydra}.
 The total loss for one window is the sum of the losses from each supported position.
-Total loss for supported position  \( i \), where \( i  \in {1,2, \cdots, S} \), is a sum of two losses: base prediction loss and informative position prediction loss and is given with
-where is the cross-entropy loss, is the binary cross-entropy loss, represents the predicted base probabilities is the true base.
-denotes the predicted probability that a
-position is informative, and is the indicator function that equals to 1, and 0 otherwise.
-We trained the model on 2 A100 \glspl{gpu} for a maximum of 1 million steps.
-
+For per position  \( i \), where \( i  \in {1,2, \cdots, S} \),  the total loss includes both base prediction loss.
+The binary cross-entropy losses were used for these tasks, with the total loss incorporating predicted base probabilities, true base values, and the probability that a position is informative.
 The complete list of hyperparameters can be found in Supplementary Table.
-The primary hyperparameters we sweep across include: learning rate, global batch size, dropout, weight decay, and a reverse complement augmentation.
 
 \subsection{Polishing predictions with sliding window}
 
-We use sliding windows to smooth predictions, which allow longer prediction region and reduce choppy noise.
-That obey the logistics of artificial sequences in the \gls{drs} data.
-In each window, we adapt vote method to polish the predictions.
-The range of sliding window is \num{21}.
-After we remove predicted region, we filter the region with length less than \num{20} and output left sequences and related quality to fastq records.
+To enhance the accuracy and smoothness of the predictions, we implemented a sliding window approach.
+This technique helps to extend the prediction regions and reduces choppy noise, aligning with the typical distribution of artificial sequences in \gls{drs} data.
+The sliding window technique is particularly effective in maintaining continuity in regions where artificial sequences are predicted, ensuring that isolated predictions do not create fragmented and unrealistic results.
 
-\subsection{Evaluating artificial sequences detection with VCap002}
+We employed a sliding window of size 21 nucleotides.
+This window size was chosen based on empirical testing to balance the need for sufficient smoothing while retaining sensitivity to shorter artificial sequences.
+
+Within each sliding window, we applied a voting method to polish the predictions.
+The final classification of each nucleotide within the window is determined by the majority vote of all predictions within that window.
+The voting result for each nucleotide \( x_i \) is given by:
+\[
+y_i = \begin{cases}
+    1 & \text{if } \sum_{j=i-k}^{i+k} p_j > \frac{W}{2} \\
+    0 & \text{otherwise}
+\end{cases}
+\]
+where: \( y_i \) is the final prediction for nucleotide \( x_i \). \( p_j \) is the predicted probability of being an artificial sequence for nucleotide \( x_j \). \( W \) is the size of the sliding window, \( k \) is half the window size, i.e., \( k = \frac{W-1}{2} \).
+
+
+After polishing the predictions using the sliding window, we performed additional filtering to refine the output.
+Predicted regions with lengths less than 20 nucleotides were removed, as such short regions are likely to represent noise rather than true artificial sequences.
+The remaining sequences, along with their associated quality scores, were then outputted to FASTQ records for further analysis.
+This post-processing step ensures that the final output is both accurate and biologically relevant.
+
+The use of sliding windows and the voting method significantly improved the quality of the predictions by smoothing the output and reducing false positives.
+By combining these techniques, we were able to produce more reliable predictions, which are crucial for downstream applications such as sequence assembly and variant calling.
+
+
+
+\subsection{Evaluating artificial sequences detection}
 
 \textit{Evaluation metrics and analysis.} On the basis of the numbers of \gls{tp} and \gls{fn}, the evaluation metrics used to assess the performance of  model included precision, recall, and F1 score:
 
@@ -463,10 +477,27 @@ These metrics provided a comprehensive view of the model's ability to identify a
 Statistical analysis was conducted to compare the performance of our language model with traditional methods, using paired t-tests to determine the significance of improvements.
 The results were further validated by testing the model on an independent dataset, demonstrating its generalizability and robustness.
 
+
 \textit{Simulation Data Evaluation.}
 
-\textit{Real Data Evaluation.} We use the Vcap002 dataset to evaluate the performance of the model.
-We sub-sample the dataset to 1 millions reads, and use the model to predict the artificial sequences.
+
+\textit{Evaluation of artificial chimeric reads in reals data.}  We evaluated the performance of \chopper using the VCaP 002 dataset.
+Specifically, the model was applied to ONT \gls{drs} to detect artificial sequences, focusing on identifying chimeric reads caused by internal adapters.
+To verify these identified reads, we cross-referenced them with data from other sequencing platforms, including ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap. Additionally, we calculated the supporting rates to assess the consistency of chimeric read detection across these platforms.
+The supporting rate was defined as the ratio of chimeric reads corroborated by other platforms to the total number of chimeric reads detected by \chopper.
+
+
+\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both BLAT and PxBLAT tools.
+The BLAT identity is defined as the ratio of the match length to the sequence length, providing a measure of how closely a sequence aligns to a reference genome.
+\[
+\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
+\]
+Here, the match length refers to the total number of aligned bases that match the reference genome, and the sequence length is the total length of the query sequence.
+
+We aligned the sequences whose length larger than 20 bp to the reference genome using BLAT (version 0.37.2) and PxBLAT (version 1.2.1)~\cite{kent2002blat, li2024pxblat}.
+The resulting BLAT identity scores were analyzed to differentiate between true biological sequences and artificial chimeric reads.
+Sequences with lower BLAT identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
+
 
 % \section{Tables}\label{sec5}
 
