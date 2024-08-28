@@ -62,7 +62,7 @@
 
 % for collabration and will remove before submit
 \newcommand{\yy}[1]{\textcolor{cyan}{\textbf{[Yangyang: #1]}}}
-\newcommand{\rd}[1]{\textcolor{green}{\textbf{[Dr. Yang: #1]}}}
+\newcommand{\rd}[1]{\textcolor{green}{\textbf{[Dr.Yang: #1]}}}
 \newcommand{\ty}[1]{\textcolor{orange}{\textbf{[Tingyou: #1]}}}
 \newcommand{\qx}[1]{\textcolor{purple}{\textbf{[Qingxiang: #1]}}}
 
@@ -149,7 +149,7 @@
 
 \begin{document}
 
-\title[Article Title]{Language models identify chimeric artificial read in Nanopore direct RNA sequencing data.}
+\title[Article Title]{Language model identify artificial chimeric read in Nanopore direct RNA sequencing data.}
 
 %%=============================================================%%
 %% GivenName	-> \fnm{Joergen W.}
@@ -318,7 +318,7 @@ We then compared the results with those obtained using Dorado, both with and wit
 We show the reduction in chimeric reads achieved by DeepChopper and the supporting rates calculated using ONT PCR cDNA data.
 The results indicate that DeepChopper significantly reduced the number of unsupported chimeric reads in the RNA 004 dataset compared to Dorado.
 Specifically, DeepChopper reduced the chimeric reads to approximately 23,000, while Dorado with trimming resulted in around 30,000 chimeric reads, and Dorado without trimming led to over 30,000 chimeric reads (\edfigref{fig:sf1}{c}).
-The ONT PCR cDNA support confirmed the accuracy of DeepChopper's predictions, with a higher proportion of supported reads than those found with Dorado alone. \yy{use pcentage}
+The ONT PCR cDNA support confirmed the accuracy of DeepChopper's predictions, with a higher proportion of supported reads than those found with Dorado alone.\yy{use pcentage}
 
 
 
@@ -339,13 +339,10 @@ This pattern is consistent with that observed in the RNA 002 dataset, confirming
 These consistent results across different datasets validate the effectiveness of DeepChopper in detecting low-quality artificial sequences, demonstrating its reliability and applicability to multiple RNA sequencing datasets.
 
 
-
-
-
 % Chimeric Read Detection Across Multiple Samples (Fig 1h)
 We present the results of chimeric read detection across five different samples, including A549, HCT116, HepG2, K562, and MCF7, mirroring the analysis shown in \figref{fig:f1}{e}.
 Each subfigure  illustrates the performance of DeepChopper in identifying and filtering out chimeric reads in different datasets.
-Consistently across all samples, DeepChopper significantly reduced the number of chimeric reads compared to baseline methods ( 62\%-84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
+Consistently across all samples, DeepChopper significantly reduced the number of chimeric reads compared to baseline methods (62\%-84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
 The supporting rate of Dorado with trimming was 8\% to 19\%, while DeepChopper achieved a supporting rate from 43\% to 55\%.
 The reduction rates were comparable to those observed in \figref{fig:f1}{e}, further validating DeepChopper’s superior capability to distinguish true biological sequences from chimeric constructs across various sample types.
 These consistent results across multiple samples underscore the model's broad applicability and effectiveness.
@@ -360,8 +357,7 @@ The consistency of these findings across the multiple datasets reinforces the re
 
 \begin{figure}[!h]
 	\includegraphics[height=0.78\columnwidth]{figures/finals/figure1}
-    \caption{{\bf  Detection and analysis of chimeric reads in nanopre \gls{drs} Data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}
-	\label{fig:f1}
+    \caption{{\bf  Detection and analysis of chimeric reads in nanopre \gls{drs} Data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}\label{fig:f1}
 \end{figure}
 
 
@@ -400,8 +396,7 @@ Future research can explore additional applications and further optimize these m
 
 \begin{figure}[!h]
 	\includegraphics[height=1.2\columnwidth]{figures/finals/figure2}
-	\caption{\bf This is figure 2.}
-	\label{fig:f2}
+	\caption{\bf This is figure 2.}\label{fig:f2}
 \end{figure}
 
 
@@ -429,7 +424,7 @@ We performed nanopore sequencing of the enriched mRNA using two different chemis
 For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, \gls{ont}) following the manufacturer's instructions.
 Nanopore \gls{drs} employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
 The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
-For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, Oxford Nanopore Technologies) according to the protocol of manufacturer.
+For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, \gls{ont}) according to the protocol of manufacturer.
 The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
 
 \subsection{Training data preparation}\label{ssec:data}
