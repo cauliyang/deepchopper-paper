@@ -73,7 +73,7 @@
 % define glossaries
 \makeglossaries
 \newacronym{blat}{BLAT}{BLAST-like alignment tool}
-\newacronym{llm}{LLM}{Large language model}
+\newacronym{llm}{LLM}{Large Language Model}
 \newacronym{hmm}{HMM}{Hidden Markov Model}
 \newacronym{gpu}{GPU}{Graphics Processing Unit}
 \newacronym{drs}{DRS}{NanoPore direct RNA sequencing}
@@ -85,7 +85,7 @@
 \newacronym{ucsc}{UCSC}{UCSC Genome Browser}
 \newacronym{glm}{GLM}{Genomic Language Model}
 \newacronym{lcglm}{LCGLM}{Long-Context Genomic Language Model}
-\newacronym{snp}{SNP}{single nucleotide polymorphism}
+\newacronym{snp}{SNP}{Single Nucleotide Polymorphism}
 \newacronym{fm}{FM}{Foundational Model}
 \newacronym{nlp}{NLP}{natural language processing}
 
@@ -93,11 +93,13 @@
 \newacronym{fp}{FP}{false positive}
 \newacronym{fn}{FN}{false negative}
 
+
 % define macros
 % chopper = DeepChopper
-\newcommand{\chopper}{DeepChopper\xspace}
+%\newcommand{\chopper}{DeepChopper\xspace}
 
 \newcommand{\figref}[2]{Fig.~\hyperref[#1]{\ref*{#1}#2}}
+\newcommand{\edfigref}[2]{Extended Data Fig.~\hyperref{#1}{\ref*{#1}{#1}}}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -170,25 +172,14 @@
 \abstract{
     The accurate identification of chimeric reads is critical for ensuring the reliability of nanopore \gls{drs} data, which has emerged as a powerful tool for sequencing full-length RNA molecules while preserving native RNA modifications. Despite its potential, \gls{drs} is susceptible to the generation of chimeric reads, where fragments of distinct RNA molecules are incorrectly joined together, complicating downstream analyses such as transcriptome assembly and gene fusion detection.
 
-    In this study, we present \chopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, \chopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio cDNA, and PacBio CapTrap.
+    In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio cDNA, and PacBio CapTrap.
 
-    Our results demonstrate that \chopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms. Additionally, \chopper effectively identified low-quality artificial sequences based on base quality scores and \gls{blat} identity, further enhancing the accuracy of \gls{drs} data.
+    Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality scores and \gls{blat} identity, further enhancing the accuracy of \gls{drs} data.
 
-    This study highlights the potential of \chopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomic analyses and broadening the applicability of genomics language models in bioinformatics.}
+    This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomic analyses and broadening the applicability of genomics language models in bioinformatics.}
 
 \maketitle
 \section{Main}\label{sec1}
-
-%Long Context Strategies in Genomic
-
-%To achieve longer context, genomic models have relied on two strategies: i. tokenization and ii. dilation and downsampling.
-%Tokenization is a necessary step in masked language modeling (MLM) with bidirectional Transformer architectures (BERT) (Devlin et al., 2018), a common model in genomics.
-%These tokenizers use fixed k-mers (short overlapping sequences of length k) or frequency-based byte pair encoding (BPE), that attempt to aggregate DNA into meaningful units (Ji et al., 2021; Zaheer et al., 2020).
-%Consequently, these aggregation techniques create large new vocabularies (compared to the natural vocabulary of 4 nucleotides) that are less generalizable (Tay et al., 2021).
-%The second strategy uses dilated convolutions and downsampling, both of which essentially average or skip elements between weights (Fournier et al., 2021).
-%A canonical example is the Enformer, which uses dilation and downsampling to reach context lengths of 100k nucleotides to predict gene expression tracks (Avsec et al., 2021).
-%Common across tokenization, dilation, and downsampling is the sacrifice of single nucleotide resolution to reach longer context.
-
 
 % Outline
 % 1. Sequencing history
@@ -201,9 +192,8 @@
 % 6. Results
 % 7. Conclusion
 
-
 The advent of high-throughput sequencing technologies has revolutionized genomics, providing unprecedented insights into the genetic underpinnings of biological processes.
-Among these technologies, Oxford \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules with the unique advantage of preserving native RNA modifications.
+Among these technologies, Oxford \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules with the unique advantage of preserving native RNA modifications~\cite{jain2022advances}.
 However, despite its transformative potential, \gls{drs} faces a significant challenge: the generation of chimeric artificial reads where fragments of distinct RNA molecules are incorrectly joined together~\cite{smith2020molecular}.
 Accurately identifying these chimeric sequences is critical, as their presence compromises data quality and hinders downstream analyses, including transcriptome assembly, quantification, and gene fusion detection.
 
@@ -219,94 +209,95 @@ Single-nucleotide resolution remains elusive—a crucial aspect for understandin
 Despite advances in \gls{drs}, the technology remains susceptible to the formation of chimeric reads, particularly in long-read sequencing, complicating the accurate interpretation of results~\cite{smith2020molecular}.
 Addressing this issue is critical for ensuring the reliability of \gls{drs} data in both research and clinical applications.
 
-In response to these challenges, we developed \chopper, a language model specifically tailored for biological sequences.
+In response to these challenges, we developed DeepChopper, a language model specifically tailored for biological sequences.
 Leveraging state-of-the-art \gls{llm} architectures and training paradigms, our model was trained on extensive \gls{drs} datasets to predict artificial sequences with high accuracy.
-Unlike traditional methods, which rely on tokenizers or fixed k-mers and often lose single-nucleotide resolution, \chopper treats biological sequences as a form of language, capturing the underlying biological grammar and enabling it to predict artificial sequences embedded within long reads.
+Unlike traditional methods, which rely on tokenizers or fixed k-mers and often lose single-nucleotide resolution, DeepChopper treats biological sequences as a form of language, capturing the underlying biological grammar and enabling it to predict artificial sequences embedded within long reads.
 
 Traditional hard clipping methods can only predict artificial sequences at the ends of reads (terminal adapters).
-In contrast, \chopper excels at identifying chimeric reads formed by artificial sequences located in the middle of reads (internal adapters).
+In contrast, DeepChopper excels at identifying chimeric reads formed by artificial sequences located in the middle of reads (internal adapters).
 Our model significantly outperforms traditional algorithms, particularly in handling the length and variability inherent in RNA sequences (Supplementary Fig 1).
 
 Our findings demonstrate that DeepChopper can effectively parse vast amounts of sequencing data, identifying artificial sequences with remarkable accuracy.
 This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
 By successfully predicting artificial sequences in \gls{drs} data, we illustrate the potential of \glspl{llm} to enhance the accuracy and efficiency of biological sequence analysis in long contexts.
-This study, exemplified by \chopper, paves the way for broader applications of \glspl{llm} in understanding and interpreting the vast complexities of genomic information.
+This study, exemplified by DeepChopper, paves the way for broader applications of \glspl{llm} in understanding and interpreting the vast complexities of genomic information.
 
 
 % Result
 
 %Model Architecture Overview (Fig 1a)
 
-We provide an overview of the \chopper model architecture, highlighting its key components designed for the detection of artificial sequences in \gls{drs} data (\figref{fig:f1}{a}).
+We provide an overview of the DeepChopper model architecture, highlighting its key components designed for the detection of artificial sequences in \gls{drs} data (\figref{fig:f1}{a}).
 The model employs a HyenaDNA as a feature extactor, incorporating advanced tokenization and sequence quality assessment mechanisms to handle long-range dependencies inherent in sequencing data~\cite{nguyen2024hyenadna}.
 The architecture is specifically tailored to biological sequences, enabling it to differentiate between true biological reads and chimeric artifacts with high accuracy.
-By leveraging residual connections and long-range attention mechanisms, \chopper is optimized for processing large volumes of sequencing data efficiently, making it a powerful tool for improving data quality in genomic research. This foundational architecture underpins the superior performance of \chopper (\figref{fig:f1}{a}).
+By leveraging residual connections and long-range attention mechanisms, DeepChopper is optimized for processing large volumes of sequencing data efficiently, making it a powerful tool for improving data quality in genomic research.
+This foundational architecture underpins the superior performance of DeepChopper (\figref{fig:f1}{a}).
 
 
 % Analysis of Predicted Artifact Lengths Fig 1b
 We conducted analysis of predicted artifact lengths in VCaP 002.
-The distribution of the lengths of predicted artifacts revealed that \chopper is particularly effective at identifying artifacts within a critical length range, which is often associated with chimeric reads.
-The frequency analysis indicated that the majority of the artifacts detected by \chopper were around 70 bp, a range where traditional methods tend to struggle due to the ambiguous nature of such sequences (\figref{fig:f1}{b}).
+The distribution of the lengths of predicted artifacts revealed that DeepChopper is particularly effective at identifying artifacts within a critical length range, which is often associated with chimeric reads.
+The frequency analysis indicated that the majority of the artifacts detected by DeepChopper were around 70 bp, a range where traditional methods tend to struggle due to the ambiguous nature of such sequences (\figref{fig:f1}{b}).
 
 % Positional Bias in Chimeric Read Prediction Fig 1c
 
 An interesting pattern emerged when analyzing the relative positions of the predicted chimeric artifacts.
-\chopper showed a consistent ability to identify chimeric sequences not only at the ends of reads (typically addressed by traditional clipping methods) but also those embedded within the middle of long reads (\figref{fig:f1}{c}).
+DeepChopper showed a consistent ability to identify chimeric sequences not only at the ends of reads (typically addressed by traditional clipping methods) but also those embedded within the middle of long reads (\figref{fig:f1}{c}).
 This capability is particularly crucial for \gls{drs} data, where chimeric reads often appear in internal regions, leading to significant errors in downstream analyses.
 
 % The number of prediction intervals Fig 1d
 
-We analyzed the number of prediction intervals identified by \chopper in the VCaP 002 dataset.
+We analyzed the number of prediction intervals identified by DeepChopper in the VCaP 002 dataset.
 A prediction interval is defined as a contiguous sequence within a read where the model predicts the presence of artificial sequences.
 The number of intervals per read offers insight into the frequency and distribution of these sequences.
 In most cases, DeepChopper predicted a single interval, typically located internally or at the end of the read.
 We focused on reads with two or more prediction intervals, as these may indicate artificial chimeric reads.
 Our results showed a distinct distribution pattern, with the majority of reads containing between 1 and 5 intervals (\figref{fig:f1}{d}).
 This suggests that chimeric artifacts often follow expected patterns and can be reliably detected.
-\chopper's ability to detect multiple prediction intervals within a single read highlights its sensitivity in identifying fragmented chimeric sequences that might be missed by traditional methods.
+DeepChopper's ability to detect multiple prediction intervals within a single read highlights its sensitivity in identifying fragmented chimeric sequences that might be missed by traditional methods.
 
 
 % Chimeric Read Detection Across Sequencing Platforms Fig 1e
-We observed that \chopper consistently outperformed Dorado, both with and without trimming, in detecting chimeric reads in the VCaP 002 dataset, achieving a 91\% reduction in the total count of chimeric reads.
+We observed that DeepChopper consistently outperformed Dorado, both with and without trimming, in detecting chimeric reads in the VCaP 002 dataset, achieving a 91\% reduction in the total count of chimeric reads.
 To further validate this capability, we used ONT PCR cDNA data (\figref{fig:f1}{e}) to verify the chimeric reads detected by our model.
-The results showed that DeepChopper identified significantly fewer unsupported reads compared to baseline methods, demonstrating superior accuracy in filtering out chimeric artifacts. Notably, \chopper reduced the number of unsupported reads by nearly 94\% and achieved a supporting rate of 47\% compared to 5\%, underscoring its exceptional ability to distinguish true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
+The results showed that DeepChopper identified significantly fewer unsupported reads compared to baseline methods, demonstrating superior accuracy in filtering out chimeric artifacts. Notably, DeepChopper reduced the number of unsupported reads by nearly 94\% and achieved a supporting rate of 47\% compared to 5\%, underscoring its exceptional ability to distinguish true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
 
 
 % Base Quality of Detected Artificial Sequences (Fig 1f)
-We analyzed the base quality of artificial sequences detected by \chopper, as identified in \figref{fig:f1}{f}.
+We analyzed the base quality of artificial sequences detected by DeepChopper, as identified in \figref{fig:f1}{f}.
 The base quality score is a critical metric for assessing the reliability of sequencing data, with higher scores indicating greater confidence in the accuracy of the detected bases.
-The results revealed that the artificial sequences identified by \chopper consistently exhibited lower base quality scores compared to true biological sequences (\figref{fig:f1}{f}).
+The results revealed that the artificial sequences identified by DeepChopper consistently exhibited lower base quality scores compared to true biological sequences (\figref{fig:f1}{f}).
 This finding underscores the model's ability to differentiate between high-confidence true reads and low-confidence artificial sequences.
-Specifically, \chopper effectively flagged sequences with diminished base quality, aligning with the expected profile of chimeric or erroneous reads.
-The clear distinction in base quality between supported and unsupported reads further validates \chopper's accuracy in identifying and filtering out artificial sequences.
-By maintaining a high level of precision in detecting these lower-quality sequences, \chopper enhances the overall integrity of the sequencing data, ensuring that downstream analyses are based on more accurate and reliable reads.
+Specifically, DeepChopper effectively flagged sequences with diminished base quality, aligning with the expected profile of chimeric or erroneous reads.
+The clear distinction in base quality between supported and unsupported reads further validates DeepChopper's accuracy in identifying and filtering out artificial sequences.
+By maintaining a high level of precision in detecting these lower-quality sequences, DeepChopper enhances the overall integrity of the sequencing data, ensuring that downstream analyses are based on more accurate and reliable reads.
 
 
 % BLAT Identity of Detected Artificial Sequences (Fig 1g)
-We evaluated the \gls{blat} identity of the artificial sequences detected by \chopper (\figref{fig:f1}{g}).
+We evaluated the \gls{blat} identity of the artificial sequences detected by DeepChopper (\figref{fig:f1}{g}).
 \gls{blat} identity measures the similarity of the sequences to known reference sequences, with lower identity scores indicating potential chimeric or erroneous reads.
-The results show that the artificial sequences identified by \chopper consistently have lower BLAT identities compared to true biological sequences.
+The results show that the artificial sequences identified by DeepChopper consistently have lower BLAT identities compared to true biological sequences.
 This finding highlights the model's proficiency in detecting sequences that diverge from expected reference sequences, further confirming their artificial nature.
 
 % Chimeric Read Detection Across Multiple Samples (Fig 1h)
 We present the results of chimeric read detection across five different samples, including A549, HCT116, HepG2, K562, and MCF7, mirroring the analysis shown in \figref{fig:f1}{e}.
-Each subfigure  illustrates the performance of \chopper in identifying and filtering out chimeric reads in different datasets.
-Consistently across all samples, \chopper significantly reduced the number of chimeric reads compared to baseline methods ( 62\%-84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
-The supporting rate of Dorado with trimming was 8\% to 19\%, while \chopper achieved a supporting rate from 43\% to 55\%.
+Each subfigure  illustrates the performance of DeepChopper in identifying and filtering out chimeric reads in different datasets.
+Consistently across all samples, DeepChopper significantly reduced the number of chimeric reads compared to baseline methods ( 62\%-84\%), demonstrating its robustness and reliability in diverse sequencing contexts.
+The supporting rate of Dorado with trimming was 8\% to 19\%, while DeepChopper achieved a supporting rate from 43\% to 55\%.
 The reduction rates were comparable to those observed in \figref{fig:f1}{e}, further validating DeepChopper’s superior capability to distinguish true biological sequences from chimeric constructs across various sample types.
 These consistent results across multiple samples underscore the model's broad applicability and effectiveness.
 
 % Supporting Read Analysis Across Multiple Datasets (Fig 1i)
-Besides, we focus on the analysis of supporting reads in the wtc11 sample, utilizing five different sequencing platforms: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap (\figref{fig:f1}{i}) to verify the chiremic read detected from data processed by \chopper.
+Besides, we focus on the analysis of supporting reads in the wtc11 sample, utilizing five different sequencing platforms: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap (\figref{fig:f1}{i}) to verify the chiremic read detected from data processed by DeepChopper.
 Our model reduces the number of chimeric reads by 54\% compare to Dorado with trim for wtc11.
-Each subfigure illustrates the proportion of supporting reads (51\% to 66\%) detected by \chopper across these datasets, and the rate of supporting reads of Dorado with trimming (26\% to 37\%).
-Despite the variation in sequencing platforms and protocols, \chopper consistently achieved high support rates in identifying true biological sequences while effectively filtering out chimeric reads.
+Each subfigure illustrates the proportion of supporting reads (51\% to 66\%) detected by DeepChopper across these datasets, and the rate of supporting reads of Dorado with trimming (26\% to 37\%).
+Despite the variation in sequencing platforms and protocols, DeepChopper consistently achieved high support rates in identifying true biological sequences while effectively filtering out chimeric reads.
 The results demonstrate the model's versatility and accuracy across diverse datasets, confirming its capability to maintain data integrity across different sequencing conditions.
-The consistency of these findings across the multiple datasets reinforces the reliability of \chopper in enhancing the quality of nanopore direct RNA sequencing data.
+The consistency of these findings across the multiple datasets reinforces the reliability of DeepChopper in enhancing the quality of nanopore direct RNA sequencing data.
 
 \begin{figure}[!h]
 	\includegraphics[height=0.78\columnwidth]{figures/finals/figure1}
-    \caption{{\bf  Detection and Analysis of Chimeric Reads in Nanopore Direct RNA Sequencing Data Using \chopper.} (a) Overview of the \chopper model architecture, highlighting key components such as tokenization, sequence quality assessment, and prediction blocks. The model is designed to identify artificial sequences by leveraging advanced transformer-based techniques. (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by ONT PCR cDNA, while the red bars indicate chimeric reads supported by ONT PCR cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) BLAT identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by ONT PCR cDNA, while the red bars indicate chimeric reads supported by ONT PCR cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap. The blue bars represent chimeric unsupported reads, while the red bars indicate  supported chimeric reads}
+    \caption{{\bf  Detection and Analysis of Chimeric Reads in Nanopore Direct RNA Sequencing Data Using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by ONT PCR cDNA, while the red bars indicate chimeric reads supported by ONT PCR cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) BLAT identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by ONT PCR cDNA, while the red bars indicate chimeric reads supported by ONT PCR cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap. The blue bars represent chimeric unsupported reads, while the red bars indicate  supported chimeric reads}
 	\label{fig:f1}
 \end{figure}
 
@@ -383,7 +374,6 @@ The dataset was split into training, validation, and test sets with a ratio of  
 
 We formulated the problem as a token classification task, where the model predicts whether each token belongs to an artificial sequence.
 The model classifies tokens into two categories: positive (part of an artificial sequence) or negative (not part of an artificial sequence).
-
 
 To achieve this, we designed the model specifically for token classification, enabling it to accurately predict the regions of artificial sequences.
 We adapted the HyenaDNA framework, a genomic model architecture, as the core feature extractor, which helps in understanding and processing biological sequences effectively.
@@ -481,10 +471,10 @@ The results were further validated by testing the model on an independent datase
 \textit{Simulation Data Evaluation.}
 
 
-\textit{Evaluation of artificial chimeric reads in reals data.}  We evaluated the performance of \chopper using the VCaP 002 dataset.
+\textit{Evaluation of artificial chimeric reads in reals data.}  We evaluated the performance of DeepChopper using the VCaP 002 dataset.
 Specifically, the model was applied to ONT \gls{drs} to detect artificial sequences, focusing on identifying chimeric reads caused by internal adapters.
 To verify these identified reads, we cross-referenced them with data from other sequencing platforms, including ONT PCR cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap. Additionally, we calculated the supporting rates to assess the consistency of chimeric read detection across these platforms.
-The supporting rate was defined as the ratio of chimeric reads corroborated by other platforms to the total number of chimeric reads detected by \chopper.
+The supporting rate was defined as the ratio of chimeric reads corroborated by other platforms to the total number of chimeric reads detected by DeepChopper.
 
 
 \textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both BLAT and PxBLAT tools.
@@ -542,26 +532,83 @@ Sequences with lower BLAT identity were flagged as potential chimeric reads, con
 % 	% \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
 % \end{table}
 
-\backmatter
 
-\bmhead{Supplementary information}
-
-% If your article has accompanying supplementary file/s please state so here.
-% Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
-% Please refer to Journal-level guidance for any specific requirements.
 \bmhead{Data Availability}
 
 The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38\_reference\_genome/}.
 
 
+\bmhead{Code Availability}
+
+DeepChopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+Both repositories are available under a MIT License.
+
+\bmhead{Acknowledgements}
+
+Acknowledgements are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
+Please refer to Journal-level guidance for any specific requirements.
+
+
+\backmatter
+
+\begin{appendices}
+    \printglossary[type=\acronymtype, title=Abbreviations]
+
+\end{appendices}
+
+
+\bibliography{sn-bibliography}% common bib file
+
+
+
+
+\newpage
+
+\section{Extend data figures}
+
+\renewcommand{\figurename}{Extended Data Fig.}
+
+
+
+ \begin{figure}[!h]
+     \includegraphics[height=0.65\columnwidth]{figures/finals/sf1}
+     \caption{ {\bf  sf 1 } (a) Base Quality and BLAT identity of terminal aritifical sequences for subsampling 1M data in VCaP 002. (b) SoftCliping Part of Dorado untrimed compared with terminal artifical sequenes for subsampling 1M data in VCaP SeqKit 002. (c) VCaP 004 chimeric read summary with cDNA support. (d)Base Quality and BLAT identity of VCaP 004 internal artificial sequences.}
+     \label{fig:sf1}
+ \end{figure}
+
+
+
+
+ \begin{figure}[!h]
+     \includegraphics[height=1.2\columnwidth]{figures/finals/sf2}
+     \caption{ {\bf  sf 2 } (a). (b) A549. (c) HCT116. (d) MCF7. (e) K562. (f) HepG2. (g) VCaP.}
+     \label{fig:sf2}
+ \end{figure}
+
+
+
+
+\newpage
+
+\section{Supplementary information}
+
+\renewcommand{\figurename}{Supplementary Fig.}
+\renewcommand{\tablename}{Supplementary Table}
+
+
+% If your article has accompanying supplementary file/s please state so here.
+% Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
+% Please refer to Journal-level guidance for any specific requirements.
+
+
 \begin{table}
-	\small
 	\centering
 	\caption{Hyperparameter ranges used}
-	\vspace{10pt}
+    \label{tab:nucleotideTRX_hyperparameter}
 	\begin{tabular}{lc}
 		\toprule
-		                                    & {$\sf \chopper$}                  \\
+		                                    & {$\sf DeepChopper$}                  \\
 		\midrule
 		Layers                              & 2                                 \\
 		Width                               & 256                               \\
@@ -579,98 +626,85 @@ The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genome
 		Sequence lengths                    & 32769                             \\
 		\midrule
 	\end{tabular}
-	\label{tab:nucleotideTRX_hyperparameter}
+
 \end{table}
 
 
-\bmhead{Code Availability}
+\begin{table}
+    \caption{Open source libraries (and corresponding licenses) used in this work.}
+    \label{tab:assets}
+            \begin{tabular}{ll}
+                \toprule
+                Library                                                & License                                                                            \\ \midrule
+                GenomicsBenchmark~\cite{grevsova2023genomic}           & Apache 2.0                                                                         \\
+                Mamba~\cite{gu2023mamba}                               & Apache 2.0                                                                         \\
+                HuggingFace~\cite{wolf2019huggingface}                 & Apache 2.0                                                                         \\
+                Hydra~\cite{Yadan2019Hydra}                            & MIT                                                                                \\
+                HyenaDNA~\cite{nguyen2024hyenadna}                     & Apache 2.0                                                                         \\
+                NumPy~\cite{harris2020array}                           & \href{https://numpy.org/doc/stable/license.html}{NumPy license}                    \\
+                Matplotlib~\cite{Hunter2007}                           & \href{https://matplotlib.org/stable/users/project/license.html}{Matplotib license} \\
+                OmegaConf                                              & BSD 3-Clause                                                                       \\
+                Pandas \cite{reback2020pandas}                         & BSD 3-Clause ``New" or ``Revised"                                                  \\
+                PyTorch~\cite{paszke2019pytorch}                       & BSD-3 Clause                                                                       \\
+                PyTorch Lightning~\cite{Falcon_PyTorch_Lightning_2019} & Apache 2.0                                                                         \\
+                Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\ \bottomrule
+            \end{tabular}
+\end{table}
 
-\chopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
-The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
-Both repositories are available under a MIT License.
 
-\bmhead{Acknowledgements}
 
-Acknowledgements are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
-Please refer to Journal-level guidance for any specific requirements.
+
 
 % \section*{Declarations}
 
 % Some journals require declarations to be submitted in a standardised format. Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section. If yes, your manuscript must contain the following sections under the heading `Declarations':
+%
+%\begin{itemize}
+%	\item Funding
+%	\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
+%	\item Ethics approval and consent to participate
+%	\item Consent for publication
+%	\item Data availability
+%	\item Materials availability
+%	\item Code availability
+%	\item Author contribution
+%\end{itemize}
 
-\begin{itemize}
-	\item Funding
-	\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
-	\item Ethics approval and consent to participate
-	\item Consent for publication
-	\item Data availability
-	\item Materials availability
-	\item Code availability
-	\item Author contribution
-\end{itemize}
-
-
-\begin{appendices}
-	\printglossary[type=\acronymtype, title=Abbreviations]
-
-	\section{Section title of first appendix}\label{secA1}
-
-	An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
-
-	%%=============================================%%
-	%% For submissions to Nature Portfolio Journals%%
-	%% please use the heading ``Extended Data''.   %%
-	%%=============================================%%
-
-	%%=============================================================%%
-	%% Sample for another appendix section			               %%
-	%%=============================================================%%
-
-	%% \section{Example of another appendix section}\label{secA2}%
-	%% Appendices may be used for helpful, supporting or essential material that would otherwise
-	%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures,
-	%% tables and equations etc.
-
-	\section{Assets}\label{appsec:assets}
-	\subsection{Datasets}
-	For pre-training we use the HG38 human reference genome~\cite{genome2009genome}.
-	The Genomics Benchmark comes from \citet{grevsova2023genomic}.
-
-	\subsection{Software and Libraries}
-	In \ref{tab:assets}, we enumerate the relevant open-source software, and corresponding licenses, used in this work.
-
-	\begin{table}[h]
-		\caption{Open source libraries (and corresponding licenses) used in this work.}
-		\label{tab:assets}
-		\vskip 0.15in
-		\begin{center}
-			\begin{small}
-				\begin{tabular}{ll}
-					\toprule
-					Library                                                & License                                                                            \\ \midrule
-					GenomicsBenchmark~\cite{grevsova2023genomic}           & Apache 2.0                                                                         \\
-					Mamba~\cite{gu2023mamba}                               & Apache 2.0                                                                         \\
-					HuggingFace~\cite{wolf2019huggingface}                 & Apache 2.0                                                                         \\
-					Hydra~\cite{Yadan2019Hydra}                            & MIT                                                                                \\
-					HyenaDNA~\cite{nguyen2024hyenadna}                     & Apache 2.0                                                                         \\
-					NumPy~\cite{harris2020array}                           & \href{https://numpy.org/doc/stable/license.html}{NumPy license}                    \\
-					Matplotlib~\cite{Hunter2007}                           & \href{https://matplotlib.org/stable/users/project/license.html}{Matplotib license} \\
-					OmegaConf                                              & BSD 3-Clause                                                                       \\
-					Pandas \cite{reback2020pandas}                         & BSD 3-Clause ``New" or ``Revised"                                                  \\
-					PyTorch~\cite{paszke2019pytorch}                       & BSD-3 Clause                                                                       \\
-					PyTorch Lightning~\cite{Falcon_PyTorch_Lightning_2019} & Apache 2.0                                                                         \\
-					Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\ \bottomrule
-				\end{tabular}
-			\end{small}
-		\end{center}
-		% \vskip -0.1in
-	\end{table}
-
-	\section{Computational resources}
-
-	Model training and inference were run on \glspl{gpu} with machine type varying by model size during pre-training and downstream tasks.
-	We use two  A100 \glspl{gpu}.
-\end{appendices}
+%
+%\begin{appendices}
+%	\printglossary[type=\acronymtype, title=Abbreviations]
+%
+%	\section{Section title of first appendix}\label{secA1}
+%
+%	An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
+%
+%	%%=============================================%%
+%	%% For submissions to Nature Portfolio Journals%%
+%	%% please use the heading ``Extended Data''.   %%
+%	%%=============================================%%
+%
+%	%%=============================================================%%
+%	%% Sample for another appendix section			               %%
+%	%%=============================================================%%
+%
+%	%% \section{Example of another appendix section}\label{secA2}%
+%	%% Appendices may be used for helpful, supporting or essential material that would otherwise
+%	%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures,
+%	%% tables and equations etc.
+%
+%	\section{Assets}\label{appsec:assets}
+%	\subsection{Datasets}
+%	For pre-training we use the HG38 human reference genome~\cite{genome2009genome}.
+%	The Genomics Benchmark comes from \citet{grevsova2023genomic}.
+%
+%	\subsection{Software and Libraries}
+%	In \ref{tab:assets}, we enumerate the relevant open-source software, and corresponding licenses, used in this work.
+%
+%	\section{Computational resources}
+%
+%	Model training and inference were run on \glspl{gpu} with machine type varying by model size during pre-training and downstream tasks.
+%	We use two  A100 \glspl{gpu}.
+%\end{appendices}
 
 %%===========================================================================================%%
 %% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
@@ -679,7 +713,7 @@ Please refer to Journal-level guidance for any specific requirements.
 %% file, and delete the associated \verb+\bibliography+ commands.                            %%
 %%===========================================================================================%%
 
-\bibliography{sn-bibliography}% common bib file
+
 %% if required, the content of .bbl file can be included here once bbl is generated
 %%\input sn-article.bbl
 

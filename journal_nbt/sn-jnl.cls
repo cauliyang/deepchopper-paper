@@ -385,7 +385,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Math Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% For above/below spacing  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% For above/below spacing
 \def\eqnarray{%
    \stepcounter{equation}%
    \def\@currentlabel{\p@equation\theequation}%
@@ -413,7 +413,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Titles %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \renewcommand\refname{References}%
-\renewcommand\figurename{Fig.}% defined as per springer style 
+\renewcommand\figurename{Fig.}% defined as per springer style
 \renewcommand\tablename{Table}%
 \renewcommand\appendixname{Appendix}%
 \renewcommand\abstractname{Abstract}%
@@ -498,7 +498,7 @@
     \authorsep{#2}\unskip\ifx\@authfrstarg\empty\else\textsuperscript{\smash{{%
       \@for\@@affmark:=#1\do{\edef\affnum{\@ifundefined{X@\@@affmark}{\@@affmark}{\jmkRef{\@@affmark}}}%
      \unskip\sep\affnum\let\sep=,}}}}\fi%
-    \def\authorsep{{\au@and} }%%% 
+    \def\authorsep{{\au@and} }%%%
     \global\let\sep\@empty\global\let\@corref\@empty%
 }}%
 %
@@ -510,7 +510,7 @@
     \authorsep{#2}\unskip\ifx\@authfrstarg\empty\else\textsuperscript{\smash{{%
       \@for\@@affmark:=#1\do{\edef\affnum{\@ifundefined{X@\@@affmark}{\@@affmark}{\jmkRef{\@@affmark}}}%
      \unskip\sep\affnum\let\sep=,}}}{*}\hskip-1pt}\fi\unskip%
-    \def\authorsep{\au@and~}%%% 
+    \def\authorsep{\au@and~}%%%
     \global\let\sep\@empty\global\let\@corref\@empty%
 }}%
 %%
@@ -545,7 +545,7 @@
    }%
 \fi}
 
-%% Corrseponding Address 
+%% Corrseponding Address
 \def\@copycorthanks{}%
 \def\auaddress{}%
 \def\@auaddress{}%
@@ -569,7 +569,7 @@
 
 \newif\ifpresentaddress%
 
-\def\@presentaddresstxt{}% 
+\def\@presentaddresstxt{}%
 \def\presentaddresstxt#1{\gdef\@presentaddresstxt{#1:}}\presentaddresstxt{Present Address}%
 \newcommand{\presentaddress}[1]{\gdef\@presentaddresstext{\@presentaddresstxt\par#1}\global\presentaddresstrue}%
 
@@ -577,15 +577,15 @@
 
 \newif\ifequalcont%
 
-%\def\@equalconttxt{}% 
+%\def\@equalconttxt{}%
 %\def\equalcontxt#1{\gdef\@equalconttxt{#1}}\equalcontxt{These authors contributed equally to this work.}%
 %\newcommand{\equalcont}[1][\@equalconttxt]{\gdef\@equalconttext{#1}\g@addto@macro\artauthors{$^{\dagger}$}\global\equalconttrue}%
 
-\def\@equalconttxt{}% 
+\def\@equalconttxt{}%
 \def\equalcontxt#1{\gdef\@equalconttxt{#1}}\equalcontxt{}%
 \newcommand{\equalcont}[1]{\gdef\@equalconttext{#1}\g@addto@macro\artauthors{$^{\dagger}$}\global\equalconttrue}%
 
-%% Author Address 
+%% Author Address
 
 \newcommand{\@@address}[2][]{%%\advance\addcount by 1
 \g@addto@macro\auaddress{%
@@ -595,7 +595,7 @@
      {\textsuperscript{#1}#2.\par} }%\theaffn
 }
 
-%% Address tagging 
+%% Address tagging
 \newcommand{\orgdiv}[1]{#1}%
 \newcommand{\orgname}[1]{#1}%
 \newcommand{\orgaddress}[1]{#1}%
@@ -610,7 +610,7 @@
 \def\@artnote{}%
 \def\artnote#1{\gdef\@artnote{#1}}%
 
-%% Miscellaneous notes 
+%% Miscellaneous notes
 
 \def\@miscnote{}%
 \def\miscnote#1{\gdef\@miscnote{\par\addvspace{3pt}#1}}%
@@ -799,7 +799,7 @@
 \end{strip}
 \else
 \twocolumn[\@maketitle]%
-\fi      
+\fi
 \else
 \@maketitle
 \fi%
@@ -837,7 +837,7 @@
 \def\headerfont{\reset@font\fontsize{10bp}{0bp}\selectfont}%
 \def\footerfont{\reset@font\fontsize{10bp}{0bp}\selectfont}%
 
-%% Regular Page Style      
+%% Regular Page Style
 \def\ps@headings{%
     \def\@oddfoot{\hfill\thepage\hfill}%
     \let\@evenfoot\@oddfoot%
@@ -853,7 +853,7 @@
       }%
 
 
-%% Opening Page Style      
+%% Opening Page Style
 \def\ps@titlepage{%
      %%\def\@oddhead{\vbox{\vskip-36pt\hbox to \textwidth{\hfill\includegraphics{springer-nature-logo}\hspace*{-1pt}}}}%
      %%\let\@oddhead\@empty\let\@evenhead\@empty%
@@ -1038,7 +1038,7 @@
    \parsep        \z@%
    \labelsep      0.5em%
    \rightmargin   \z@%
-   \raggedright%   
+   \raggedright%
    \listparindent \parindent%
    \itemindent    \z@}%
 
@@ -1096,7 +1096,7 @@
 
 \let\endunenumerate\endlist%
 
-%% bulleted list 
+%% bulleted list
 
 \def\itemargs{%
    \listfont%
@@ -1258,7 +1258,7 @@
 
 %% Table Footnotes
 
-\newenvironment{tablenotes}{\list{}{\setlength{\labelsep}{0pt}% 
+\newenvironment{tablenotes}{\list{}{\setlength{\labelsep}{0pt}%
 \setlength{\labelwidth}{0pt}%
 \setlength{\leftmargin}{0pt}%
 \setlength{\rightmargin}{0pt}%
@@ -1354,7 +1354,7 @@
                {\list{}{\topsep=0pt\topsep6pt\leftmargin=1em\raggedright\quotefont}%
                 \item\relax}
                {\endlist}
-               
+
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -1423,7 +1423,7 @@
 }{\end{oldappendices}}
 }
 %%
-}{}            
+}{}
 
 
 %
@@ -1569,7 +1569,7 @@
   \popQED\endtrivlist\@endpefalse%
 }%
 %
-\let\proof\spiproof\let\endproof\endspiproof% 
+\let\proof\spiproof\let\endproof\endspiproof%
 %
 }%
 %
@@ -1628,9 +1628,9 @@
 
 % \def\bibcommenthead{\if@bibcomment\begingroup\parindent=0pt\parskip=0pt%
 % \removelastskip\vskip13pt\nointerlineskip%
-% 
-% \vbox{\bibfont If you are submitting to one of the Nature Research journals, using the eJP 
-%  submission system, please include the references within the manuscript file itself. You may 
+%
+% \vbox{\bibfont If you are submitting to one of the Nature Research journals, using the eJP
+%  submission system, please include the references within the manuscript file itself. You may
 %  do this by copying the reference list from your .bbl file, and pasting it into the bibliography
 %  environment of the main manuscript .tex file.}\par%
 % \removelastskip\nobreak\vskip13pt\nobreak%
@@ -1771,7 +1771,7 @@ $\kern\wd\@ne\kern -\@tempdima\left\@firstoftwo#1%
 \usepackage{vruler}%
 %
 %%\setvruler[<SCALE>][<INITIAL_COUNT>][<STEP>][<DIGITS>][<MODE>][<ODD_HSHIFT]>][<EVEN_HSHIFT>][<VSHIFT>][<HEIGHT>]
-\def\linenoon{%%\definecolor{blue}{gray}{0}% 
+\def\linenoon{%%\definecolor{blue}{gray}{0}%
 \def\tiny{\normalsize\color{black}}%
 \setvruler[12bp][1][1][3][1][1.18\textwidth][26pt][-7pt][0.99\textheight]% for even pages: left side; for odd pages: right side;
 %%\linkbluecolor
