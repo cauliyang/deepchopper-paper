@@ -85,7 +85,7 @@
 \newacronym{llm}{LLM}{Large Language Model}
 \newacronym{hmm}{HMM}{Hidden Markov Model}
 \newacronym{gpu}{GPU}{Graphics Processing Unit}
-
+\newacronym{hpc}{HPC}{High Performance Computing}
 \newacronym{bert}{BERT}{Bidirectional Encoder Representations from Transformers}
 \newacronym{gpt}{GPT}{Generative Pre-trained Transformer}
 
@@ -565,6 +565,22 @@ The resulting BLAT identity scores were analyzed to differentiate between true b
 Sequences with lower BLAT identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
 
 
+
+\subsection{\gls{go} Analysis.}
+
+
+
+\subsection{Gene Expression Aanalysis.}
+
+
+
+
+\subsection{Computing resource}
+
+All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM.
+The server also featured two NVIDIA A100 GPUs, each with 80 GB of GPU memory, providing substantial computational power for both CPU-intensive tasks and GPU-accelerated deep learning workloads.
+
+
 % \section{Tables}\label{sec5}
 
 % Tables can be inserted via the normal table and tabular environment. To put
@@ -646,23 +662,18 @@ Please refer to Journal-level guidance for any specific requirements.
 \renewcommand{\figurename}{Extended Data Fig.}
 
 
-
  \begin{figure}[!h]
      \includegraphics[height=0.65\columnwidth]{figures/finals/sf1}
-     \caption{ {\bf  sf 1 } (a) Base Quality and BLAT identity of terminal aritifical sequences for subsampling 1M data in VCaP 002. (b) SoftCliping Part of Dorado untrimed compared with terminal artifical sequenes for subsampling 1M data in VCaP SeqKit RNA002. (c) VCaP 004 chimeric read summary with cDNA support. (d)Base Quality and BLAT identity of VCaP 004 internal artificial sequences.}
+     \caption{ {\bf Analysis of chimeric reads and artificial sequences in VCaP RNA sequencing data } (a) Base Quality and BLAT identity of terminal aritifical sequences for subsampling 1M data in VCaP 002. (b) SoftCliping Part of Dorado untrimed compared with terminal artifical sequenes for subsampling 1M data in VCaP SeqKit RNA002. (c) VCaP 004 chimeric read summary with cDNA support. (d)Base Quality and BLAT identity of VCaP 004 internal artificial sequences.}
      \label{fig:sf1}
  \end{figure}
 
 
-
-
  \begin{figure}[!h]
      \includegraphics[height=1.2\columnwidth]{figures/finals/sf2}
-     \caption{ {\bf  sf 2 } (a). (b) A549. (c) HCT116. (d) MCF7. (e) K562. (f) HepG2. (g) VCaP.}
+     \caption{ {\bf  Analysis of \gls{fp} chimeric reads } (a) Visualization of chromosomal connections for all \gls{fp} chimeric reads detected in the VCaP 002 dataset. (b) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in A549. (c) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HCT116. (d) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in MCF7. (e) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in K562. (f) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HepG2. (g) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in VCaP.}
      \label{fig:sf2}
  \end{figure}
-
-
 
 
 \newpage
