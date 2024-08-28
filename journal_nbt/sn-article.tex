@@ -58,7 +58,16 @@
 \usepackage{xspace}
 \usepackage{standalone}
 
-%% my package
+%% my package start
+
+% for collabration and will remove before submit
+\newcommand{\yy}[1]{\textcolor{cyan}{\textbf{[Yangyang: #1]}}}
+\newcommand{\rd}[1]{\textcolor{green}{\textbf{[Dr. Yang: #1]}}}
+\newcommand{\ty}[1]{\textcolor{orange}{\textbf{[Tingyou: #1]}}}
+\newcommand{\qx}[1]{\textcolor{purple}{\textbf{[Qingxiang: #1]}}}
+
+% for collabration and will remove before submit
+
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
     scientific-notation=false,
@@ -104,6 +113,8 @@
 \newcommand{\figref}[2]{Fig.~\hyperref[#1]{\ref*{#1}#2}}
 \newcommand{\edfigref}[2]{Extended Data Fig.~\hyperref[#1]{\ref*{#1}#2}}
 \newcommand{\edfigrefrg}[3]{Extended Data Fig.~\hyperref[#1]{\ref*{#1}#2-\ref*{#1}#3}}
+%% my package end
+
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -197,7 +208,7 @@
 % 7. Conclusion
 
 The advent of high-throughput sequencing technologies has revolutionized genomics, providing unprecedented insights into the genetic underpinnings of biological processes.
-Among these technologies, nanopore \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules with the unique advantage of preserving native RNA modifications~\cite{garalde2018highly, jain2022advances}.
+Among these technologies, nanopore \gls{drs} stands out as a powerful tool for sequencing full-length RNA molecules with the unique advantage of preserving native RNA modifications~\cite{ozsolak2009direct, garalde2018highly, jain2022advances}.
 However, despite its transformative potential, nanopore \gls{drs} faces a significant challenge: the generation of chimeric artificial reads where fragments of distinct RNA molecules are incorrectly joined together~\cite{smith2020molecular}.
 Accurately identifying these chimeric sequences is critical, as their presence compromises data quality and hinders downstream analyses, including transcriptome assembly, quantification, and gene fusion detection.
 
@@ -225,7 +236,6 @@ Our findings demonstrate that DeepChopper can effectively parse vast amounts of 
 This capability is crucial for improving the overall quality of sequencing data and ensuring reliable downstream analyses.
 By successfully predicting artificial sequences in nanopore \gls{drs} data, we illustrate the potential of \glspl{llm} to enhance the accuracy and efficiency of biological sequence analysis in long contexts.
 This study, exemplified by DeepChopper, paves the way for broader applications of \glspl{llm} in understanding and interpreting the vast complexities of genomic information.
-
 
 % Result
 
@@ -308,15 +318,15 @@ We then compared the results with those obtained using Dorado, both with and wit
 We show the reduction in chimeric reads achieved by DeepChopper and the supporting rates calculated using ONT PCR cDNA data.
 The results indicate that DeepChopper significantly reduced the number of unsupported chimeric reads in the RNA 004 dataset compared to Dorado.
 Specifically, DeepChopper reduced the chimeric reads to approximately 23,000, while Dorado with trimming resulted in around 30,000 chimeric reads, and Dorado without trimming led to over 30,000 chimeric reads (\edfigref{fig:sf1}{c}).
-The ONT PCR cDNA support confirmed the accuracy of DeepChopper's predictions, with a higher proportion of supported reads than those found with Dorado alone.
-%\alert{use percentage}
+The ONT PCR cDNA support confirmed the accuracy of DeepChopper's predictions, with a higher proportion of supported reads than those found with Dorado alone. \yy{use pcentage}
+
+
 
 In additon, we present the base quality and \gls{drs} identity metrics for the artificial sequences identified by DeepChopper in the RNA 004 dataset.
 The base quality scores of these sequences were consistently low, averaging around 10, indicating reduced confidence in their sequence accuracy (\edfigref{fig:sf1}{d}).
 The \gls{blat} identity of these sequences was also predominantly low, clustering around 0.3, suggesting poor alignment with the reference genome (\edfigref{fig:sf1}{d}).
 These findings are consistent with those observed in the RNA 002 dataset, reinforcing DeepChopper's robustness in identifying artificial sequences that are likely to be chimeric artifacts.
 Overall, these results validate DeepChopper's effectiveness in reducing chimeric reads and accurately identifying low-quality artificial sequences, demonstrating its reliability across different RNA sequencing protocols and its applicability to more refined datasets produced by the newer RNA004 protocol.
-
 
 
 The nanopore \gls{drs} now release RNA004 protocol to sequence data which can get more clean data compared with RNA002 protocol.
@@ -762,19 +772,8 @@ Please refer to Journal-level guidance for any specific requirements.
 %	%% Appendices may be used for helpful, supporting or essential material that would otherwise
 %	%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures,
 %	%% tables and equations etc.
-%
-%	\section{Assets}\label{appsec:assets}
-%	\subsection{Datasets}
-%	For pre-training we use the HG38 human reference genome~\cite{genome2009genome}.
-%	The Genomics Benchmark comes from \citet{grevsova2023genomic}.
-%
-%	\subsection{Software and Libraries}
-%	In \ref{tab:assets}, we enumerate the relevant open-source software, and corresponding licenses, used in this work.
-%
-%	\section{Computational resources}
-%
-%	Model training and inference were run on \glspl{gpu} with machine type varying by model size during pre-training and downstream tasks.
-%	We use two  A100 \glspl{gpu}.
+
+
 %\end{appendices}
 
 %%===========================================================================================%%
