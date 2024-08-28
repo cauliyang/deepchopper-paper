@@ -101,6 +101,7 @@
 
 \newcommand{\figref}[2]{Fig.~\hyperref[#1]{\ref*{#1}#2}}
 \newcommand{\edfigref}[2]{Extended Data Fig.~\hyperref[#1]{\ref*{#1}#2}}
+\newcommand{\edfigrefrg}[3]{Extended Data Fig.~\hyperref[#1]{\ref*{#1}#2-\ref*{#1}#3}}
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -225,7 +226,6 @@ This study, exemplified by DeepChopper, paves the way for broader applications o
 
 
 % Result
-
 %Model Architecture Overview (Fig 1a)
 
 We provide an overview of the DeepChopper model architecture, highlighting its key components designed for the detection of artificial sequences in nanopore \gls{drs} data (\figref{fig:f1}{a}).
@@ -273,8 +273,6 @@ Specifically, DeepChopper effectively flagged sequences with diminished base qua
 The clear distinction in base quality between supported and unsupported reads further validates DeepChopper's accuracy in identifying and filtering out artificial sequences.
 By maintaining a high level of precision in detecting these lower-quality sequences, DeepChopper enhances the overall integrity of the sequencing data, ensuring that downstream analyses are based on more accurate and reliable reads.
 
-
-
 % BLAT Identity of Detected Artificial Sequences (Fig 1g)
 We evaluated the \gls{blat} identity of the artificial sequences detected by DeepChopper (\figref{fig:f1}{g}).
 \gls{blat} identity measures the similarity of the sequences to known reference sequences, with lower identity scores indicating potential chimeric or erroneous reads.
@@ -299,7 +297,7 @@ The consistency of these findings across the multiple datasets reinforces the re
 
 \begin{figure}[!h]
 	\includegraphics[height=0.78\columnwidth]{figures/finals/figure1}
-    \caption{{\bf  Detection and analysis of chimeric reads in nanopre \gls{drs} Data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by ONT \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: ONT \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate  supported chimeric reads}
+    \caption{{\bf  Detection and analysis of chimeric reads in nanopre \gls{drs} Data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Distribution of the lengths of predicted artifacts detected by DeepChopper in the VCaP 002 dataset. (c) Analysis of the relative positions of prediction artifacts within the VCaP 002 dataset.  (d) Number of prediction intervals detected by DeepChopper in the VCaP 002 dataset. (e) Chimeric read detection performance of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. The figure includes three background colors representing different levels of base quality: green for high base quality, yellow for medium base quality, and red for low base quality. (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection across multiple samples, including VCaP 002, A549, HCT116, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for wtc11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}
 	\label{fig:f1}
 \end{figure}
 
@@ -309,10 +307,11 @@ This not only enhances the quality of sequencing data but also opens up new poss
 
 
 % Figure 2 result
-
 In the VCaP cell line, genes in the \gls{fp} group exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{a}), despite displaying similar gene lengths (\figref{fig:f2}{b}).
-To further explore the functional roles of FP group genes, we conducted Gene Ontology (GO) enrichment analysis across six cell lines—VCaP, A549, K562, HepG2, MCF7, and HCT116 (Figure S2a-S2f).
+To further explore the functional roles of \gls{fp} group genes, we conducted Gene Ontology (GO) enrichment analysis across six cell lines—VCaP, A549, K562, HepG2, MCF7, and HCT116 (\edfigrefrg{fig:sf2}{b}{g}).
 Interestingly, despite distinct input gene sets, these cell lines converged on common housekeeping functions, including translation, ribosomal small subunit biogenesis, and rRNA processing, etc. (\figref{fig:f2}{c}).
+
+
 
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of nanopore \gls{drs}.
 By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
@@ -324,6 +323,7 @@ Future research can explore additional applications and further optimize these m
 	\caption{\bf This is figure 2.}
 	\label{fig:f2}
 \end{figure}
+
 
 \section{Methods}\label{sec:methods}
 
@@ -346,12 +346,11 @@ The mRNA preparations were either immediately used to prepare a sequencing libra
 \subsection{Nanopore sequencing}
 
 We performed nanopore sequencing of the enriched mRNA using two different chemistries: the DNA-nanopore (R9 chemistry; RNA002 kit) and the RNA-nanopore chemistry (RNA chemistry; RNA004 kit).
-For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, Oxford Nanopore Technologies) following the manufacturer's instructions.
-Direct RNA nanopore sequencing employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
+For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, \gls{ont}) following the manufacturer's instructions.
+Nanopore \gls{drs} employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
 The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
 For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, Oxford Nanopore Technologies) according to the protocol of manufacturer.
 The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
-
 
 \subsection{Training data preparation}\label{ssec:data}
 
@@ -542,7 +541,7 @@ The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genome
 
 \bmhead{Code Availability}
 
-DeepChopper (v.1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+DeepChopper (v1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 Both repositories are available under a MIT License.
 
