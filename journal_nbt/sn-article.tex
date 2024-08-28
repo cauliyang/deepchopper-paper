@@ -87,7 +87,7 @@
 \newacronym{lcglm}{LCGLM}{Long-Context Genomic Language Model}
 \newacronym{snp}{SNP}{Single Nucleotide Polymorphism}
 \newacronym{fm}{FM}{Foundational Model}
-\newacronym{nlp}{NLP}{natural language processing}
+\newacronym{nlp}{NLP}{Natural Language Processing}
 
 \newacronym{ont}{ONT}{Oxford Nanopore Technologies}
 \newacronym{pb}{PacBio}{Pacific Biosciences}
@@ -95,18 +95,12 @@
 \newacronym{r2c2}{R2C2}{Rolling Circle Amplification to Concatemeric Consensus}
 \newacronym{pcr}{PCR}{Polymerase Chain Reaction}
 
-\newacronym{tp}{TP}{true positive}
-\newacronym{fp}{FP}{false positive}
-\newacronym{fn}{FN}{false negative}
-
-
-% define macros
-% chopper = DeepChopper
-%\newcommand{\chopper}{DeepChopper\xspace}
+\newacronym{tp}{TP}{True Positive}
+\newacronym{fp}{FP}{False Positive}
+\newacronym{fn}{FN}{False Negative}
 
 \newcommand{\figref}[2]{Fig.~\hyperref[#1]{\ref*{#1}#2}}
 \newcommand{\edfigref}[2]{Extended Data Fig.~\hyperref[#1]{\ref*{#1}#2}}
-
 
 %%%%%=============================================================================%%%%
 %%%%  Remarks: This template is provided to aid authors with the preparation
@@ -179,7 +173,7 @@
 \abstract{
     The accurate identification of chimeric reads is critical for ensuring the reliability of nanopore \gls{drs} data, which has emerged as a powerful tool for sequencing full-length RNA molecules while preserving native RNA modifications. Despite its potential, nanopore \gls{drs} is susceptible to the generation of chimeric reads, where fragments of distinct RNA molecules are incorrectly joined together, complicating downstream analyses such as transcriptome assembly and gene fusion detection.
 
-    In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap, \gls{ont} R2C2, PacBio cDNA, and PacBio CapTrap.
+    In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
 
     Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality scores and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
 
@@ -480,11 +474,12 @@ The results were further validated by testing the model on an independent datase
 
 \textit{Evaluation of artificial chimeric reads in reals data.}  We evaluated the performance of DeepChopper using the VCaP 002 dataset.
 Specifically, the model was applied to nanopore \gls{drs} to detect artificial sequences, focusing on identifying chimeric reads caused by internal adapters.
-To verify these identified reads, we cross-referenced them with data from other sequencing platforms, including ONT \gls{pcr} cDNA, ONT CapTrap, ONT R2C2, PacBio (PB) cDNA, and PB CapTrap. Additionally, we calculated the supporting rates to assess the consistency of chimeric read detection across these platforms.
+To verify these identified reads, we cross-referenced them with data from other sequencing platforms, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
+Additionally, we calculated the supporting rates to assess the consistency of chimeric read detection across these platforms.
 The supporting rate was defined as the ratio of chimeric reads corroborated by other platforms to the total number of chimeric reads detected by DeepChopper.
 
 
-\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both BLAT and PxBLAT tools.
+\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} and PxBLAT tools.
 The BLAT identity is defined as the ratio of the match length to the sequence length, providing a measure of how closely a sequence aligns to a reference genome.
 \[
 \textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
