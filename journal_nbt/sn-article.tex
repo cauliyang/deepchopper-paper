@@ -216,7 +216,7 @@ Accurately identifying these chimeric sequences is critical for maintaining data
 Traditional methods for identifying chimeric reads often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 While recent advances in \gls{llm} have shown promise in genomics, their application to long-read sequencing data remains challenging due to the need for modeling long-range dependencies and achieving single-nucleotide resolution~\cite{dalla2023nucleotide, tay2022efficient, zhou2023dnabert2}.
 To address these limitations, we developed DeepChopper, a novel language model specifically tailored for biological sequences.
-DeepChopper introduces a hybrid architecture that combines a \gls{lcglm} HyenaDNA for efficient long-range dependency modeling with residual block and \gls{mlp} for fine-grained sequence analysis, achieving both broad context understanding and single-nucleotide resolution~\cite{poli2023hyena, nguyen2024hyenadna, he2016deep} (\figref{fig:f1}{a}).
+DeepChopper introduces a hybrid architecture that combines a \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna} for efficient long-range dependency modeling with residual block and \gls{mlp} for fine-grained sequence analysis, achieving both broad context understanding and single-nucleotide resolution~\cite{poli2023hyena, he2016deep} (\figref{fig:f1}{a}).
 Uniquely, DeepChopper incorporates base quality information alongside sequence data, enabling more nuanced predictions that account for sequencing confidence.
 This quality-aware processing is complemented by an adaptive tokenization strategy that preserves single-nucleotide resolution while capturing higher-order sequence patterns.
 
@@ -254,8 +254,8 @@ We focused on reads with two or more prediction intervals, as these may indicate
 Most reads contained 1-5 intervals, with multiple intervals potentially indicating fragmented chimeric sequences often missed by Dorado (\figref{fig:f1}{d}).
 
 % Base Quality and BLAT Identity of Artificial Sequences at the End of Reads (Supplementary Fig 1a)
-Further validation of DeepChopper's performance came from analyzing base quality and \gls{blat} identity of artificial sequences at read ends in a 1 million read subsampling from the VCaP 002 dataset (\edfigref{fig:sf1}{a}).
-Terminal artificial sequences showed lower average base quality scores (~10) and \gls{blat} identity values (~0.3), consistent with their characterization as sequencing artifacts or erroneous terminal adapters.
+Further validation of DeepChopper's performance came from analyzing base quality and \gls{blat}~\cite{kent2002blat} identity of artificial sequences at read ends in a 1 million read subsampling from the VCaP 002 dataset (\edfigref{fig:sf1}{a}).
+Terminal artificial sequences showed lower average base quality scores (around 10) and \gls{blat} identity values (roughly 0.3), consistent with their characterization as sequencing artifacts or erroneous terminal adapters.
 % Comparison of Soft-Clipping Regions to Terminal Adapters Identified by DeepChopper (Supplementary Fig 1b)
 Comparison of soft-clipping regions in Dorado-processed data (without trimming) to DeepChopper-identified terminal adapters showed 99.6\% alignment (\edfigref{fig:sf1}{b}).
 Of the 0.4\% non-aligned sequences, 97\% failed to map to the reference genome, further confirming their artificial nature.
@@ -363,13 +363,13 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 
 We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
 FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.~\cite{dorado2023}.
-Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24) with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14)~\cite{li2018minimap2}.
+Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence.
-The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.16) to obtain the genome coverage distribution~\cite{li2009sequence}.
-Our dataset comprises both positive (terminal and internal adapters in a 1:1 ratio) and negative examples (no artificial sequences) in a 9:1 ratio.
-We generated 600,000 data points, split into training (480,000), validation (60,000), and test (60,000) sets with a ratio of 0.8:0.1:0.1.
+The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.16)~\cite{li2009sequence} to obtain the genome coverage distribution.
+Our dataset comprises both positive (terminal and internal adapters in a $1:1$ ratio) and negative examples (no artificial sequences) in a $9:1$ ratio.
+We generated 600,000 data points, split into training (480,000), validation (60,000), and test (60,000) sets with a ratio of \(0.8:0.1:0.1\).
 
 
 \subsection{Language model architecture}\label{ssec:lm}
@@ -377,7 +377,7 @@ We generated 600,000 data points, split into training (480,000), validation (60,
 DeepChopper approaches artificial sequence detection as a token classification task, predicting whether each token belongs to an artificial sequence.
 The model's architecture is specifically designed for this purpose, enabling accurate identification of artificial sequence regions within biological data.
 
-At its core, DeepChopper adapts the HyenaDNA framework, a genomics model architecture, as its primary feature extractor~\cite{nguyen2024hyenadna}.
+At its core, DeepChopper adapts the HyenaDNA framework, a genomics model architecture, as its primary feature extractor.
 This choice enhances the model's ability to process and interpret complex biological sequences effectively.
 Following feature extraction, we integrated a quality block to incorporate sequence quality information into the prediction process.
 This block, comprising dense layers with residual connections, combines quality scores with extracted features, enriching the model's understanding of the input data.
@@ -423,7 +423,7 @@ Evaluation metrics included accuracy, precision, recall, and F1 score with the f
 \end{align*}
 
 The final model was selected based on the best performance on the validation set.
-We use Hydra to find the optimal model's parameters~\cite{Yadan2019Hydra}.
+We use Hydra~\cite{Yadan2019Hydra} to find the optimal model's parameters.
 The total loss for one window is the sum of the losses from each supported position.
 For per position  \( i \), where \( i  \in {1, 2, \cdots, S} \),  the total loss includes both base prediction loss.
 The binary cross-entropy losses were used for these tasks, with the total loss incorporating predicted base probabilities, true base values, and the probability that a position is informative.
