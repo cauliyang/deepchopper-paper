@@ -362,12 +362,12 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 \subsection{Training data preparation}\label{ssec:data}
 
 We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
-FASTQ files were generated using Dorado (v0.7.3) with adapter trimming disabled (--no-trim)~\cite{dorado2023}.
-Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.26-r1209) with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14)~\cite{li2018minimap2}.
+FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model “rna002\_70bps\_hac@v3”.~\cite{dorado2023}.
+Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24) with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14)~\cite{li2018minimap2}.
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating 3' soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence.
-The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.19.2) to obtain the genome coverage distribution~\cite{li2009sequence}.
+The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.16) to obtain the genome coverage distribution~\cite{li2009sequence}.
 Our dataset comprises both positive (terminal and internal adapters in a 1:1 ratio) and negative examples (no artificial sequences) in a 9:1 ratio.
 We generated 600,000 data points, split into training (480,000), validation (60,000), and test (60,000) sets with a ratio of 0.8:0.1:0.1.
 
@@ -473,11 +473,6 @@ To evaluate the quality of detected artificial sequences, we analyzed their base
 We compared these metrics for artificial sequences detected in false positive chimeric reads unique to Dorado processing versus DeepChopper processing.
 Statistical analysis, including paired t-tests, was conducted to determine the significance of improvements over traditional methods.
 The model's generalizability was further validated by testing on independent datasets, including the VCaP 004 dataset sequenced using the newer RNA004 protocol, demonstrating DeepChopper's adaptability to evolving sequencing technologies.
-
-\textit{Simulation Data Evaluation.}
-
-We obtained ONT directRNA FAST5 data from the SG-Nex project\cite{SG-Nex}, encompassing six cell lines (A549, K562, HepG2, MCF7, and HCT116). FAST5 files then converted to POD5 files using pod5 tool (version 0.3.6). FASTQ files were generated using Dorado (https://github.com/nanoporetech/dorado/) (version 0.5.2) with adapter trimming disabled (“--no-trim”) and model “rna002_70bps_hac@v3”.  Reads were then aligned to the human reference genome (hg38) using minimap2 (version 2.24) with optimized ONT directRNA parameters (“-ax splice -uf -k14”). During the adapter extraction step, we selected primary alignments that lacked supplementary alignments; the 3′ soft-clipped regions of these alignments were treated as adapter sequences, while the aligned portions were considered non-adapter sequences. To create artificial chimeric reads for model training, we randomly selected two non-adapter sequences from the repository and one adapter sequence from the adapter repository, repeating this process multiple times to generate the chimeric dataset.
-
 
 \textit{Evaluation of artificial chimeric reads in real data.} To evaluate DeepChopper on real data, we used the VCaP 002 dataset, focusing on identifying chimeric reads caused by internal adapters in nanopore DRS data.
 We cross-referenced the identified reads with data from multiple sequencing platforms: ONT PCR cDNA, ONT CapTrap-seq, ONT R2C2, PacBio cDNA, and PacBio CapTrap-seq.
