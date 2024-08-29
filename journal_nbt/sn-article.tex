@@ -285,7 +285,7 @@ These results, mirroring those from VCaP 002, demonstrate DeepChopper's robustne
 
 % Chimeric Read Detection Across Multiple Samples (Fig 1h)
 To demonstrate DeepChopper's broad applicability  and effectiveness, we extended our analysis to multiple samples and sequencing platforms.
-Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}, DeepChopper consistently reduced chimeric reads by 62-84\% compared to baseline methods (\figref{fig:f1}{h}).
+Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}~\cite{chen2021systematic}, DeepChopper consistently reduced chimeric reads by 62-84\% compared to baseline methods (\figref{fig:f1}{h}).
 The supporting rate improved from 8-19\% (Dorado with trimming) to 43-55\% (DeepChopper), mirroring the performance observed in the VCaP 002 dataset (\figref{fig:f1}{e}).
 This consistent performance across diverse samples underscores DeepChopper's robustness and reliability in various cell lines.
 
@@ -362,9 +362,9 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 \subsection{Training data preparation}\label{ssec:data}
 
 We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
-FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model “rna002\_70bps\_hac@v3”.~\cite{dorado2023}.
+FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.~\cite{dorado2023}.
 Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24) with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14)~\cite{li2018minimap2}.
-For adapter extraction, we selected primary alignments lacking supplementary alignments, treating 3' soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
+For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence.
 The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.16) to obtain the genome coverage distribution~\cite{li2009sequence}.
@@ -495,12 +495,14 @@ Sequences with lower BLAT identity were flagged as potential chimeric reads, con
 
 \subsection{Gene expression analysis of FP group of chimeric reads}
 
-To identify the false positive (FP) group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper. The FP group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado. Following the identification of the FP group, we proceeded to assess gene expression levels specifically associated with these reads using IsoQuant\cite{IsoQuant}
+To identify the \gls{fp} group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper.
+The \gls{fp} group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado.
+Following the identification of the \gls{fp} group, we proceeded to assess gene expression levels specifically associated with these reads using IsoQuant (v )~\cite{prjibelski2023accurate}.
 
 
 \subsection{\gls{go} analysis}
 
-For each cell line, the top 100 high expressed genes were used for the GO enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID)\cite{david} to elucidate the biological processes they involved.
+For each cell line, the top 100 high expressed genes were used for the \gls{go} enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) ~\cite{sherman2022david} to elucidate the biological processes they involved .
 
 \subsection{Computing resource}
 
