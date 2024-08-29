@@ -474,7 +474,9 @@ We compared these metrics for artificial sequences detected in false positive ch
 Statistical analysis, including paired t-tests, was conducted to determine the significance of improvements over traditional methods.
 The model's generalizability was further validated by testing on independent datasets, including the VCaP 004 dataset sequenced using the newer RNA004 protocol, demonstrating DeepChopper's adaptability to evolving sequencing technologies.
 
-\textit{Simulation Data Evaluation.} \yy{refer to ty}
+\textit{Simulation Data Evaluation.}
+
+We obtained ONT directRNA FAST5 data from the SG-Nex project\cite{SG-Nex}, encompassing six cell lines (A549, K562, HepG2, MCF7, and HCT116). FAST5 files then converted to POD5 files using pod5 tool (version 0.3.6). FASTQ files were generated using Dorado (https://github.com/nanoporetech/dorado/) (version 0.5.2) with adapter trimming disabled (“--no-trim”) and model “rna002_70bps_hac@v3”.  Reads were then aligned to the human reference genome (hg38) using minimap2 (version 2.24) with optimized ONT directRNA parameters (“-ax splice -uf -k14”). During the adapter extraction step, we selected primary alignments that lacked supplementary alignments; the 3′ soft-clipped regions of these alignments were treated as adapter sequences, while the aligned portions were considered non-adapter sequences. To create artificial chimeric reads for model training, we randomly selected two non-adapter sequences from the repository and one adapter sequence from the adapter repository, repeating this process multiple times to generate the chimeric dataset.
 
 
 \textit{Evaluation of artificial chimeric reads in real data.} To evaluate DeepChopper on real data, we used the VCaP 002 dataset, focusing on identifying chimeric reads caused by internal adapters in nanopore DRS data.
@@ -497,10 +499,12 @@ Sequences with lower BLAT identity were flagged as potential chimeric reads, con
 
 
 \subsection{Gene expression analysis of FP group of chimeric reads}
+
 To identify the false positive (FP) group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper. The FP group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado. Following the identification of the FP group, we proceeded to assess gene expression levels specifically associated with these reads using IsoQuant\cite{IsoQuant}
 
 
 \subsection{\gls{go} analysis}
+
 For each cell line, the top 100 high expressed genes were used for the GO enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID)\cite{david} to elucidate the biological processes they involved.
 
 \subsection{Computing resource}
