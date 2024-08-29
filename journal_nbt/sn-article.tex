@@ -165,7 +165,7 @@
 \equalcont{These authors contributed equally to this work.}
 
 % \author*[1,2]{\fnm{First} \sur{Author}}\email{iauthor@gmail.com}
-\author[1]{\fnm{Tingyou} \sur{Wang}}\email{tingyou.wang@northwestern.edu}
+\author[1]{\fnm{Tingyou} \sur{Wang}}\email{tywang@northwestern.edu}
 \equalcont{These authors contributed equally to this work.}
 
 \author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
@@ -492,7 +492,6 @@ The model's generalizability was further validated by testing on independent dat
 \yy{refer to ty}
 
 
-
 \textit{Evaluation of artificial chimeric reads in reals data.} To evaluate DeepChopper on real data, we used the VCaP 002 dataset, focusing on identifying chimeric reads caused by internal adapters in nanopore DRS data.
 We cross-referenced the identified reads with data from multiple sequencing platforms: ONT PCR cDNA, ONT CapTrap-seq, ONT R2C2, PacBio cDNA, and PacBio CapTrap-seq.
 Supporting rates, defined as the ratio of chimeric reads corroborated by other platforms to the total detected chimeric reads, were calculated to assess detection consistency across platforms.
@@ -512,14 +511,12 @@ The resulting BLAT identity scores were analyzed to differentiate between true b
 Sequences with lower BLAT identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
 
 
+\subsection{Gene expression analysis of FP group of chimeric reads}
+To identify the false positive (FP) group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper. The FP group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado. Following the identification of the FP group, we proceeded to assess gene expression levels specifically associated with these reads using IsoQuant\cite{IsoQuant}
+
+
 \subsection{\gls{go} analysis}
-
-\yy{refer to ty}
-
-\subsection{Gene expression analysis}
-
-\yy{refer to ty}
-
+For each cell line, the top 100 high expressed genes were used for the GO enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID)\cite{david} to elucidate the biological processes they involved.
 
 \subsection{Computing resource}
 
