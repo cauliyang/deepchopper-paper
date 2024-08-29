@@ -1,0 +1,3 @@
+1.	Chen, Y. et al. A systematic benchmark of Nanopore long read RNA sequencing for transcript level analysis in human cell lines. bioRxiv, 2021.04.21.440736 (The SG-NEx data was accessed on 05/01/2024 at registry.opendata.aws/sg-nex-data).
+2.	Prjibelski, A.D. et al. Accurate isoform discovery with IsoQuant using long reads. Nat Biotechnol 41, 915-918 (2023).
+3.	Sherman, B.T. et al. DAVID: a web server for functional enrichment analysis and functional annotation of gene lists (2021 update). Nucleic Acids Res 50, W216-W221 (2022).
