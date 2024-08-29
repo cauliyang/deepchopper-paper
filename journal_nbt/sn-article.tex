@@ -72,7 +72,7 @@
 \sisetup{
     scientific-notation=false,
     round-mode = places,
-    round-precision = 2
+    round-precision = 0
 }
 
 \usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
@@ -265,7 +265,8 @@ These results underscore DeepChopper's reliability in identifying artificial seq
 DeepChopper significantly outperformed Dorado in artificial chimeric read detection, achieving a 91\% reduction in total chimeric read count for the VCaP 002 dataset (\figref{fig:f1}{e}).
 Validation using \gls{ont} \gls{pcr} cDNA data showed DeepChopper reduced unsupported reads by 94\% and increased the supporting rate from 5\% to 47\%, demonstrating superior accuracy in distinguishing true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
 % Base Quality of Detected Artificial Sequences (Fig 1f)
-To assess the quality of detected artificial sequences, we analyzed their base quality scores. \figref{fig:f1}{f} specifically shows the base quality of internal artificial sequences in \gls{fp} chimeric reads, which are unique chimeric reads in VCaP 002 data processed by Dorado with trim compared to the same data processed by DeepChopper.
+To assess the quality of detected artificial sequences, we analyzed their base quality scores.
+The base quality score of internal artificial sequences shown in \figref{fig:f1}{f}  for \gls{fp} chimeric reads, which are unique chimeric reads in VCaP 002 data processed by Dorado with trim compared to the same data processed by DeepChopper.
 The artificial sequences identified by DeepChopper consistently exhibited lower base quality scores, aligning with the expected profile of erroneous reads.
 The result further validates the accuracy of DeepChopper in identifying and filtering out artificial sequences (\figref{fig:f1}{f}).
 % BLAT Identity of Detected Artificial Sequences (Fig 1g)
@@ -279,21 +280,21 @@ By maintaining high precision in detecting lower-quality and divergent sequences
 
 % Performance of DeepChopper on VCaP 004 Data (Supplementary Fig 1C and 1D)
 To assess the performance of DeepChopper across different protocols, we applied the model to VCaP 004 data, sequenced using the newer RNA004 protocol designed for cleaner data output.
-DeepChopper achieved a 21\% reduction in chimeric reads compared to Dorado with trimming, increasing the supporting ratio from 25\% to 30\% when validated against \gls{ont} \gls{pcr} cDNA data (\edfigref{fig:sf1}{c}).
+DeepChopper achieved a 21\% reduction in chimeric reads compared to Dorado with trimming, increasing the supporting ratio from 25\%  to 30\% when validated against \gls{ont} \gls{pcr} cDNA data (\edfigref{fig:sf1}{c}).
 Analysis of \gls{fp} chimeric reads in VCaP 004 showed consistently low base quality scores (averaging around 10) and \gls{blat} identity (clustering approximately 0.3) for artificial sequences (\edfigref{fig:sf1}{d}).
 These results, mirroring those from VCaP 002, demonstrate DeepChopper's robustness in identifying chimeric artifacts across different \gls{drs} protocols.
 
 % Chimeric Read Detection Across Multiple Samples (Fig 1h)
 To demonstrate DeepChopper's broad applicability  and effectiveness, we extended our analysis to multiple samples and sequencing platforms.
-Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}~\cite{chen2021systematic}, DeepChopper consistently reduced chimeric reads by 62-84\% compared to baseline methods (\figref{fig:f1}{h}).
-The supporting rate improved from 8-19\% (Dorado with trimming) to 43-55\% (DeepChopper), mirroring the performance observed in the VCaP 002 dataset (\figref{fig:f1}{e}).
+Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}~\cite{chen2021systematic}, DeepChopper consistently reduced chimeric reads by 62\% to 84\% compared to baseline methods (\figref{fig:f1}{h}).
+The supporting rate improved from 8\% to 19\% (Dorado with trimming) to 43\% to 55\% (DeepChopper), mirroring the performance observed in the VCaP 002 dataset (\figref{fig:f1}{e}).
 This consistent performance across diverse samples underscores DeepChopper's robustness and reliability in various cell lines.
 
 % Supporting Read Analysis Across Multiple Datasets (Fig 1i)
 We further validated DeepChopper's effectiveness using the WTC11 sample, leveraging multiple sequencing platforms to verify chimeric read detection (\figref{fig:f1}{i}).
 DeepChopper reduced chimeric reads in WTC11 by 54\% compared to Dorado with trim.
 To assess the accuracy of chimeric read identification, we calculated supporting read rates using data from five different platforms: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq~\cite{carbonell2024captrap}.
-DeepChopper consistently achieved high support rates (51-66\%) across these diverse datasets, compared to 26-37\% for Dorado with trimming.
+DeepChopper consistently achieved high support rates (51\% to 66\%) across these diverse datasets, compared to 26\% to 37\% for Dorado with trimming.
 This cross-platform validation demonstrates DeepChopper's versatility and accuracy in maintaining data integrity across various sequencing conditions.
 
 These comprehensive analyses collectively showcase DeepChopper's superior performance in detecting and filtering artificial chimeric reads.
@@ -327,7 +328,7 @@ The significant intersection sizes for these \gls{go} terms across the six cell 
 This finding highlights the need for careful evaluation of \gls{gpt} genes in high-throughput sequencing studies to avoid misleading conclusions about gene function.
 
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of nanopore \gls{drs}.
-By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
+By accurately predicting adapter sequences, \glspl{llm} can significantly improve the quality and reliability of sequencing data.
 This showcases the broader applicability of language models in handling complex biological data, paving the way for advancements in genomics and transcriptomics.
 Future research can explore additional applications and further optimize these models for specific biological tasks, solidifying their role in biotechnology.
 
