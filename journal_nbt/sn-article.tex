@@ -302,7 +302,7 @@ The consistency of results across diverse datasets reinforces DeepChopper's reli
 
 \begin{figure}[!h]
     \includegraphics[height=1.2\columnwidth]{figures/finals/figure2}
-    \caption{\bf This is figure 2.}\label{fig:f2}
+    \caption{{\bf Characterization of \gls{fp} Genes Detected by DeepChopper.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 × 10^{-16}\)). (b) b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Example of a long read containing artificial sequences, illustrating the position of chopped regions and polyA tails.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a)
@@ -313,7 +313,7 @@ This pattern highlights the effectiveness of DeepChopper in distinguishing betwe
 % Visualization of Chromosomal Connections in FP Chimeric Reads (Supplementary Fig 2a)
 To investigate potential patterns among \gls{fp} chimeric reads, we visualized the chromosomal regions connected by all \gls{fp} chimeric reads from the VCaP 002 dataset (\edfigref{fig:sf2}{a}).
 This analysis aimed to detect any recurring connections between specific genomic regions that might indicate systematic artifacts in the sequencing data.
-The results did not reveal any clear or consistent patterns of chromosomal connections in the \gls{fp} chimeric reads.s
+The results did not reveal any clear or consistent patterns of chromosomal connections in the \gls{fp} chimeric reads  (\edfigref{fig:sf2}{a}).
 The connections appeared to be randomly distributed across various chromosomes, with no particular region showing a higher frequency of connections (\edfigref{fig:sf2}{a}).
 This lack of an obvious pattern suggests that the occurrence may not be driven by specific genomic locations but rather by random sequencing or data processing errors.
 These findings imply that \gls{fp} chimeric reads are likely due to non-specific factors rather than biases associated with particular chromosomal regions, underscoring the need for robust detection and filtering methods, such as those provided by DeepChopper, to improve data quality.
@@ -325,7 +325,7 @@ The results show a substantial overlap in \gls{go} terms related to core biologi
 This overlap indicates that the \gls{fp} group genes are frequently involved in pathways critical to protein synthesis and ribosome function.
 Such pathways are typically highly expressed and conserved across different cell types, which might explain their recurrent identification as false positives.
 The significant intersection sizes for these \gls{go} terms across the six cell lines suggest a common pattern in the \gls{fp} gene set, reinforcing the hypothesis that these genes might be artifacts associated with sequencing or data processing errors rather than true biological signals.
-This finding highlights the need for careful evaluation of \gls{gpt} genes in high-throughput sequencing studies to avoid misleading conclusions about gene function.
+This finding highlights the need for careful evaluation in high-throughput sequencing studies to avoid misleading conclusions about gene function.
 
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of nanopore \gls{drs}.
 By accurately predicting adapter sequences, \glspl{llm} can significantly improve the quality and reliability of sequencing data.
@@ -363,7 +363,7 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 \subsection{Training data preparation}\label{ssec:data}
 
 We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
-FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.~\cite{dorado2023}.
+FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''~\cite{dorado2023}.
 Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
 
@@ -482,16 +482,16 @@ We extended our evaluation to multiple cell lines (A549, HCT116, HepG2, K562, MC
 This cross-sample and cross-platform validation approach allowed us to assess the model's performance across diverse sequencing contexts.
 
 
-\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} and PxBLAT tools.
+\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
 The BLAT identity is defined as the ratio of the match length to the sequence length, providing a measure of how closely a sequence aligns to a reference genome.
 \[
 \textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
 \]
 Here, the match length refers to the total number of aligned bases that match the reference genome, and the sequence length is the total length of the query sequence.
 
-We aligned the sequences whose length was larger than 20 bp to the reference genome using BLAT (v0.37.2) and PxBLAT (v1.2.1)~\cite{kent2002blat, li2024pxblat}.
-The resulting BLAT identity scores were analyzed to differentiate between true biological sequences and artificial chimeric reads.
-Sequences with lower BLAT identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
+We aligned the sequences whose length was larger than 20 bp to the reference genome.
+The resulting \gls{blat} identity scores were analyzed to differentiate between true biological sequences and artificial chimeric reads.
+Sequences with lower \gls{blat} identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
 
 
 \subsection{Gene expression analysis of FP group of chimeric reads}
