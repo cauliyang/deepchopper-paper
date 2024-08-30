@@ -72,7 +72,7 @@
 \sisetup{
     scientific-notation=false,
     round-mode = places,
-    round-precision = 2
+    round-precision = 0
 }
 
 \usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
@@ -165,7 +165,7 @@
 \equalcont{These authors contributed equally to this work.}
 
 % \author*[1,2]{\fnm{First} \sur{Author}}\email{iauthor@gmail.com}
-\author[1]{\fnm{Tingyou} \sur{Wang}}\email{tingyou.wang@northwestern.edu}
+\author[1]{\fnm{Tingyou} \sur{Wang}}\email{tywang@northwestern.edu}
 \equalcont{These authors contributed equally to this work.}
 
 \author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
@@ -192,7 +192,7 @@
 
     Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms\qx{which platforms? Should be listed out}. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality scores and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
 
-    This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomic analyses and broadening the applicability of genomics language models in bioinformatics.}
+    This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomics analyses and broadening the applicability of genomics language models in bioinformatics.}
 
 \maketitle
 \section{Main}\label{sec1}
@@ -216,29 +216,38 @@ Accurately identifying these chimeric sequences is critical for maintaining data
 Traditional methods for identifying chimeric reads often struggle with the intricacies of long RNA sequences, leading to errors and inefficiencies.
 While recent advances in \gls{llm} have shown promise in genomics, their application to long-read sequencing data remains challenging due to the need for modeling long-range dependencies and achieving single-nucleotide resolution~\cite{dalla2023nucleotide, tay2022efficient, zhou2023dnabert2}.
 To address these limitations, we developed DeepChopper, a novel language model specifically tailored for biological sequences.
-DeepChopper introduces a hybrid architecture that combines a \gls{lcglm} HyenaDNA for efficient long-range dependency modeling with residual block and \gls{mlp} for fine-grained sequence analysis, achieving both broad context understanding and single-nucleotide resolution~\cite{poli2023hyena, nguyen2024hyenadna, he2016deep} (\figref{fig:f1}{a}).
+DeepChopper introduces a hybrid architecture that combines a \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna} for efficient long-range dependency modeling with residual block and \gls{mlp} for fine-grained sequence analysis, achieving both broad context understanding and single-nucleotide resolution~\cite{poli2023hyena, he2016deep} (\figref{fig:f1}{a}).
 Uniquely, DeepChopper incorporates base quality information alongside sequence data, enabling more nuanced predictions that account for sequencing confidence.
 This quality-aware processing is complemented by an adaptive tokenization strategy that preserves single-nucleotide resolution while capturing higher-order sequence patterns.
 
 A key innovation of DeepChopper is its ability to excel at identifying chimeric reads formed by artificial sequences located in the middle of reads (internal adapters), a capability beyond traditional hard clipping methods that focus only on artificial sequences located in the end of reads (terminal adapters).
 By treating biological sequences as a form of language, DeepChopper captures the underlying biological grammar to predict artificial sequences embedded within long reads.
-Our approach builds upon recent advancements in \gls{glm} architectures, optimizing for the specific challenges of genomic data processing~\cite{nguyen2024hyenadna}.
+Our approach builds upon recent advancements in \gls{glm} architectures, optimizing for the specific challenges of genomics data processing~\cite{nguyen2024hyenadna}.
 
 Here, we present DeepChopper's performance in accurately identifying artificial chimeric reads in nanopore \gls{drs} data across various library preparation methods and cell lines.
 We demonstrate significant improvements over existing methods, particularly in handling the length and variability inherent in RNA sequences.
+<<<<<<< HEAD
 These results demonstrate the ability of DeepChopper to significantly improve the quality of \gls{drs} data, enabling more accurate and reliable downstream analyses, such as quantification and gene fusion detection.
 This work paves the way for broader adoption of \glspl{llm} in enhancing the accuracy and efficiency of biological sequence analysis, ultimately leading to a deeper understanding of the complexities of the transcriptome.\qx{Could be more detailed? Like which field in industry or clinical}
+=======
+These results demonstrate the ability of DeepChopper to significantly improve the quality of \gls{drs} data, enabling more accurate downstream analyses.
+This work paves the way for broader adoption of \glspl{llm} in enhancing the accuracy and efficiency of biological sequence analysis, ultimately leading to a deeper understanding of the complexities of the transcriptome.
+>>>>>>> aadea035cf56bd28be41c4849538c6396ee0e330
 
 
 % Result
 \begin{figure}[!h]
     \includegraphics[height=0.78\columnwidth]{figures/finals/figure1}
+<<<<<<< HEAD
     \caption{{\bf  Detection and analysis of chimeric reads in nanopore\qx{typo} \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c)  Relative positions of prediction artifacts within the VCaP 002 dataset. (d) Number of prediction intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple samples, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}\label{fig:f1}
+=======
+    \caption{{\bf  Detection and analysis of chimeric reads in nanopore \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c)  Relative positions of prediction artifacts within the VCaP 002 dataset. (d) Number of prediction intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality scores of the artificial sequences identified by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple samples, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}\label{fig:f1}
+>>>>>>> aadea035cf56bd28be41c4849538c6396ee0e330
 \end{figure}
 
 % Model Architecture Overview (Fig 1a)
 DeepChopper's architecture integrates a HyenaDNA as a feature extractor with advanced tokenization and quality assessment mechanisms, optimizing it for processing long-range dependencies in sequencing data~\cite{nguyen2024hyenadna} (\figref{fig:f1}{a}).
-This design enables efficient differentiation between true biological reads and chimeric artifacts in large volumes of genomic data.
+This design enables efficient differentiation between true biological reads and chimeric artifacts in large volumes of genomics data.
 % Analysis of Predicted Artifact Lengths Fig 1b
 Analysis of predicted artifact lengths in VCaP 002 data (using RNA002 Kit for \gls{drs}) revealed DeepChopper's efficacy in identifying artificial sequences within a critical length range often associated with chimeric reads.
 The majority of detected artifacts were approximately 70 bp long, a range where traditional methods typically struggle due to sequence ambiguity (\figref{fig:f1}{b}).
@@ -254,8 +263,8 @@ We focused on reads with two or more prediction intervals, as these may indicate
 Most reads contained 1-5 intervals, with multiple intervals potentially indicating fragmented chimeric sequences often missed by Dorado (\figref{fig:f1}{d}).
 
 % Base Quality and BLAT Identity of Artificial Sequences at the End of Reads (Supplementary Fig 1a)
-Further validation of DeepChopper's performance came from analyzing base quality and \gls{blat} identity of artificial sequences at read ends in a 1 million read subsample from the VCaP 002 dataset (\edfigref{fig:sf1}{a}).
-Terminal artificial sequences showed lower average base quality scores (~10) and \gls{blat} identity values (~0.3), consistent with their characterization as sequencing artifacts or erroneous terminal adapters.
+Further validation of DeepChopper's performance came from analyzing base quality and \gls{blat}~\cite{kent2002blat} identity of artificial sequences at read ends in a 1 million read subsampling from the VCaP 002 dataset (\edfigref{fig:sf1}{a}).
+Terminal artificial sequences showed lower average base quality scores (around 10) and \gls{blat} identity values (roughly 0.3), consistent with their characterization as sequencing artifacts or erroneous terminal adapters.
 % Comparison of Soft-Clipping Regions to Terminal Adapters Identified by DeepChopper (Supplementary Fig 1b)
 Comparison of soft-clipping regions in Dorado-processed data (without trimming) to DeepChopper-identified terminal adapters showed 99.6\% alignment (\edfigref{fig:sf1}{b}).
 Of the 0.4\% non-aligned sequences, 97\% failed to map to the reference genome, further confirming their artificial nature.
@@ -265,7 +274,8 @@ These results underscore DeepChopper's reliability in identifying artificial seq
 DeepChopper significantly outperformed Dorado in artificial chimeric read detection, achieving a 91\% reduction in total chimeric read count for the VCaP 002 dataset (\figref{fig:f1}{e}).
 Validation using \gls{ont} \gls{pcr} cDNA data showed DeepChopper reduced unsupported reads by 94\% and increased the supporting rate from 5\% to 47\%, demonstrating superior accuracy in distinguishing true biological sequences from chimeric constructs (\figref{fig:f1}{e}).
 % Base Quality of Detected Artificial Sequences (Fig 1f)
-To assess the quality of detected artificial sequences, we analyzed their base quality scores. \figref{fig:f1}{f} specifically shows the base quality of internal artificial sequences in \gls{fp} chimeric reads, which are unique chimeric reads in VCaP 002 data processed by Dorado with trim compared to the same data processed by DeepChopper.
+To assess the quality of detected artificial sequences, we analyzed their base quality scores.
+The base quality score of internal artificial sequences shown in \figref{fig:f1}{f}  for \gls{fp} chimeric reads, which are unique chimeric reads in VCaP 002 data processed by Dorado with trim compared to the same data processed by DeepChopper.
 The artificial sequences identified by DeepChopper consistently exhibited lower base quality scores, aligning with the expected profile of erroneous reads.
 The result further validates the accuracy of DeepChopper in identifying and filtering out artificial sequences (\figref{fig:f1}{f}).
 % BLAT Identity of Detected Artificial Sequences (Fig 1g)
@@ -279,29 +289,29 @@ By maintaining high precision in detecting lower-quality and divergent sequences
 
 % Performance of DeepChopper on VCaP 004 Data (Supplementary Fig 1C and 1D)
 To assess the performance of DeepChopper across different protocols, we applied the model to VCaP 004 data, sequenced using the newer RNA004 protocol designed for cleaner data output.
-DeepChopper achieved a 21\% reduction in chimeric reads compared to Dorado with trimming, increasing the supporting ratio from 25\% to 30\% when validated against \gls{ont} \gls{pcr} cDNA data (\edfigref{fig:sf1}{c}).
-Analysis of \gls{fp} chimeric reads in VCaP 004 showed consistently low base quality scores (averaging around 10) and \gls{blat} identity (clustering around 0.3) for artificial sequences (\edfigref{fig:sf1}{d}).
+DeepChopper achieved a 21\% reduction in chimeric reads compared to Dorado with trimming, increasing the supporting ratio from 25\%  to 30\% when validated against \gls{ont} \gls{pcr} cDNA data (\edfigref{fig:sf1}{c}).
+Analysis of \gls{fp} chimeric reads in VCaP 004 showed consistently low base quality scores (averaging around 10) and \gls{blat} identity (clustering approximately 0.3) for artificial sequences (\edfigref{fig:sf1}{d}).
 These results, mirroring those from VCaP 002, demonstrate DeepChopper's robustness in identifying chimeric artifacts across different \gls{drs} protocols.
 
 % Chimeric Read Detection Across Multiple Samples (Fig 1h)
 To demonstrate DeepChopper's broad applicability  and effectiveness, we extended our analysis to multiple samples and sequencing platforms.
-Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}, DeepChopper consistently reduced chimeric reads by 62-84\% compared to baseline methods (\figref{fig:f1}{h}).
-The supporting rate improved from 8-19\% (Dorado with trimming) to 43-55\% (DeepChopper), mirroring the performance observed in the VCaP 002 dataset (\figref{fig:f1}{e}).
+Across five different cell lines (A549, HCT116, HepG2, K562, and MCF7) using the RNA002 protocol for \gls{drs}~\cite{chen2021systematic}, DeepChopper consistently reduced chimeric reads by 62\% to 84\% compared to baseline methods (\figref{fig:f1}{h}).
+The supporting rate improved from 8\% to 19\% (Dorado with trimming) to 43\% to 55\% (DeepChopper), mirroring the performance observed in the VCaP 002 dataset (\figref{fig:f1}{e}).
 This consistent performance across diverse samples underscores DeepChopper's robustness and reliability in various cell lines.
 
 % Supporting Read Analysis Across Multiple Datasets (Fig 1i)
 We further validated DeepChopper's effectiveness using the WTC11 sample, leveraging multiple sequencing platforms to verify chimeric read detection (\figref{fig:f1}{i}).
 DeepChopper reduced chimeric reads in WTC11 by 54\% compared to Dorado with trim.
 To assess the accuracy of chimeric read identification, we calculated supporting read rates using data from five different platforms: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq~\cite{carbonell2024captrap}.
-DeepChopper consistently achieved high support rates (51-66\%) across these diverse datasets, compared to 26-37\% for Dorado with trimming.
+DeepChopper consistently achieved high support rates (51\% to 66\%) across these diverse datasets, compared to 26\% to 37\% for Dorado with trimming.
 This cross-platform validation demonstrates DeepChopper's versatility and accuracy in maintaining data integrity across various sequencing conditions.
 
 These comprehensive analyses collectively showcase DeepChopper's superior performance in detecting and filtering artificial chimeric reads.
-The consistency of results across diverse datasets reinforces DeepChopper's reliability in enhancing the quality of nanopore \gls{drs} data, providing a robust solution for improving the accuracy of downstream genomic analyses.
+The consistency of results across diverse datasets reinforces DeepChopper's reliability in enhancing the quality of nanopore \gls{drs} data, providing a robust solution for improving the accuracy of downstream genomics analyses.
 
 \begin{figure}[!h]
     \includegraphics[height=1.2\columnwidth]{figures/finals/figure2}
-    \caption{\bf This is figure 2.}\label{fig:f2}
+    \caption{{\bf Characterization of \gls{fp} Genes Detected by DeepChopper.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Example of a long read containing artificial sequences, illustrating the position of chopped regions and polyA tails.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a)
@@ -312,7 +322,11 @@ This pattern highlights the effectiveness of DeepChopper in distinguishing betwe
 % Visualization of Chromosomal Connections in FP Chimeric Reads (Supplementary Fig 2a)
 To investigate potential patterns among \gls{fp} chimeric reads, we visualized the chromosomal regions connected by all \gls{fp} chimeric reads from the VCaP 002 dataset (\edfigref{fig:sf2}{a}).
 This analysis aimed to detect any recurring connections between specific genomic regions that might indicate systematic artifacts in the sequencing data.
+<<<<<<< HEAD
 The results did not reveal any clear or consistent patterns of chromosomal connections in the \gls{fp} chimeric reads.\qx{Typo}
+=======
+The results did not reveal any clear or consistent patterns of chromosomal connections in the \gls{fp} chimeric reads  (\edfigref{fig:sf2}{a}).
+>>>>>>> aadea035cf56bd28be41c4849538c6396ee0e330
 The connections appeared to be randomly distributed across various chromosomes, with no particular region showing a higher frequency of connections (\edfigref{fig:sf2}{a}).
 This lack of an obvious pattern suggests that the occurrence may not be driven by specific genomic locations but rather by random sequencing or data processing errors.\qx{This conclusion is a little bit too solid and may critizied by reviewer}
 These findings imply that \gls{fp} chimeric reads are likely due to non-specific factors rather than biases associated with particular chromosomal regions, underscoring the need for robust detection and filtering methods, such as those provided by DeepChopper, to improve data quality.
@@ -324,10 +338,10 @@ The results show a substantial overlap in \gls{go} terms related to core biologi
 This overlap indicates that the \gls{fp} group genes are frequently involved in pathways critical to protein synthesis and ribosome function.
 Such pathways are typically highly expressed and conserved across different cell types, which might explain their recurrent identification as false positives.
 The significant intersection sizes for these \gls{go} terms across the six cell lines suggest a common pattern in the \gls{fp} gene set, reinforcing the hypothesis that these genes might be artifacts associated with sequencing or data processing errors rather than true biological signals.
-This finding highlights the need for careful evaluation of \gls{gpt} genes in high-throughput sequencing studies to avoid misleading conclusions about gene function.
+This finding highlights the need for careful evaluation in high-throughput sequencing studies to avoid misleading conclusions about gene function.
 
 Our study demonstrates the potential of large language models in biological sequence analysis, particularly in the context of nanopore \gls{drs}.
-By accurately predicting adapter sequences,  \glspl{llm} can significantly improve the quality and reliability of sequencing data.
+By accurately predicting adapter sequences, \glspl{llm} can significantly improve the quality and reliability of sequencing data.
 This showcases the broader applicability of language models in handling complex biological data, paving the way for advancements in genomics and transcriptomics.
 Future research can explore additional applications and further optimize these models for specific biological tasks, solidifying their role in biotechnology.
 
@@ -362,14 +376,20 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 \subsection{Training data preparation}\label{ssec:data}
 
 We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
-FASTQ files were generated using Dorado (v0.7.3) with adapter trimming disabled (--no-trim)~\cite{dorado2023}.
-Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.26-r1209) with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14)~\cite{li2018minimap2}.
-For adapter extraction, we selected primary alignments lacking supplementary alignments, treating 3' soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
+FASTQ files were generated using Dorado (v0.5.2) with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''~\cite{dorado2023}.
+Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
+For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as non-adapter sequences.
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence.
+<<<<<<< HEAD
 The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.19.2) to obtain the genome coverage distribution~\cite{li2009sequence}.
 Our dataset comprises both positive (terminal and internal adapters in a 1:1 ratio) and negative examples (no artificial sequences) in a 9:1 ratio.
 We generated 600,000 data points, split into training (480,000), validation (60,000), and test (60,000) sets with a ratio of 0.8:0.1:0.1 \qx{8:1:1?}.
+=======
+The resulting SAM files were converted to BAM format, indexed, and sorted using SAMtools (v1.16)~\cite{li2009sequence} to obtain the genome coverage distribution.
+Our dataset comprises both positive (terminal and internal adapters in a $1:1$ ratio) and negative examples (no artificial sequences) in a $9:1$ ratio.
+We generated 600,000 data points, split into training (480,000), validation (60,000), and test (60,000) sets with a ratio of \(0.8:0.1:0.1\).
+>>>>>>> aadea035cf56bd28be41c4849538c6396ee0e330
 
 
 \subsection{Language model architecture}\label{ssec:lm}
@@ -377,7 +397,7 @@ We generated 600,000 data points, split into training (480,000), validation (60,
 DeepChopper approaches artificial sequence detection as a token classification task, predicting whether each token belongs to an artificial sequence.
 The model's architecture is specifically designed for this purpose, enabling accurate identification of artificial sequence regions within biological data.
 
-At its core, DeepChopper adapts the HyenaDNA framework, a genomic model architecture, as its primary feature extractor~\cite{nguyen2024hyenadna}.
+At its core, DeepChopper adapts the HyenaDNA framework, a genomics model architecture, as its primary feature extractor.
 This choice enhances the model's ability to process and interpret complex biological sequences effectively.
 Following feature extraction, we integrated a quality block to incorporate sequence quality information into the prediction process.
 This block, comprising dense layers with residual connections, combines quality scores with extracted features, enriching the model's understanding of the input data.
@@ -423,7 +443,7 @@ Evaluation metrics included accuracy, precision, recall, and F1 score with the f
 \end{align*}
 
 The final model was selected based on the best performance on the validation set.
-We use Hydra to find the optimal model's parameters~\cite{Yadan2019Hydra}.
+We use Hydra~\cite{Yadan2019Hydra} to find the optimal model's parameters.
 The total loss for one window is the sum of the losses from each supported position.
 For per position  \( i \), where \( i  \in {1, 2, \cdots, S} \),  the total loss includes both base prediction loss.
 The binary cross-entropy losses were used for these tasks, with the total loss incorporating predicted base probabilities, true base values, and the probability that a position is informative.
@@ -474,9 +494,6 @@ We compared these metrics for artificial sequences detected in false positive ch
 Statistical analysis, including paired t-tests, was conducted to determine the significance of improvements over traditional methods.
 The model's generalizability was further validated by testing on independent datasets, including the VCaP 004 dataset sequenced using the newer RNA004 protocol, demonstrating DeepChopper's adaptability to evolving sequencing technologies.
 
-\textit{Simulation Data Evaluation.} \yy{refer to ty}
-
-
 \textit{Evaluation of artificial chimeric reads in real data.} To evaluate DeepChopper on real data, we used the VCaP 002 dataset, focusing on identifying chimeric reads caused by internal adapters in nanopore DRS data.
 We cross-referenced the identified reads with data from multiple sequencing platforms: ONT PCR cDNA, ONT CapTrap-seq, ONT R2C2, PacBio cDNA, and PacBio CapTrap-seq.
 Supporting rates, defined as the ratio of chimeric reads corroborated by other platforms to the total detected chimeric reads, were calculated to assess detection consistency across platforms.
@@ -484,31 +501,37 @@ We extended our evaluation to multiple cell lines (A549, HCT116, HepG2, K562, MC
 This cross-sample and cross-platform validation approach allowed us to assess the model's performance across diverse sequencing contexts.
 
 
+<<<<<<< HEAD
 \textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read\qx{reads}, we calculated the \gls{blat} identity for each sequence using both \gls{blat} and PxBLAT tools.
+=======
+\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
+>>>>>>> aadea035cf56bd28be41c4849538c6396ee0e330
 The BLAT identity is defined as the ratio of the match length to the sequence length, providing a measure of how closely a sequence aligns to a reference genome.
 \[
 \textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
 \]
 Here, the match length refers to the total number of aligned bases that match the reference genome, and the sequence length is the total length of the query sequence.
 
-We aligned the sequences whose length was larger than 20 bp to the reference genome using BLAT (v0.37.2) and PxBLAT (v1.2.1)~\cite{kent2002blat, li2024pxblat}.
-The resulting BLAT identity scores were analyzed to differentiate between true biological sequences and artificial chimeric reads.
-Sequences with lower BLAT identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
+We aligned the sequences whose length was larger than 20 bp to the reference genome.
+The resulting \gls{blat} identity scores were analyzed to differentiate between true biological sequences and artificial chimeric reads.
+Sequences with lower \gls{blat} identity were flagged as potential chimeric reads, contributing to the overall assessment of DeepChopper's performance.
+
+
+\subsection{Gene expression analysis of FP group of chimeric reads}
+
+To identify the \gls{fp} group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper.
+The \gls{fp} group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado.
+Following the identification of the \gls{fp} group, we proceeded to assess gene expression levels specifically associated with these reads using IsoQuant (v )~\cite{prjibelski2023accurate}.
 
 
 \subsection{\gls{go} analysis}
 
-\yy{refer to ty}
-
-\subsection{Gene expression analysis}
-
-\yy{refer to ty}
-
+For each cell line, the top 100 high expressed genes were used for the \gls{go} enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) ~\cite{sherman2022david} to elucidate the biological processes they involved .
 
 \subsection{Computing resource}
 
 All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM.
-The server also featured two NVIDIA A100 GPUs, each with 80 GB of GPU memory, providing substantial computational power for both CPU-intensive tasks and GPU-accelerated deep learning workloads.
+The server also featured two NVIDIA A100 \glspl{gpu}, each with 80 GB of GPU memory, providing substantial computational power for both CPU-intensive tasks and GPU-accelerated deep learning workloads.
 
 
 % \section{Tables}\label{sec5}

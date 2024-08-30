@@ -256,3 +256,4 @@ data
 .vscode
 igv
 tmp
+.DS_Store
