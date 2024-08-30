@@ -396,9 +396,9 @@ By classifying tokens into positive (part of an artificial sequence) or negative
 The tokens contain \emph{A}, \emph{C}, \emph{G}, \emph{T} and \emph{N} as the basic units, allowing the model to capture the fine-grained details of the sequences.
 The model was trained using supervised learning, with sequences annotated for artificial sequences.
 Training was conducted on a high-performance computing cluster using two A100 \glspl{gpu}.
-The batch size was \num{64}, validation was performed every \num{20000}\qx{The number should be revised throughout the MS}  steps, and we selected the model with the highest validation F1 score for the base prediction task.
+The batch size was \num{64}, validation was performed every 20,000 \qx{The number should be revised throughout the MS}  steps, and we selected the model with the highest validation F1 score for the base prediction task.
 The Adam optimizer was used for training with default \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \) parameters~\cite{kingma2014adam}.
-We use a learning rate scheduler to reduce the learning rate when the validation loss stops improving, and the initial learning rate is \num{0.00002}\qx{shown as zero in MS} .
+We use a learning rate scheduler to reduce the learning rate when the validation loss stops improving, and the initial learning rate is 0.00002.
 
 Cross-entropy loss was used to update the model parameters:
 
@@ -464,7 +464,7 @@ By combining these techniques, we were able to produce more reliable predictions
 
 \subsection{Evaluating artificial sequences detection}
 
-\textit{Evaluation metrics and analysis.} We assessed DeepChopper's performance using precision, recall, and F1 score\qx{How about False Positive (FP)?} , based on \gls{tp} and \gls{fn} counts.\qx{How about FP?}
+\textit{Evaluation metrics and analysis.} We assessed DeepChopper's performance using precision, recall, and F1 score on testing data.
 These metrics provided a comprehensive view of the model's ability to identify artificial sequences.
 To evaluate DeepChopper's effectiveness across diverse datasets, we analyzed its performance on multiple cell lines (VCaP 002, A549, HCT116, K562, MCF7) and compared it to baseline methods, including Dorado with and without trimming.
 We quantified the reduction in chimeric reads and the improvement in supporting rates across these datasets.
@@ -480,7 +480,7 @@ The model's generalizability was further validated by testing on independent dat
 \textit{Evaluation of artificial chimeric reads in real data.} To evaluate DeepChopper on real data, we used the VCaP 002 dataset, focusing on identifying chimeric reads caused by internal adapters in nanopore DRS data.
 We cross-referenced the identified reads with data from multiple sequencing platforms: ONT PCR cDNA, ONT CapTrap-seq, ONT R2C2, PacBio cDNA, and PacBio CapTrap-seq.
 Supporting rates, defined as the ratio of chimeric reads corroborated by other platforms to the total detected chimeric reads, were calculated to assess detection consistency across platforms.
-We extended our evaluation to multiple cell lines (A549, HCT116, HepG2, K562, MCF7) and the wtc11 cell lines\qx{WTC11 cell line}  to demonstrate DeepChopper's broad applicability.
+We extended our evaluation to multiple cell lines (A549, HCT116, HepG2, K562, MCF7) and the WTC11 cell lines to demonstrate DeepChopper's broad applicability.
 This cross-sample and cross-platform validation approach allowed us to assess the model's performance across diverse sequencing contexts.
 
 \textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
