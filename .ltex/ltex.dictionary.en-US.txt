@@ -4,3 +4,4 @@ minibatch
 nanopore
 Nanopore
 Nanopore
+DeepChopper

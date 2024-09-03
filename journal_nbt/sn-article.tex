@@ -192,13 +192,13 @@
 %%==================================%%
 
 \abstract{
-    The accurate identification of chimeric reads is critical for ensuring the reliability of nanopore \gls{drs} data, which has emerged as a powerful tool for sequencing full-length RNA molecules while preserving native RNA modifications. Despite its potential, nanopore \gls{drs} is susceptible to the generation of chimeric reads, where fragments of distinct RNA molecules are incorrectly joined together, complicating downstream analyses such as transcriptome assembly and gene fusion detection.
+	The accurate identification of chimeric reads is critical for ensuring the reliability of nanopore \gls{drs} data, which has emerged as a powerful tool for sequencing full-length RNA molecules while preserving native RNA modifications. Despite its potential, nanopore \gls{drs} is susceptible to the generation of chimeric reads, where fragments of distinct RNA molecules are incorrectly joined together, complicating downstream analyses such as transcriptome assembly and gene fusion detection.
 
-    In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
+	In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
 
-    Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms\qx{which platforms? Should be listed out}. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality score and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
+	Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms\qx{which platforms? Should be listed out}. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality score and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
 
-    This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomics analyses and broadening the applicability of genomics language models in bioinformatics.}
+	This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomics analyses and broadening the applicability of genomics language models in bioinformatics.}
 
 \maketitle
 \section{Main}\label{sec1}
@@ -238,8 +238,8 @@ This work paves the way for broader adoption of \glspl{llm} in enhancing the acc
 
 % Result
 \begin{figure}[!h]
-    \includegraphics[height=0.78\columnwidth]{finals/figure1}
-    \caption{{\bf  Detection and analysis of chimeric reads in nanopore \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c)  Relative positions of prediction artifacts within the VCaP 002 dataset. (d) Number of prediction intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality score of the artificial sequences identified by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple samples, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}\label{fig:f1}
+	\includegraphics[height=0.78\columnwidth]{finals/figure1}
+	\caption{{\bf  Detection and analysis of chimeric reads in nanopore \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c)  Relative positions of prediction artifacts within the VCaP 002 dataset. (d) Number of prediction intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) Base quality score of the artificial sequences identified by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple samples, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the red bars indicate supported chimeric reads}\label{fig:f1}
 \end{figure}
 
 % Model Architecture Overview (Fig 1a)
@@ -308,8 +308,8 @@ These comprehensive analyses collectively showcase DeepChopper's superior perfor
 The consistency of results across diverse datasets reinforces DeepChopper's reliability in enhancing the quality of nanopore \gls{drs} data, providing a robust solution for improving the accuracy of downstream genomics analyses.
 
 \begin{figure}[!h]
-    \includegraphics[height=0.95\columnwidth]{finals/figure2}
-    \caption{{\bf Characterization of \gls{fp} Genes Detected by DeepChopper.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Example of a long read containing artificial sequences, illustrating the position of chopped regions and polyA tails.}\label{fig:f2}
+	\includegraphics[height=0.95\columnwidth]{finals/figure2}
+	\caption{{\bf Characterization of \gls{fp} Genes Detected by DeepChopper.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Example of a long read containing artificial sequences, illustrating the position of chopped regions and polyA tails.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a)
@@ -451,10 +451,10 @@ Within each sliding window, we applied a voting method to polish the predictions
 The final classification of each nucleotide within the window is determined by the majority vote of all predictions within that window.
 The voting result for each nucleotide \( x_i \) is given by:
 \[
-y_i = \begin{cases}
-    1 & \text{if } \sum_{j=i-k}^{i+k} p_j > \frac{W}{2} \\
-    0 & \text{otherwise}
-\end{cases}
+	y_i = \begin{cases}
+		1 & \text{if } \sum_{j=i-k}^{i+k} p_j > \frac{W}{2} \\
+		0 & \text{otherwise}
+	\end{cases}
 \]
 where \( y_i \) is the final prediction for nucleotide \( x_i \). \( p_j \) is the predicted probability of being an artificial sequence for nucleotide \( x_j \). \( W \) is the size of the sliding window, \( k \) is half the window size, i.e., \( k = \frac{W-1}{2} \).
 
@@ -491,7 +491,7 @@ This cross-sample and cross-platform validation approach allowed us to assess th
 \textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
 The BLAT identity is defined as the ratio of the match length to the sequence length, providing a measure of how closely a sequence aligns to a reference genome.
 \[
-\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
+	\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
 \]
 Here, the match length refers to the total number of aligned bases that match the reference genome, and the sequence length is the total length of the query sequence.
 
@@ -584,7 +584,7 @@ Please refer to Journal-level guidance for any specific requirements.
 \backmatter
 
 \begin{appendices}
-    \printglossaries[type=\acronymtype, title=Abbreviations]
+	\printglossaries[type=\acronymtype, title=Abbreviations]
 \end{appendices}
 
 
@@ -600,18 +600,18 @@ Please refer to Journal-level guidance for any specific requirements.
 \renewcommand{\figurename}{Extended Data Fig.}
 
 
- \begin{figure}[!h]
-     \includegraphics[height=0.65\columnwidth]{finals/sf1}
-     \caption{ {\bf Analysis of chimeric reads and artificial sequences in VCaP RNA sequencing data } (a) Base quality score and \gls{blat} identity of terminal artificial sequences for subsampling 1M data in VCaP 002. (b) Soft-clipping part of Dorado untrimmed data compared with terminal artificial sequences for subsampling 1M data in VCaP RNA002. SC (Soft-Clipping Consistent): Terminal artificial sequences that align with soft-clipped regions in Dorado untrimmed data. NOSC (Not Soft-Clipping Consistent): Terminal artificial sequences that do not align with soft-clipped regions. HIT: Terminal artificial sequences that can be aligned to the reference genome. NOHIT: Terminal artificial sequences that cannot be aligned to the reference genome. (c) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 004 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (d) Base quality score and \gls{blat} identity of VCaP RNA004 internal artificial sequences.}
-     \label{fig:sf1}
- \end{figure}
+\begin{figure}[!h]
+	\includegraphics[height=0.65\columnwidth]{finals/sf1}
+	\caption{ {\bf Analysis of chimeric reads and artificial sequences in VCaP RNA sequencing data } (a) Base quality score and \gls{blat} identity of terminal artificial sequences for subsampling 1M data in VCaP 002. (b) Soft-clipping part of Dorado untrimmed data compared with terminal artificial sequences for subsampling 1M data in VCaP RNA002. SC (Soft-Clipping Consistent): Terminal artificial sequences that align with soft-clipped regions in Dorado untrimmed data. NOSC (Not Soft-Clipping Consistent): Terminal artificial sequences that do not align with soft-clipped regions. HIT: Terminal artificial sequences that can be aligned to the reference genome. NOHIT: Terminal artificial sequences that cannot be aligned to the reference genome. (c) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 004 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (d) Base quality score and \gls{blat} identity of VCaP RNA004 internal artificial sequences.}
+	\label{fig:sf1}
+\end{figure}
 
 
- \begin{figure}[!h]
-     \includegraphics[height=1.2\columnwidth]{finals/sf2}
-     \caption{ {\bf  Analysis of \gls{fp} chimeric reads } (a) Visualization of chromosomal connections for \gls{fp} chimeric reads detected in the VCaP 002 dataset. (b) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in A549. (c) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HCT116. (d) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in MCF7. (e) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in K562. (f) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HepG2. (g) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in VCaP.}
-     \label{fig:sf2}
- \end{figure}
+\begin{figure}[!h]
+	\includegraphics[height=1.2\columnwidth]{finals/sf2}
+	\caption{ {\bf  Analysis of \gls{fp} chimeric reads } (a) Visualization of chromosomal connections for \gls{fp} chimeric reads detected in the VCaP 002 dataset. (b) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in A549. (c) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HCT116. (d) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in MCF7. (e) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in K562. (f) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in HepG2. (g) Distribution of \gls{fp} biological processes enriched among \gls{fp} group genes in VCaP.}
+	\label{fig:sf2}
+\end{figure}
 
 
 \newpage
@@ -632,17 +632,17 @@ Please refer to Journal-level guidance for any specific requirements.
 	\caption{Hyperparameter ranges used}\label{tab:hyperparameter}
 	\begin{tabular}{lc}
 		\toprule
-		                                    & {$\sf DeepChopper$}                  \\
+		                     & {$\sf DeepChopper$}               \\
 		\midrule
-		Parameters                          & 1.6M                              \\
-		Optimizer                           & AdamW                             \\
-		Optimizer momentum                  & $\beta_1$, $\beta_2$ = 0.9, 0.999 \\
-		Training epoch                      & 60                               \\
-		Batch size                          & 64                        \\
-		Learning rate                       & 2e-5 to 1e-3                      \\
-		LR scheduler                        & ReduceLROnPlateau                      \\
-		Weight decay (model)                & 0-0.2                             \\
-		Sequence lengths                    & 32769                             \\
+		Parameters           & 1.6M                              \\
+		Optimizer            & AdamW                             \\
+		Optimizer momentum   & $\beta_1$, $\beta_2$ = 0.9, 0.999 \\
+		Training epoch       & 60                                \\
+		Batch size           & 64                                \\
+		Learning rate        & 2e-5 to 1e-3                      \\
+		LR scheduler         & ReduceLROnPlateau                 \\
+		Weight decay (model) & 0-0.2                             \\
+		Sequence lengths     & 32769                             \\
 		\midrule
 	\end{tabular}
 \end{table}
