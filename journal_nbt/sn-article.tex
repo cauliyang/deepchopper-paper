@@ -75,12 +75,12 @@
     round-precision = 0
 }
 
+
 \usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
-
 \setabbreviationstyle[acronym]{long-short}
-
 % define glossaries
 \makeglossaries
+
 \newacronym{blat}{BLAT}{BLAST-like alignment tool}
 \newacronym{llm}{LLM}{Large Language Model}
 \newacronym{hmm}{HMM}{Hidden Markov Model}
@@ -171,6 +171,10 @@
 \equalcont{These authors contributed equally to this work.}
 
 \author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
+
+\author[1]{\fnm{Yanan} \sur{Ren}}\email{ynren1020@gmail.com}
+\author[1]{\fnm{Xiaotong} \sur{Lu}}\email{xiaotong.lu@northwestern.edu}
+
 \author*[1,2]{\fnm{Rendong} \sur{Yang}}\email{rendong.yang@northwestern.edu}
 
 \affil[1]{\orgdiv{Department of Urology}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{303 E Superior St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
@@ -412,7 +416,7 @@ Cross-entropy loss was used to update the model parameters:
 \]
 
 where \( x \) is the input, \( y \) is the target, \( w \) is the weight,
-\( C \) is the number of classes, and \( N \) spans the minibatch dimension as well as
+\( C \) is the number of classes, and \( N \) spans the mini-batch dimension as well as
 \( d_1, \cdots, d_k \) for the K-dimensional case.
 
 \[
@@ -420,7 +424,6 @@ where \( x \) is the input, \( y \) is the target, \( w \) is the weight,
 	.\]
 
 Training was conducted for \num{60} epochs with early stopping based on validation performance to prevent overfitting.
-
 Evaluation metrics included accuracy, precision, recall, and F1 score with the following equations:
 \begin{align*}
 	\textrm{Precision} & = \frac{\textrm{TP}}{\textrm{TP}+\textrm{FP}}                                                     \\
@@ -500,7 +503,7 @@ To assess DeepChopper's accuracy in detecting terminal artificial sequences, we 
 An overlap threshold of 0.4 was used to determine concordance between the two methods (\edfigref{fig:sf1}{b}).
 
 
-\subsection{Gene expression analysis of FP group of chimeric reads}
+\subsection{Gene expression analysis of \gls{fp} group of chimeric reads}
 
 To identify the \gls{fp} group of chimeric reads, we began by comparing two datasets: the chimeric reads identified by Dorado and those supported by DeepChopper.
 The \gls{fp} group was defined by subtracting the chimeric reads confirmed by DeepChopper from the total chimeric reads identified by Dorado.
@@ -581,8 +584,7 @@ Please refer to Journal-level guidance for any specific requirements.
 \backmatter
 
 \begin{appendices}
-    \printglossary[type=\acronymtype, title=Abbreviations]
-
+    \printglossaries[type=\acronymtype, title=Abbreviations]
 \end{appendices}
 
 
@@ -644,32 +646,6 @@ Please refer to Journal-level guidance for any specific requirements.
 		\midrule
 	\end{tabular}
 \end{table}
-
-
-\begin{table}
-    \caption{Open source libraries (and corresponding licenses) used in this work.}
-    \label{tab:assets}
-            \begin{tabular}{ll}
-                \toprule
-                Library                                                & License                                                                            \\ \midrule
-                GenomicsBenchmark~\cite{grevsova2023genomic}           & Apache 2.0                                                                         \\
-                Mamba~\cite{gu2023mamba}                               & Apache 2.0                                                                         \\
-                HuggingFace~\cite{wolf2019huggingface}                 & Apache 2.0                                                                         \\
-                Hydra~\cite{Yadan2019Hydra}                            & MIT                                                                                \\
-                HyenaDNA~\cite{nguyen2024hyenadna}                     & Apache 2.0                                                                         \\
-                NumPy~\cite{harris2020array}                           & \href{https://numpy.org/doc/stable/license.html}{NumPy license}                    \\
-                Matplotlib~\cite{Hunter2007}                           & \href{https://matplotlib.org/stable/users/project/license.html}{Matplotib license} \\
-                OmegaConf                                              & BSD 3-Clause                                                                       \\
-                Pandas \cite{reback2020pandas}                         & BSD 3-Clause ``New" or ``Revised"                                                  \\
-                PyTorch~\cite{paszke2019pytorch}                       & BSD-3 Clause                                                                       \\
-                PyTorch Lightning~\cite{Falcon_PyTorch_Lightning_2019} & Apache 2.0                                                                         \\
-                Seaborn~\cite{Waskom2021}                              & BSD 3-Clause ``New" or ``Revised"                                                  \\ \bottomrule
-            \end{tabular}
-\end{table}
-
-
-
-
 
 % \section*{Declarations}
 
