@@ -196,7 +196,7 @@
 
 	In this study, we present DeepChopper, a genomics language model specifically designed to detect and filter chimeric reads. Leveraging advanced long-range attention mechanisms and tailored tokenization strategies, DeepChopper effectively distinguishes true biological sequences from artificial constructs with high precision. We validated the performance of DeepChopper across multiple datasets, including \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
 
-	Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms\qx{which platforms? Should be listed out}. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality score and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
+	Our results demonstrate that DeepChopper significantly outperforms existing methods, achieving up to a 94\% reduction in unsupported reads and consistently maintaining high support rates across diverse sequencing platforms\qx{such as ONT PCR cDNA, ONT CapTrap-seq, ONT R2C2, PacBio cDNA, and PacBio CapTrap-seq}. Additionally, DeepChopper effectively identified low-quality artificial sequences based on base quality score and \gls{blat} identity, further enhancing the accuracy of nanopore \gls{drs} data.
 
 	This study highlights the potential of DeepChopper to improve the integrity of nanopore \gls{drs} data, paving the way for more reliable genomics analyses and broadening the applicability of genomics language models in bioinformatics.}
 
@@ -232,8 +232,8 @@ Our approach builds upon recent advancements in \gls{glm} architectures, optimiz
 
 Here, we present DeepChopper's performance in accurately identifying artificial chimeric reads in nanopore \gls{drs} data across various library preparation methods and cell lines.
 We demonstrate significant improvements over existing methods, particularly in handling the length and variability inherent in RNA sequences.
-These results demonstrate the ability of DeepChopper to significantly improve the quality of \gls{drs} data, enabling more accurate and reliable downstream analyses, such as quantification and gene fusion detection.
-This work paves the way for broader adoption of \glspl{llm} in enhancing the accuracy and efficiency of biological sequence analysis, ultimately leading to a deeper understanding of the complexities of the transcriptome.\qx{Could be more detailed? Like which field in industry or clinical}
+\qx{These results highlight DeepChopper's significant improvements in \gls{drs} data quality}, enabling more accurate and reliable downstream analyses, such as quantification and gene fusion detection.
+This work paves the way for broader adoption of \glspl{llm} in enhancing the accuracy and efficiency of biological sequence analysis, ultimately leading to a deeper understanding of the complexities of the transcriptome\qx{and their implications in both clinical and industrial biotechnology.}
 
 
 % Result
@@ -308,14 +308,14 @@ These comprehensive analyses collectively showcase DeepChopper's superior perfor
 The consistency of results across diverse datasets reinforces DeepChopper's reliability in enhancing the quality of nanopore \gls{drs} data, providing a robust solution for improving the accuracy of downstream genomics analyses.
 
 \begin{figure}[!h]
-	\includegraphics[height=1.1\columnwidth]{finals/figure2}
+	\includegraphics[height=1\columnwidth]{finals/figure2}
 	\caption{{\bf Characterization of \gls{fp} Genes Detected by DeepChopper.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Example of a long read containing artificial sequences, illustrating the position of chopped regions and polyA tails.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a)
 In the VCaP 002, genes in the \gls{fp} group exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{a}), despite displaying similar gene lengths (\figref{fig:f2}{b}).
 This result suggests that the \gls{fp} genes detected by DeepChopper, after comparing with Dorado, are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals.
-This pattern highlights the effectiveness of DeepChopper in distinguishing between genuine gene expression and artifacts introduced during sequencing, thereby improving the overall accuracy of gene expression analysis in the dataset.\qx{It is advisable to narrow the scope of the conclusions or identify areas}
+This pattern highlights the effectiveness of DeepChopper in distinguishing between genuine gene expression and artifacts introduced during sequencing, thereby improving the overall accuracy of gene expression analysis in the dataset.
 
 % Visualization of Chromosomal Connections in FP Chimeric Reads (Supplementary Fig 2a)
 To investigate potential patterns among \gls{fp} chimeric reads, we visualized the chromosomal regions connected by all \gls{fp} chimeric reads from the VCaP 002 dataset (\edfigref{fig:sf2}{a}).
@@ -323,7 +323,7 @@ This analysis aimed to detect any recurring connections between specific genomic
 The results did not reveal any clear or consistent patterns of chromosomal connections in the \gls{fp} chimeric reads  (\edfigref{fig:sf2}{a}).
 
 The connections appeared to be randomly distributed across various chromosomes, with no particular region showing a higher frequency of connections (\edfigref{fig:sf2}{a}).
-This lack of an obvious pattern suggests that the occurrence may not be driven by specific genomic locations but rather by random sequencing or data processing errors.\qx{This conclusion is a little bit too solid and may criticized by reviewer}
+This lack of an obvious pattern suggests \qx{that the occurrence of these FP chimeric reads may not be driven by specific genomic locations, but could potentially be the result of random sequencing or data processing errors. Further investigation would be needed to fully characterize the underlying causes of these artifacts.}
 These findings imply that \gls{fp} chimeric reads are likely due to non-specific factors rather than biases associated with particular chromosomal regions, underscoring the need for robust detection and filtering methods, such as those provided by DeepChopper, to improve data quality.
 
 % Gene Ontology (GO) Enrichment Analysis of FP Group Genes (Fig 2c)
@@ -361,7 +361,7 @@ The mRNA preparations were either immediately used to prepare a sequencing libra
 
 \subsection{Nanopore sequencing}
 
-We performed nanopore sequencing of the enriched mRNA using two different chemistries: the DNA-nanopore (R9 chemistry; RNA002 kit) and the RNA-nanopore chemistry (RNA chemistry; RNA004 kit).\qx{The decision to use both kits was motivated by our aim to compare their performance and assess the improvements in the newer RNA004 kit. ...Should let the reader know why we choose them}
+We performed Direct-RNA nanopore sequencing of the enriched mRNA using two different sets: \qx{the RNA002 kits with R9.4.1 flow cells and the RNA004 kits with R10.4.1 flow cells} \qx{The decision to incorporate the RNA004 kit, a newly released option, was driven by our intention to test its capabilities in conjunction with our DeepChopper tool to optimize data quality and sequencing efficiency.}
 For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA002, \gls{ont}) following the manufacturer's instructions.
 Nanopore \gls{drs} employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
 The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
@@ -445,7 +445,7 @@ This technique helps to extend the prediction regions and reduces choppy noise, 
 The sliding window technique is particularly effective in maintaining continuity in regions where artificial sequences are predicted, ensuring that isolated predictions do not create fragmented and unrealistic results.
 
 We employed a sliding window of size 21 nucleotides.
-This window size was chosen based on empirical testing to balance the need for sufficient smoothing while retaining sensitivity to shorter artificial sequences\qx{or some citations? We need more evidence for this.} .
+This window size was chosen based on empirical testing to balance the need for sufficient smoothing while retaining sensitivity to shorter artificial sequences\qx{citation like Valeri, Jacqueline A., Katherine M. Collins, Pradeep Ramesh, Miguel A. Alcantar, Bianca A. Lepe, Timothy K. Lu, and Diogo M. Camacho. "Sequence-to-function deep learning frameworks for engineered riboregulators." Nature communications 11, no. 1 (2020): 5058.} .
 
 Within each sliding window, we applied a voting method to polish the predictions.
 The final classification of each nucleotide within the window is determined by the majority vote of all predictions within that window.
