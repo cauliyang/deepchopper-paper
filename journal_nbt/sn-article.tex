@@ -515,6 +515,18 @@ Following the identification of the \gls{fp} group, we proceeded to assess gene 
 
 For each cell line, the top 100 high expressed genes were used for the \gls{go} enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID)~\cite{sherman2022david} to elucidate the biological processes they involved.
 
+\subsection{Gene fusion detection and visualization}
+
+Gene fusions were identified using Fusionseeker (v1.0.1)~\cite{chen2023} in Dorado-trimmed reads, Deepchopper-processed reads, and FP chimeric reads. The gene structure was visualized using GSDS (v2.0)~\cite{hu2015}. Base quality scores were generated using a custom Python script, and ONT ion current signals were visualized with Squigualiser (v0.6.3)~\cite{Samarakoon2024}.
+
+
+\ty{Chen, Y. et al. Gene Fusion Detection and Characterization in Long-Read Cancer Transcriptome Sequencing Data with FusionSeeker. Cancer Res 83, 28-33 (2023).
+Hu, B. et al. GSDS 2.0: an upgraded gene feature visualization server. Bioinformatics 31, 1296-7 (2015).
+Samarakoon, H. et al. Interactive visualisation of raw nanopore signal data with Squigualiser. bioRxiv, 2024.02.19.581111 (2024).}
+
+
+
+
 \subsection{Computing resource}
 
 All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM.
