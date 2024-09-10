@@ -152,7 +152,7 @@
 
 \begin{document}
 
-\title[Article Title]{Language model identify artificial chimeric read in Nanopore direct RNA sequencing data.}
+\title[Article Title]{A Genomic Language Model for Chimera Artifact Detection in Nanopore Direct RNA Sequencing}
 
 %%=============================================================%%
 %% GivenName	-> \fnm{Joergen W.}
@@ -311,12 +311,12 @@ By precisely detecting low-quality and divergent sequences, it significantly enh
 
 \begin{figure}[!h]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by \gls{ont} \gls{pcr} cDNA, while the green bars indicate gene fusions supported by \gls{ont} \gls{pcr} cDNA. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief "open pore" state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a) Fig 2b
 In the VCaP 002, genes supported by the \gls{fp} chimeric reads exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{a}), despite displaying similar gene lengths (\figref{fig:f2}{b}).
-This result suggests that \gls{fp} genes are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals.\yy{add more result description for figure 2b; refer to tingyou}
+This result suggests that \gls{fp} genes are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals.\yy{may add more result description for figure 2b; refer to tingyou}
 
 % Visualization of Chromosomal Connections in FP Chimeric Reads (Supplementary Fig 2)
 We visualized chromosomal connections in \gls{fp} chimeric reads from the VCaP 002 dataset to investigate potential systematic artifacts (\edfigref{fig:sf2}{}). 
@@ -335,9 +335,9 @@ This finding highlights the need for careful evaluation in high-throughput seque
 
 % Gene fusion detection in VCaP 002 dataset.  (Fig 2d)
 We compared gene fusion detection in the VCaP 002 dataset processed by DeepChopper and Dorado with trimming (\figref{fig:f2}{d}). 
-DeepChopper significantly outperformed Dorado, reducing total gene fusion events by 89\% and increasing the proportion of supported fusions (validated by ONT PCR cDNA) from 2\% (Dorado) to 17\%  (\figref{fig:f2}{d}). 
+DeepChopper significantly outperformed Dorado, reducing total gene fusion events by 89\% and increasing the proportion of supported fusions (validated by RNA-seq data) from 3\% (Dorado) to 33\% (DeepChopper)  (\figref{fig:f2}{d}). 
 This marked improvement in precision demonstrates the ability of DeepChopper to distinguish genuine gene fusions from artifacts. 
-This precision is crucial for applications in cancer genomics and transcriptomics, where correct identification of gene fusions is critical \yy{may need to add citations}.
+This precision is crucial for applications in cancer genomics and transcriptomics, where correct identification of gene fusions is critical.
 
 % The circular plot shows an overview of chromosal chonnection of fusion events detected in the FP chimeric reads in VCaP 002 dataset between locations in chromosomes. (sumplementary fig 3)
 \edfigref{fig:sf3}{} visualizes the chromosomal connections of the fusion events in \gls{fp} chimeric reads from the VCaP 002 dataset.
