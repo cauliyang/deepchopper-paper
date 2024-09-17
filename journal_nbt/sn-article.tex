@@ -486,7 +486,7 @@ By combining these techniques, we were able to produce more reliable predictions
 
 \subsection{Evaluating artificial sequences detection}
 
-We evaluated DeepChopper performance using precision, recall, and the F1 score in the test data.
+We evaluated DeepChopper performance using precision, recall and the F1 score in the test data.
 These metrics provided a comprehensive view of the model's ability to identify artificial sequences.
 To evaluate DeepChopper's effectiveness across diverse datasets, we analyzed its performance on multiple cell lines (VCaP 002, A549, HCT116, K562, MCF7) and compared it to baseline methods, including Dorado with and without trimming.
 We quantified the reduction in chimeric reads and the improvement in supporting rates across these datasets.
@@ -517,6 +517,44 @@ To evaluate terminal artificial sequences, we employed \gls{blat} identity thres
 
 To assess DeepChopper's accuracy in detecting terminal artificial sequences, we compared its predictions to the soft-clipped regions in untrimmed Dorado-processed data.
 An overlap threshold of 0.4 was used to determine the concordance between the two methods (\edfigref{fig:sf1}{b}).
+
+\subsection{Heatmap Analysis}
+
+The dataset consisted of numerical values associated with 25 chromosomes (chr1-chr22, chrX, chrY, and chrM). 
+Each chromosome was represented by a single numerical value, which means the count of connection.
+Then, every value is divided by the length of the related chromosome.
+To standardize the data and facilitate comparisons between chromosomes, we applied Z-score normalization. 
+For each chromosome $i$, the Z-score ($Z_i$) was calculated as:
+
+\begin{equation}
+Z_i = \frac{X_i - \mu}{\sigma}
+\end{equation}
+
+where $X_i$ is the original value for chromosome $i$, $\mu$ is the mean of all chromosome values, and $\sigma$ is the standard deviation of all chromosome values.
+
+To assess the statistical significance of each chromosome's deviation from the mean, we calculated p-values based on the Z-scores. 
+The two-tailed p-value for each chromosome was computed as:
+
+\begin{equation}
+p = 2 \cdot (1 - \Phi(|Z|))
+\end{equation}
+
+where $\Phi$ is the cumulative distribution function of the standard normal distribution and $|Z|$ is the absolute value of the Z-score.
+
+To account for multiple comparisons, we applied the Bonferroni correction. 
+The significance threshold ($\alpha$) was adjusted by dividing the standard $\alpha$ level (0.05) by the number of tests (25 chromosomes):
+
+\begin{equation}
+\alpha_{\text{corrected}} = \frac{0.05}{25} = 0.002
+\end{equation}
+
+We created a bar plot of the Z-scores for all chromosomes, with bars color-coded based on their statistical significance:
+All analyzes were performed using Python 3.10 with the following libraries: pandas for data manipulation, numpy for numerical computations, scipy.stats for statistical calculations, and matplotlib for visualization.
+
+% The plot included a horizontal line at $Z = 0$ to represent the mean, and a special annotation for chrM to highlight its p-value.
+    % Red: Significant after Bonferroni correction ($p < 0.002$)
+    % Orange: Significant at $\alpha = 0.05$ but not after Bonferroni correction
+    % Blue: Not significant ($p \geq 0.05$)
 
 
 \subsection{Gene expression analysis of \gls{fp} group of chimeric reads}
