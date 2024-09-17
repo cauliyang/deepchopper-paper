@@ -312,7 +312,7 @@ By precisely detecting low-quality and divergent sequences, it significantly enh
 
 \begin{figure}[!h]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a). (b) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (c). (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
 \end{figure}
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a) Fig 2b
@@ -460,7 +460,7 @@ To enhance the accuracy and smoothness of the predictions, we implemented a slid
 This technique helps to extend prediction regions and reduces choppy noise, aligning with the typical distribution of artificial sequences in nanopore \gls{drs} data.
 The sliding window technique is particularly effective in maintaining continuity in regions where artificial sequences are predicted, ensuring that isolated predictions do not create fragmented and unrealistic results.
 
-We employed a sliding window of size 21 nucleotides.
+We used a sliding window of size 21 nucleotides.
 This window size was chosen based on empirical testing to balance the need for sufficient smoothing while retaining sensitivity to shorter artificial sequences\qx{citation like Valeri, Jacqueline A., Katherine M. Collins, Pradeep Ramesh, Miguel A. Alcantar, Bianca A. Lepe, Timothy K. Lu, and Diogo M. Camacho. "Sequence-to-function deep learning frameworks for engineered riboregulators." Nature communications 11, no. 1 (2020): 5058.} .
 
 Within each sliding window, we applied a voting method to polish the predictions.
@@ -669,8 +669,9 @@ Please refer to Journal-level guidance for any specific requirements.
 
 
 \begin{figure}[!h]
-	\includegraphics[height=0.9\columnwidth]{finals/sf2}
-	\caption{ {\bf  Visualization of chromosomal connections for \gls{fp} chimeric reads detected in the VCaP 002 dataset.} Each arc represents a connection between two chromosomal regions. The length of each chromosome segment is proportional to the number of connections involving that chromosome.}
+	\includegraphics[height=0.32\columnwidth]{finals/sf2}
+	\caption{ {\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} 
+  (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes.}
 	\label{fig:sf2}
 \end{figure}
 
