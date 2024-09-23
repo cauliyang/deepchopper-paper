@@ -225,6 +225,14 @@ DeepChopper introduces a hybrid architecture that combines a \gls{lcglm} HyenaDN
 Uniquely, DeepChopper incorporates base quality score information alongside sequence data, enabling more nuanced predictions that account for sequencing confidence.
 This quality-aware processing is complemented by an adaptive tokenization strategy that preserves single nucleotide resolution while capturing higher-order sequence patterns.
 
+Accurate detection of artificial sequences in nanopore \gls{drs} data requires a model capable of processing long genomic contexts with single nucleotide resolution. 
+Although recent advances in genomic language models have shown promise, many face limitations in these crucial aspects. DNABERT2\cite{zhou2023dnabert2}, for example, is restricted to a context length of 512 base pairs, insufficient to capture long-range dependencies in RNA sequences.
+Similarly, NuclideTransformer\cite{dalla2023nucleotide}, despite its genomic focus, lacks the single-base resolution essential for the precise identification of artificial sequences.
+Importantly, HyenaDNA accomplishes this feat with a comparatively modest 7 million parameters, offering a thoughtful balance between model sophistication and computational practicality.
+This approach stands in contrast to some larger models, such as Evo\cite{nguyen2024sequence}, which, while demonstrating remarkable capabilities, rely on billions of parameters.
+Such large-scale models, despite their strengths, may face challenges in widespread adoption, especially in settings where computational resources are at a premium.
+The HyenaDNA design thus aligns as a backbone that is powerful and accessible in diverse research environments.
+
 A key innovation of DeepChopper is its ability to excel at identifying chimeric reads formed by artificial sequences located in the middle of reads (internal adapters), a capability beyond traditional hard-clipping methods that focus only on artificial sequences located in the end of reads (terminal adapters).
 By treating biological sequences as a form of language, DeepChopper captures the underlying biological grammar to predict artificial sequences embedded within long reads.
 Our approach is based on recent advances in \gls{glm} architectures, optimizing for the specific challenges of genomic data processing~\cite{nguyen2024hyenadna}.
@@ -255,7 +263,6 @@ Furthermore, analysis of the predicted artifact lengths in VCaP 002 data (using 
 Most of the detected artifacts were approximately 70 bp long, a range in which traditional methods typically struggle due to sequence ambiguity (\figref{fig:f1}{b}).
 % Positional Bias in Chimeric Read Prediction Fig 1c
 Importantly, DeepChopper demonstrated a consistent ability to identify artificial sequences not only at read ends but also embedded within reads (\figref{fig:f1}{c}) that cause artificial chimeric reads.
-
 This capability is crucial for nanopore \gls{drs} data, where artificial chimeric reads can significantly impact downstream analyses~\cite{smith2020molecular}.
 
 % The number of prediction intervals Fig 1d
@@ -313,20 +320,24 @@ By precisely detecting low-quality and divergent sequences, it significantly enh
 
 \begin{figure}[!h]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a). (b) Overlap of \gls{go} pathways enriched among \gls{fp} genes across six cell lines (VCaP, A549, K562, HepG2, MCF7, HCT116). The figure shows intersection sizes of enriched \gls{go} terms, highlighting common pathways related to ribosomal biogenesis and translation. (c). (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 002. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections. (b) UpSet plot showing the intersection of enriched \gls{go} terms among six cell lines (VCaP, A549, MCF7, HepG2, K562, HCT116). The bar chart (left) displays the total number of enriched \gls{go} terms for each cell line. The connected squares (bottom) indicate shared \gls{go} terms across cell lines, with corresponding intersection sizes shown in the top bar chart. Highlighted \gls{go} terms (upper right) represent the most significant shared biological processes. (c). (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
 \end{figure}
 
-% Comparison of Gene Expression Levels Between Reference and FP Genes (Fig 2a) Fig 2b
-In the VCaP 002, genes supported by the \gls{fp} chimeric reads exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\figref{fig:f2}{a}), despite displaying similar gene lengths (\figref{fig:f2}{b}).
+% Chromosomal distribution and connections in chimeric reads (Fig 2a)
+We analyze the chromosomal distribution and chromosomal connections of \gls{fp} chimeric reads in the VCaP 002 dataset (\figref{fig:f2}{a}). 
+The bar plot reveals varying frequencies of chimeric connections across chromosomes, with some chromosomes showing significantly higher rates of participation in chimeric events. 
+Interestingly, the mitochondrial chromosome (Chr M) exhibited a particularly high rate of connections per base pair, suggesting that it may be a hotspot for chimeric read formation.
+The heatmap of chromosomal connections unveils complex patterns of chimeric events. 
+Although most chromosomes show relatively uniform interaction rates, certain chromosome pairs display higher connection counts, indicated by more intense colors. 
+These hotspots may represent regions more susceptible to artificial chimeric read formation or areas of the genome where accurate read assignment is more challenging.
+This comprehensive view of the distribution of \gls{fp} chimeric reads across the genome underscores the complexity of artificial sequence patterns in nanopore \gls{drs} data. 
+It highlights the importance of sophisticated detection methods like DeepChopper, which can identify and filter out these diverse chimeric events, thereby enhancing the overall integrity of sequencing data for downstream analyses.
+
+% Comparison of Gene Expression Levels Between Reference and FP Genes (SupplementaryFig 2a) Supplementary Fig 2b
+In the VCaP 002, genes supported by the \gls{fp} chimeric reads exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf2}{a}), despite displaying similar gene lengths (\edfigref{fig:sf2}{b}).
 This result suggests that \gls{fp} genes are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals.\yy{may add more result description for figure 2b; refer to tingyou}
 
-% Visualization of Chromosomal Connections in FP Chimeric Reads (Supplementary Fig 2)
-We visualized chromosomal connections in \gls{fp} chimeric reads from the VCaP 002 dataset to investigate potential systematic artifacts (\edfigref{fig:sf2}{}).
-The analysis revealed no clear patterns or consistent connections between specific genomic regions, with connections randomly distributed across chromosomes.
-In particular, mitochondrial showed a higher likelihood of connection relative to chromosome length.
-These findings suggest that \gls{fp} chimeric reads are likely the result of nonspecific factors rather than chromosomal biases, highlighting the importance of robust detection methods such as DeepChopper to improve sequencing data quality.
-
-% Gene Ontology (GO) Enrichment Analysis of FP Group Genes (Fig 2c)
+% Gene Ontology (GO) Enrichment Analysis of FP Group Genes (Fig 2b)
 To further explore the functional functions of genes in the \gls{fp} group, we conducted a \gls{go} enrichment analysis in six cell lines: VCaP, A549, K562, HepG2, MCF7, and HCT116 (\edfigrefrg{fig:sf4}{a}{f}).
 We illustrate the overlapping \gls{go} pathways enriched among the \gls{fp} genes across these cell lines (\figref{fig:f2}{c}).
 The results show a substantial overlap in \gls{go} terms related to core biological processes, particularly those associated with ribosomal small subunit biogenesis, cytoplasmic translation, translational elongation, and rRNA processing (\figref{fig:f2}{c}).
@@ -334,6 +345,7 @@ This overlap indicates that genes in the \gls{fp} group are frequently involved 
 Such pathways are typically highly expressed and conserved in different cell types, which might explain their recurrent identification as false positives.
 The significant intersection sizes for these \gls{go} terms in the six cell lines suggest a common pattern in the \gls{fp} gene set, strengthening the hypothesis that these genes might be artifacts associated with sequencing or data processing errors rather than true biological signals.
 This finding highlights the need for careful evaluation in high-throughput sequencing studies to avoid misleading conclusions about gene function.
+
 
 % Gene fusion detection in VCaP 002 dataset.  (Fig 2d)
 We compared gene fusion detection in the VCaP 002 dataset processed by DeepChopper and Dorado with trimming (\figref{fig:f2}{d}).
@@ -670,9 +682,9 @@ Please refer to Journal-level guidance for any specific requirements.
 
 
 \begin{figure}[!h]
-	\includegraphics[height=0.32\columnwidth]{finals/sf2}
+	\includegraphics[height=0.73\columnwidth]{finals/sf2}
 	\caption{ {\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} 
-  (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes.}
+  (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 004. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections.}
 	\label{fig:sf2}
 \end{figure}
 
