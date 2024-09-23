@@ -242,7 +242,7 @@ This work paves the way for broader adoption of \glspl{llm} in improving the acc
 \end{figure}
 
 % Model Architecture Overview (Fig 1a)
-DeepChopper's architecture integrates a HyenaDNA as a feature extractor with advanced tokenization and quality assessment mechanisms, optimizing it for processing long-range dependencies in sequencing data~\cite{nguyen2024hyenadna} (\figref{fig:f1}{a}).
+The DeepChopper architecture integrates HyenaDNA~\cite{nguyen2024hyenadna} as a feature extractor with advanced tokenization and quality assessment mechanisms, optimizing it for processing long-range dependencies in sequencing data (\figref{fig:f1}{a}).
 This design enables efficient differentiation between true biological reads and chimeric artifacts in large volumes of genomics data.
 DeepChopper processes individual FASTQ records to predict artificial sequences.
 When an artificial sequence is detected in the middle of a read, the model splits it into two or more FASTQ records (\figref{fig:f1}{a}).
@@ -255,6 +255,7 @@ Furthermore, analysis of the predicted artifact lengths in VCaP 002 data (using 
 Most of the detected artifacts were approximately 70 bp long, a range in which traditional methods typically struggle due to sequence ambiguity (\figref{fig:f1}{b}).
 % Positional Bias in Chimeric Read Prediction Fig 1c
 Importantly, DeepChopper demonstrated a consistent ability to identify artificial sequences not only at read ends but also embedded within reads (\figref{fig:f1}{c}) that cause artificial chimeric reads.
+
 This capability is crucial for nanopore \gls{drs} data, where artificial chimeric reads can significantly impact downstream analyses~\cite{smith2020molecular}.
 
 % The number of prediction intervals Fig 1d
@@ -360,7 +361,7 @@ As large language models continue to evolve, their role in biotechnology and mol
 
 \subsection{Cell culture}
 
-VCaP 002 cell line was obtained from the American Type Culture Collection (ATCC) and cultured under sterile conditions to maintain optimal growth and viability.
+VCaP cell line was obtained from the American Type Culture Collection (ATCC) and cultured under sterile conditions to maintain optimal growth and viability.
 The cells were grown in Dulbecco's Modified Eagle Medium (DMEM, high glucose; Gibco, Cat\# 11-965-092) supplemented with 10\% fetal bovine serum (FBS Opti-Gold, Performance Enhanced, US Origin; Gendepot, Cat\# F0900-050) to provide essential growth factors.
 In addition, the culture medium was enriched with \SI{5}{\ml} of 100 mM Sodium Pyruvate (Gendepot, Cat\# CA017-010) to support cellular metabolism and \SI{5}{\ml} of Antibiotics-Antimycotics (\( 100\times \)) (Gendepot, Cat\# CA002-010) to prevent microbial contamination.
 Cells were cultured in \SI{100}{\mm} cell culture treated dishes (Thermo Fisher Scientific, Cat\# 12-556-002) and incubated at \SI{37}{\degreeCelsius} in a humidified atmosphere containing 5\% CO2, with media changes performed every 72 hours to ensure nutrient availability and waste removal.
@@ -382,11 +383,11 @@ For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input fo
 Nanopore \gls{drs} employs a reverse transcriptase adapter (RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
 The prepared library was loaded onto a MinION flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
 For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, \gls{ont}) according to the protocol of the manufacturer.
-The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
+The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours. \ty{direct-cDNA nanopore sequencing part is missing.}
 
 \subsection{Training data preparation}\label{ssec:data}
 
-We utilized \gls{ont} directRNA FAST5 data from the SG-Nex project, encompassing six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}.
+We obtained \gls{ont} directRNA FAST5 data from the SG-Nex project, which includes six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}, and subsequently converted the data to POD5 format using POD5 tool (https://pod5-file-format.readthedocs.io/).
 FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.
 Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as nonadapter sequences.
