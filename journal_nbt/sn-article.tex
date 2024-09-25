@@ -399,7 +399,7 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 
 \subsection{Training data preparation}\label{ssec:data}
 
-We obtained \gls{ont} directRNA FAST5 data from the SG-Nex project, which includes six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}, and subsequently converted the data to POD5 format using POD5 tool (https://pod5-file-format.readthedocs.io/).
+We obtained \gls{ont} directRNA FAST5 data from the SG-Nex project, which includes six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}, and subsequently converted the data to POD5 format using POD5 tool (\url{https://pod5-file-format.readthedocs.io}).
 FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.
 Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as nonadapter sequences.
@@ -499,7 +499,7 @@ By combining these techniques, we were able to produce more reliable predictions
 
 \subsection{Evaluating artificial sequences detection}
 
-We evaluated DeepChopper performance using precision, recall and the F1 score in the test data.
+We evaluated DeepChopper performance using precision, recall, and the F1 score in the test data.
 These metrics provided a comprehensive view of the model's ability to identify artificial sequences.
 To evaluate DeepChopper's effectiveness across diverse datasets, we analyzed its performance on multiple cell lines (VCaP 002, A549, HCT116, K562, MCF7) and compared it to baseline methods, including Dorado with and without trimming.
 We quantified the reduction in chimeric reads and the improvement in supporting rates across these datasets.
@@ -534,7 +534,7 @@ An overlap threshold of 0.4 was used to determine the concordance between the tw
 \subsection{Heatmap Analysis}
 
 The dataset consisted of numerical values associated with 25 chromosomes (chr1-chr22, chrX, chrY, and chrM). 
-Each chromosome was represented by a single numerical value, which means the count of connection.
+Each chromosome was represented by a single numerical value, which means the count of connections.
 Then, every value is divided by the length of the related chromosome.
 To standardize the data and facilitate comparisons between chromosomes, we applied Z-score normalization. 
 For each chromosome $i$, the Z-score ($Z_i$) was calculated as:
@@ -690,7 +690,7 @@ Please refer to Journal-level guidance for any specific requirements.
 
 
 \begin{figure}[!h]
-	\includegraphics[height=0.97\columnwidth]{finals/sf3}
+	\includegraphics[height=1.2\columnwidth]{finals/sf3}
 	\caption{ {\bf Chromosomal connections of fusion events in false positive chimeric reads from VCaP 002 dataset.} Red and blue links indicate intra and inter-chromosomal fusions.}
 	\label{fig:sf3}
 \end{figure}
