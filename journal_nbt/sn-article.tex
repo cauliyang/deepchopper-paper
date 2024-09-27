@@ -198,7 +198,6 @@
 	In particular, in gene fusion detection, DeepChopper reduced false positives by 89\% while increasing the proportion of supported fusions from 2\% to 17\%.
 	By improving data quality, DeepChopper significantly improves the reliability of downstream analyses, particularly in cancer genomics and transcriptomics.
 	This work demonstrates the powerful potential of large language models in analyzing complex biological data, paving the way for advancements in genomics and biotechnology.}
-
 \maketitle
 \section{Main}\label{sec1}
 
@@ -246,7 +245,7 @@ This work paves the way for broader adoption of \glspl{llm} in improving the acc
 % Result
 \begin{figure}[!h]
 	\includegraphics[height=0.78\columnwidth]{finals/figure1}
-	\caption{{\bf  Detection and analysis of chimeric reads in nanopore \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c)  Relative positions of prediction artifacts within the VCaP 002 dataset. (d) Count of remaining intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the green bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) The base quality score of the artificial sequences identified by DeepChopper in the VCaP 002 dataset. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper in the VCaP 002 dataset. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple cell lines, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the blue bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the green bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the green bars indicate supported chimeric reads}\label{fig:f1}
+	\caption{{\bf  Detection and analysis of chimeric reads in nanopore \gls{drs} data using DeepChopper.} (a) Overview of the DeepChopper model architecture. Created with BioRender.com (b) Length distribution of predicted artifacts in the VCaP 002 dataset. (c) Relative position of prediction artifacts in the VCaP 002 dataset. Top: Schematic illustrating the calculation of relative position (rp). Grey rectangle represents a read from 5$'$ to 3$'$. Red arrow indicates the chopped site, marking the starting position of chopped intervals. Relative position is calculated as the ratio of the length before the chopped site to the total read length. Bottom: Distribution of relative position of prediction artifacts across the dataset. (d) Count of remaining intervals per read in the VCaP 002 dataset. (e) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 002 dataset. The grey bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (f) The base quality score of the artificial sequences identified by DeepChopper in the VCaP 002 dataset. Background colors indicate quality levels: green (high), yellow (medium), red (low). (g) \gls{blat} identity analysis of the artificial sequences detected by DeepChopper in the VCaP 002 dataset. (h) Chimeric read detection of DeepChopper compared to Dorado with trimming across multiple cell lines, including A549, HCT116, HepG2, K562, and MCF7. In each sample, the grey bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA. (i)  Supporting read analysis for WTC11, calculated supporting rate using five different datasets: \gls{ont} \gls{pcr} cDNA, \gls{ont} CapTrap-seq, \gls{ont} \gls{r2c2}, \gls{pb} cDNA, and \gls{pb} CapTrap-seq. The blue bars represent chimeric unsupported reads, while the green bars indicate supported chimeric reads}\label{fig:f1}
 \end{figure}
 
 % Model Architecture Overview (Fig 1a)
@@ -272,14 +271,13 @@ Single-interval reads were the most common, followed by those with two intervals
 This distribution reveals the complexity of artificial sequence patterns within reads and demonstrates DeepChopper's ability to identify and remove multiple artificial sequences from a single read. 
 The presence of reads with multiple remaining intervals highlights DeepChopper's capacity to handle complex chimeric structures, surpassing traditional methods that typically focus only on terminal adapters.
 
-
 % Base Quality and BLAT Identity of Artificial Sequences at the End of Reads (Supplementary Fig 1a)
 We further validated the performance of DeepChopper by analyzing the base quality score and \gls{blat}~\cite{kent2002blat} identity of terminal artificial sequences in 1 million reads subsample from the VCaP 002 dataset (\edfigref{fig:sf1}{a}).
 \gls{blat} identity measures the similarity of the sequences to known reference sequences, with lower identity scores indicating possible artificial sequences.
 DeepChopper predicted terminal artificial sequences on 847,421 reads (85\%), which exhibited lower average base quality scores (around 10) and \gls{blat} identity (roughly 0.3), consistent with sequencing artifacts or erroneous terminal adapters.
 % Comparison of Soft-Clipping Regions to Terminal Adapters Identified by DeepChopper (Supplementary Fig 1b)
 After aligning the data with the reference genome using minimap2~\cite{li2018minimap2}, the comparison of soft-clipping regions in Dorado-processed data (without trimming) with DeepChopper-identified terminal adapters showed 99.6\% concordance (\edfigref{fig:sf1}{b}).
-Of the 0. 4\% non-aligned sequences, 97\% failed to map to the reference genome using \gls{blat}, further confirming their artificial nature.
+Of the 0. 4\% nonaligned sequences, 97\% failed to map to the reference genome using \gls{blat}, further confirming their artificial nature.
 These results underscore DeepChopper's reliability in identifying artificial sequences, particularly at read ends, demonstrating its potential to improve data quality.
 
 % Chimeric Read Detection Across Sequencing Platforms Fig 1e
@@ -320,7 +318,7 @@ By precisely detecting low-quality and divergent sequences, it significantly enh
 
 \begin{figure}[!h]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 002. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections. (b) UpSet plot showing the intersection of enriched \gls{go} terms among six cell lines (VCaP, A549, MCF7, HepG2, K562, HCT116). The bar chart (left) displays the total number of enriched \gls{go} terms for each cell line. The connected squares (bottom) indicate shared \gls{go} terms across cell lines, with corresponding intersection sizes shown in the top bar chart. Highlighted \gls{go} terms (upper right) represent the most significant shared biological processes. (c). (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The blue bars represent gene fusions unsupported by RNA-seq data, while the green bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 002. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections. (b) UpSet plot showing the intersection of enriched \gls{go} terms among six cell lines (VCaP, A549, MCF7, HepG2, K562, HCT116). The bar chart (left) displays the total number of enriched \gls{go} terms for each cell line. The connected squares (bottom) indicate shared \gls{go} terms across cell lines, with corresponding intersection sizes shown in the top bar chart. Highlighted \gls{go} terms (upper right) represent the most significant shared biological processes. (c) \yy{refer to ty}. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The grey bars represent gene fusions unsupported by RNA-seq data, while the red bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
 \end{figure}
 
 % Chromosomal distribution and connections in chimeric reads (Fig 2a)
@@ -345,6 +343,9 @@ This overlap indicates that genes in the \gls{fp} group are frequently involved 
 Such pathways are typically highly expressed and conserved in different cell types, which might explain their recurrent identification as false positives.
 The significant intersection sizes for these \gls{go} terms in the six cell lines suggest a common pattern in the \gls{fp} gene set, strengthening the hypothesis that these genes might be artifacts associated with sequencing or data processing errors rather than true biological signals.
 This finding highlights the need for careful evaluation in high-throughput sequencing studies to avoid misleading conclusions about gene function.
+
+% (Fig 2c)
+\yy{refer the result description of figure 2 c to tingyou}
 
 
 % Gene fusion detection in VCaP 002 dataset.  (Fig 2d)
@@ -399,9 +400,9 @@ The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and s
 
 \subsection{Training data preparation}\label{ssec:data}
 
-We obtained \gls{ont} directRNA FAST5 data from the SG-Nex project, which includes six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}, and subsequently converted the data to POD5 format using POD5 tool (\url{https://pod5-file-format.readthedocs.io}).
+We obtained \gls{ont} directRNA FAST5 data from the SG-Nex project, which includes six cell lines (HEK293T, A549, K562, HepG2, MCF7, and HCT116)~\cite{chen2021systematic}, and subsequently converted the data to POD5 format using the POD5 tool (\url{https://pod5-file-format.readthedocs.io}).
 FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (--no-trim) and  model ``rna002\_70bps\_hac@v3''.
-Reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
+The reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized \gls{ont} directRNA parameters (-ax splice -uf -k14).
 For adapter extraction, we selected primary alignments lacking supplementary alignments, treating \(3^{\prime}\)  soft-clipped regions as adapter sequences and aligned portions as nonadapter sequences.
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence.
@@ -412,7 +413,7 @@ We generated 600,000 data points, divided into training (480,000), validation (6
 \subsection{Language model architecture}\label{ssec:lm}
 
 DeepChopper approaches artificial sequence detection as a token classification task, predicting whether each token belongs to an artificial sequence.
-The model architecture is specifically designed for this purpose, enabling accurate identification of artificial sequence regions within biological data.
+The model architecture is specifically designed for this purpose, allowing for accurate identification of artificial sequence regions within biological data.
 
 At its core, DeepChopper adapts the HyenaDNA framework, a genomics model architecture, as its primary feature extractor.
 This choice enhances the ability of the model to process and interpret complex biological sequences effectively.
@@ -485,7 +486,7 @@ The voting result for each nucleotide \( x_i \) is given by:
 		0 & \text{otherwise}
 	\end{cases}
 \]
-where \( y_i \) is the final prediction for nucleotide \( x_i \). \( p_j \) is the predicted probability of being an artificial sequence for nucleotide \( x_j \). \( W \) is the size of the sliding window, \( k \) is half the window size, i.e., \( k = \frac{W-1}{2} \).
+where \( y_i \) is the final prediction for nucleotide \( x_i \). \( p_j \) is the predicted probability of being an artificial sequence for the nucleotide \( x_j \). \( W \) is the size of the sliding window, \( k \) is half the window size, i.e., \( k = \frac{W-1}{2} \).
 
 Following prediction refinement using a sliding window approach, we applied additional filters to enhance output quality.
 Predicted artificial sequences shorter than 13 nucleotides were removed to minimize false positives due to noise.
@@ -517,7 +518,7 @@ Supporting rates, defined as the ratio of chimeric reads corroborated by other p
 We extended our evaluation to multiple cell lines (A549, HCT116, HepG2, K562, MCF7) and WTC11 cell lines to demonstrate the broad applicability of DeepChopper.
 This cross-sample and cross-platform validation approach allowed us to assess the model's performance across diverse sequencing contexts.
 
-\textit{BLAT Identity Calculation.} To assess the accuracy of artificial sequences in chimeric read, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
+\textit{BLAT Identity Calculation.} To assess the accuracy of the chimeric read artificial sequences, we calculated the \gls{blat} identity for each sequence using both \gls{blat} (v0.37.2)~\cite{kent2002blat} and PxBLAT (v1.2.1)~\cite{li2024pxblat}.
 The BLAT identity is defined as the ratio of match length to sequence length, providing a measure of how closely a sequence aligns to a reference genome.
 \[
 	\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
@@ -531,44 +532,13 @@ To evaluate terminal artificial sequences, we employed \gls{blat} identity thres
 To assess DeepChopper's accuracy in detecting terminal artificial sequences, we compared its predictions to the soft-clipped regions in untrimmed Dorado-processed data.
 An overlap threshold of 0.4 was used to determine the concordance between the two methods (\edfigref{fig:sf1}{b}).
 
-\subsection{Heatmap Analysis}
+\subsection{Heatmap Analysis for chromosomal connections}
 
-The dataset consisted of numerical values associated with 25 chromosomes (chr1-chr22, chrX, chrY, and chrM). 
-Each chromosome was represented by a single numerical value, which means the count of connections.
-Then, every value is divided by the length of the related chromosome.
-To standardize the data and facilitate comparisons between chromosomes, we applied Z-score normalization. 
-For each chromosome $i$, the Z-score ($Z_i$) was calculated as:
+The dataset consisted of numerical values associated with 25 chromosomes (chromosome 1 to chromosome 22, chromosome X, chromosome Y and chromosome M). 
+Each chromosome was represented by a single numerical value, which means the number of connections.
+To standardize the data and facilitate comparisons between chromosomes, every value is divided by the length of the related chromosome.
 
-\begin{equation}
-Z_i = \frac{X_i - \mu}{\sigma}
-\end{equation}
-
-where $X_i$ is the original value for chromosome $i$, $\mu$ is the mean of all chromosome values, and $\sigma$ is the standard deviation of all chromosome values.
-
-To assess the statistical significance of each chromosome's deviation from the mean, we calculated p-values based on the Z-scores. 
-The two-tailed p-value for each chromosome was computed as:
-
-\begin{equation}
-p = 2 \cdot (1 - \Phi(|Z|))
-\end{equation}
-
-where $\Phi$ is the cumulative distribution function of the standard normal distribution and $|Z|$ is the absolute value of the Z-score.
-
-To account for multiple comparisons, we applied the Bonferroni correction. 
-The significance threshold ($\alpha$) was adjusted by dividing the standard $\alpha$ level (0.05) by the number of tests (25 chromosomes):
-
-\begin{equation}
-\alpha_{\text{corrected}} = \frac{0.05}{25} = 0.002
-\end{equation}
-
-We created a bar plot of the Z-scores for all chromosomes, with bars color-coded based on their statistical significance:
 All analyzes were performed using Python 3.10 with the following libraries: pandas for data manipulation, numpy for numerical computations, scipy.stats for statistical calculations, and matplotlib for visualization.
-
-% The plot included a horizontal line at $Z = 0$ to represent the mean, and a special annotation for chrM to highlight its p-value.
-    % Red: Significant after Bonferroni correction ($p < 0.002$)
-    % Orange: Significant at $\alpha = 0.05$ but not after Bonferroni correction
-    % Blue: Not significant ($p \geq 0.05$)
-
 
 \subsection{Gene expression analysis of \gls{fp} group of chimeric reads}
 
@@ -645,14 +615,14 @@ The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genome
 
 \bmhead{Code Availability}
 
-DeepChopper (v1.0) is available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
-The scripts for model training, performance valuation and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+DeepChopper (v1.0) is available on GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
+The scripts for model training, performance valuation, and simulate data generation are available at GitHub (\url{https://github.com/ylab-hi/DeepChopper}).
 Both repositories are available under a MIT License.
 
 \bmhead{Acknowledgements}
 
-Acknowledgments are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
-Please refer to Journal-level guidance for any specific requirements.
+Acknowledgments are not compulsory. Where included, they should be brief. Grant or contribution numbers may be acknowledged.
+Please refer to the journal-level guidance for any specific requirements.
 
 
 \backmatter
@@ -664,9 +634,6 @@ Please refer to Journal-level guidance for any specific requirements.
 
 \bibliography{sn-bibliography}% common bib file
 
-
-
-
 \newpage
 
 \section{Extend data}
@@ -676,25 +643,20 @@ Please refer to Journal-level guidance for any specific requirements.
 
 \begin{figure}[!h]
 	\includegraphics[height=0.65\columnwidth]{finals/sf1}
-	\caption{ {\bf Analysis of chimeric reads and artificial sequences in VCaP RNA sequencing data } (a) Base quality score and \gls{blat} identity of terminal artificial sequences for subsampling 1M data in VCaP 002. (b) Soft-clipping part of Dorado untrimmed data compared with terminal artificial sequences for subsampling 1M data in VCaP RNA002. SC (Soft-Clipping Consistent): Terminal artificial sequences that align with soft-clipped regions in Dorado untrimmed data. NOSC (Not Soft-Clipping Consistent): Terminal artificial sequences that do not align with soft-clipped regions. HIT: Terminal artificial sequences that can be aligned to the reference genome. NOHIT: Terminal artificial sequences that cannot be aligned to the reference genome. (c) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 004 dataset. The purple bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (d) Base quality score and \gls{blat} identity of VCaP RNA004 internal artificial sequences.}
-	\label{fig:sf1}
+	\caption{ {\bf Analysis of chimeric reads and artificial sequences in VCaP RNA sequencing data } (a) Base quality score and \gls{blat} identity of terminal artificial sequences for subsampling 1M data in VCaP 002. (b) Soft-clipping part of Dorado untrimmed data compared with terminal artificial sequences for subsampling 1M data in VCaP RNA002. SC (Soft-Clipping Consistent): Terminal artificial sequences that align with soft-clipped regions in Dorado untrimmed data. NOSC (Not Soft-Clipping Consistent): Terminal artificial sequences that do not align with soft-clipped regions. HIT: Terminal artificial sequences that can be aligned to the reference genome. NOHIT: Terminal artificial sequences that cannot be aligned to the reference genome. (c) Chimeric read detection of DeepChopper compared to Dorado (with and without trimming) in the VCaP 004 dataset. The grey bars represent chimeric reads unsupported by \gls{ont} \gls{pcr} cDNA, while the red bars indicate chimeric reads supported by \gls{ont} \gls{pcr} cDNA.  (d) Base quality score and \gls{blat} identity of VCaP RNA004 internal artificial sequences.}\label{fig:sf1}
 \end{figure}
 
 
 \begin{figure}[!h]
 	\includegraphics[height=0.73\columnwidth]{finals/sf2}
-	\caption{ {\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} 
-  (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 004. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections.}
-	\label{fig:sf2}
+	\caption{ {\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Comparison of gene expression levels between reference genes and \gls{fp} genes in the VCaP 002 dataset. \gls{fp} genes show significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all genes and target genes, showing similar lengths between reference and \gls{fp} genes. (c) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 004. Top: Bar plot showing the number of connections per base pair for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections.}\label{fig:sf2}
 \end{figure}
 
-
 \begin{figure}[!h]
-	\includegraphics[height=1.2\columnwidth]{finals/sf3}
+	\includegraphics[height=0.97\columnwidth]{finals/sf3}
 	\caption{ {\bf Chromosomal connections of fusion events in false positive chimeric reads from VCaP 002 dataset.} Red and blue links indicate intra and inter-chromosomal fusions.}
 	\label{fig:sf3}
 \end{figure}
-
 
 \begin{figure}[!h]
 	\includegraphics[height=0.87\columnwidth]{finals/sf4}
