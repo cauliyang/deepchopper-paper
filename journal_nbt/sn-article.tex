@@ -29,9 +29,9 @@
 
 %%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst%
 
-%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
-%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-\documentclass[pdflatex, sn-mathphys-num, lineno]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+\documentclass[pdflatex,sn-nature, lineno]{sn-jnl}% Style for submissions to Nature Portfolio journals
+% \documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+% \documentclass[pdflatex, sn-mathphys-num, lineno]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
 %%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
 %%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
 %%\documentclass[pdflatex,sn-vancouver,Numbered]{sn-jnl}% Vancouver Reference Style
@@ -75,7 +75,6 @@
     round-precision = 0
 }
 
-
 \usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
 \setabbreviationstyle[acronym]{long-short}
 % define glossaries
@@ -106,6 +105,11 @@
 \newacronym{go}{GO}{Gene Ontology}
 \newacronym{r2c2}{R2C2}{Rolling Circle Amplification to Concatemeric Consensus}
 \newacronym{pcr}{PCR}{Polymerase Chain Reaction}
+
+\newacronym{fsm}{FMS}{Full splice match}
+\newacronym{ism}{ISM}{Incomplete splice match}
+\newacronym{nic}{NIC}{Novel in catalog}
+\newacronym{nnc}{NNC}{Novel not in catalog}
 
 \newacronym{tp}{TP}{True Positive}
 \newacronym{fp}{FP}{False Positive}
@@ -212,7 +216,7 @@
 % 6. Results
 % 7. Conclusion
 
-The advent of high-throughput sequencing technologies has revolutionized genomics, providing unprecedented insights into the genetic underpinnings of biological processes.
+The advent of long-read sequencing technologies has revolutionized genomics, providing unprecedented insights into the genetic underpinnings of biological processes.
 Nanopore \gls{drs} has emerged as a powerful tool for sequencing full-length RNA molecules, preserving native RNA modifications~\cite{ozsolak2009direct, garalde2018highly, jain2022advances}.
 However, this technology faces a significant challenge: the generation of artificial chimeric reads in which fragments of distinct RNA molecules are incorrectly joined together~\cite{smith2020molecular}.
 Accurate identification of these chimeric sequences is critical for maintaining data quality and ensuring reliable downstream analyses, including transcriptome assembly, quantification, and detection of gene fusion.
@@ -240,7 +244,6 @@ Here, we present the performance of DeepChopper in accurately identifying artifi
 We demonstrate significant improvements over existing methods, particularly in handling the length and variability inherent in RNA sequences.
 These results highlight the significant improvements of DeepChopper in \gls{drs} data quality, which allows more accurate and reliable downstream analyses.
 This work paves the way for broader adoption of \glspl{llm} in improving the accuracy and efficiency of biological sequence analysis, ultimately leading to a deeper understanding of the complexities of the transcriptome and their implications in both clinical and industrial biotechnology.
-
 
 % Result
 \begin{figure}[!h]
@@ -314,11 +317,12 @@ DeepChopper consistently achieved high support rates (51\% to 66\%) in these div
 This cross-platform validation demonstrates the versatility and accuracy of DeepChopper to maintain data integrity under various sequencing conditions.
 
 Therefore, DeepChopper demonstrates superior performance in identifying artificial sequences and reducing chimeric artifacts across diverse datasets.
-By precisely detecting low-quality and divergent sequences, it significantly enhances the integrity of nanopore \gls{drs} data. This consistent reliability provides a robust foundation for improving the accuracy of downstream genomic analyses, reinforcing DeepChopper's value as a critical tool in RNA sequencing data processing.
+By precisely detecting low-quality and divergent sequences, it significantly enhances the integrity of nanopore \gls{drs} data.
+This consistent reliability provides a robust foundation for improving the accuracy of downstream genomic analyses, reinforcing DeepChopper's value as a critical tool in RNA sequencing data processing.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 002. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections. (b) UpSet plot showing the intersection of enriched \gls{go} terms among six cell lines (VCaP, A549, MCF7, HepG2, K562, HCT116). The bar chart (left) displays the total number of enriched \gls{go} terms for each cell line. The connected squares (bottom) indicate shared \gls{go} terms across cell lines, with corresponding intersection sizes shown in the top bar chart. Highlighted \gls{go} terms (upper right) represent the most significant shared biological processes. (c) \yy{refer to ty}. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The grey bars represent gene fusions unsupported by RNA-seq data, while the red bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{fp} chimeric reads Detected by DeepChopper in the VCaP 002 dataset.} (a) Chromosomal distribution and connections in \gls{fp} chimeric reads of VCaP 002. Top: Bar plot showing the number of connections per base pair (log scale) for each chromosome. Higher bars indicate more frequent connections. Bottom: Heatmap illustrating the count of connections between chromosomes. Intensity of color corresponds to the number of connections. (b) UpSet plot showing the intersection of enriched \gls{go} terms among six cell lines (VCaP, A549, MCF7, HepG2, K562, HCT116). The bar chart (left) displays the total number of enriched \gls{go} terms for each cell line. The connected squares (bottom) indicate shared \gls{go} terms across cell lines, with corresponding intersection sizes shown in the top bar chart. Highlighted \gls{go} terms (upper right) represent the most significant shared biological processes. (c) Comparison of isoforms identified in DeepChopper and Dorado processed data. After DeepChopper treatment, an increased number of isoforms were observed across all categories except for NNC. (d) Gene fusion detection in VCaP 002 dataset. Comparison of DeepChopper and Dorado (with trimming) performance. The grey bars represent gene fusions unsupported by RNA-seq data, while the red bars indicate gene fusions supported by RNA-seq data. (e) Fusion of RPS29 and COX8A identified from artifactual chimeric reads from the VCaP 002 dataset. The polyA sequence within the RNA read is highlighted in red, and regions trimmed by Deepchopper are indicated with grey dashed lines. Accompanying the read sequence are base quality scores and normalized ONT ion current signals. Red circles mark a brief ``open pore'' state that Dorado missed, preventing the accurate segmentation of the signal into two independent reads.}\label{fig:f2}
 \end{figure}
 
 % Chromosomal distribution and connections in chimeric reads (Fig 2a)
@@ -333,7 +337,7 @@ It highlights the importance of sophisticated detection methods like DeepChopper
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (SupplementaryFig 2a) Supplementary Fig 2b
 In the VCaP 002, genes supported by the \gls{fp} chimeric reads exhibited significantly higher expression levels compared to reference genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf2}{a}), despite displaying similar gene lengths (\edfigref{fig:sf2}{b}).
-This result suggests that \gls{fp} genes are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals.\yy{may add more result description for figure 2b; refer to tingyou}
+This result suggests that \gls{fp} genes are characterized by higher expression levels, which may indicate their association with artificial sequences or chimeric reads rather than true biological signals. However, GO enrichment analysis reveals that \gls{fp} genes are predominantly involved in housekeeping functions, particularly in ribosome-related processes such as cytoplasmic translation, rRNA processing, and ribosomal small subunit biogenesis(\figref{fig:f2}{b}).
 
 % Gene Ontology (GO) Enrichment Analysis of FP Group Genes (Fig 2b)
 To further explore the functional functions of genes in the \gls{fp} group, we conducted a \gls{go} enrichment analysis in six cell lines: VCaP, A549, K562, HepG2, MCF7, and HCT116 (\edfigrefrg{fig:sf4}{a}{f}).
@@ -345,7 +349,7 @@ The significant intersection sizes for these \gls{go} terms in the six cell line
 This finding highlights the need for careful evaluation in high-throughput sequencing studies to avoid misleading conclusions about gene function.
 
 % (Fig 2c)
-\yy{refer the result description of figure 2 c to tingyou}
+DeepChopper processed data shows a higher number of isoforms, particularly in the FSM category, indicating its superior ability to accurately trim full-length transcripts from artificial chimeras (\figref{fig:f2}{c}).
 
 
 % Gene fusion detection in VCaP 002 dataset.  (Fig 2d)
@@ -362,7 +366,7 @@ In particular, ribosomal protein genes (RPL and RPS families) are frequently inv
 Recurrent fusion partners, such as RPL11, RPS8, and RPL31, emerge as potential hotspots. This diverse pattern of chromosomal connections underscores the complexity of artificial chimeras in nanopore direct RNA sequencing data and highlights the necessity for advanced detection methods like DeepChopper to accurately identify and filter these events.
 
 % Example of a misleading gene fusion caused by an artificial chimeric read (Fig 2e)
-\yy{add result description for figure 2e; refer to tingyou}
+False positive fusions, such as RPS29-COX8A, were identified through the clear visual confirmation of dual adapters in the raw signal. The presence of multiple adapters within a single read may arise from free-floating adapters in solution and insufficient time between the passage of the first adapter and the next true read. Additionally, the lack of a distinct open pore signal can cause Dorado to miss proper segmentation, resulting in a single POD5 file that captures both events, further complicating the analysis (\figref{fig:f2}{e}).
 
 In conclusion, DeepChopper demonstrates the powerful potential of \gls{llm} in the analysis of long biological sequences, particularly in nanopore \gls{drs}.
 By accurately identifying and removing artificial sequences, including internal adapters, DeepChopper significantly enhances the quality and reliability of sequencing data.
@@ -610,6 +614,10 @@ The server also featured two NVIDIA A100 \glspl{gpu}, each with 80 GB of GPU mem
 
 \bmhead{Data Availability}
 
+The raw and processed data from the VCaP cell line that support the findings of this study have been deposited in the Gene Expression Omnibus (GEO) database under accession code GSE277934. 
+This dataset includes nanopore \gls{drs} data, and nanopore cDNA data.
+The deposited data are available in their raw format as well as in processed forms, including BAM files.
+All data are available for public access and can be downloaded directly from the GEO repository (https://www.ncbi.nlm.nih.gov/geo/) using the provided accession number.
 The human reference genome GRCh38 was downloaded from \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38\_reference\_genome/}.
 
 
