@@ -244,10 +244,10 @@ Importantly, DeepChopper demonstrated a consistent ability to identify artificia
 This capability is crucial for nanopore \gls{drs} data, where artificial chimeric reads can significantly impact downstream analyses~\cite{smith2020molecular}.
 
 % The number of prediction intervals Fig 1d
-We analyzed the number of intervals remaining per read after DeepChopper removed predicted artificial sequences in the VCaP 002 dataset (\figref{fig:f1}{d}). 
-Most processed reads contained between 1 and 5 remaining intervals, with frequency decreasing as the number of intervals increased (\figref{fig:f1}{d}). 
+We analyzed the number of intervals remaining per read after DeepChopper removed predicted artificial sequences in the VCaP 002 dataset (\figref{fig:f1}{d}).
+Most processed reads contained between 1 and 5 remaining intervals, with frequency decreasing as the number of intervals increased (\figref{fig:f1}{d}).
 Single-interval reads were the most common, followed by those with two intervals, while reads with three to five intervals were progressively less frequent.
-This distribution reveals the complexity of artificial sequence patterns within reads and demonstrates DeepChopper's ability to identify and remove multiple artificial sequences from a single read. 
+This distribution reveals the complexity of artificial sequence patterns within reads and demonstrates DeepChopper's ability to identify and remove multiple artificial sequences from a single read.
 The presence of reads with multiple remaining intervals highlights DeepChopper's capacity to handle complex chimeric structures, surpassing traditional methods that typically focus only on terminal adapters.
 
 % Base Quality and BLAT Identity of Artificial Sequences at the End of Reads (Supplementary Fig 1a)
@@ -302,13 +302,13 @@ This consistent reliability provides a robust foundation for improving the accur
 \end{figure}
 
 % Chromosomal distribution and connections in chimeric reads (Fig 2a)
-We analyze the chromosomal distribution and chromosomal connections of \gls{fp} chimeric reads in the VCaP 002 dataset (\figref{fig:f2}{a}). 
-The bar plot reveals varying frequencies of chimeric connections across chromosomes, with some chromosomes showing significantly higher rates of participation in chimeric events. 
+We analyze the chromosomal distribution and chromosomal connections of \gls{fp} chimeric reads in the VCaP 002 dataset (\figref{fig:f2}{a}).
+The bar plot reveals varying frequencies of chimeric connections across chromosomes, with some chromosomes showing significantly higher rates of participation in chimeric events.
 Interestingly, the mitochondrial chromosome (Chr M) exhibited a particularly high rate of connections per base pair, suggesting that it may be a hotspot for chimeric read formation.
-The heatmap of chromosomal connections unveils complex patterns of chimeric events. 
-Although most chromosomes show relatively uniform interaction rates, certain chromosome pairs display higher connection counts, indicated by more intense colors. 
+The heatmap of chromosomal connections unveils complex patterns of chimeric events.
+Although most chromosomes show relatively uniform interaction rates, certain chromosome pairs display higher connection counts, indicated by more intense colors.
 These hotspots may represent regions more susceptible to artificial chimeric read formation or areas of the genome where accurate read assignment is more challenging.
-This comprehensive view of the distribution of \gls{fp} chimeric reads across the genome underscores the complexity of artificial sequence patterns in nanopore \gls{drs} data. 
+This comprehensive view of the distribution of \gls{fp} chimeric reads across the genome underscores the complexity of artificial sequence patterns in nanopore \gls{drs} data.
 It highlights the importance of sophisticated detection methods like DeepChopper, which can identify and filter out these diverse chimeric events, thereby enhancing the overall integrity of sequencing data for downstream analyses.
 
 % Comparison of Gene Expression Levels Between Reference and FP Genes (SupplementaryFig 2a) Supplementary Fig 2b
@@ -376,7 +376,7 @@ For the RNA002 library, \SI{1}{\micro\gram} of poly(A)+ RNA was used as input fo
 Nanopore \gls{drs} employs a reverse transcriptase adapter ( RTA) that typically binds to the poly(A) tails of messenger RNA (mRNA); subsequently, a sequencing adapter is ligated to the RTA, which guides the mRNA through the nanopore for sequencing.
 The prepared library was loaded onto a MinION R9.4 flow cell (FLO-MIN106) and sequenced for 48 hours using the Oxford Nanopore MinION device.
 For the RNA004 library, 300 ng of poly(A)+ RNA was used as input for library preparation using the Direct RNA Sequencing Kit (SQK-RNA004, \gls{ont}) according to the protocol of the manufacturer.
-The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours. 
+The library was then loaded onto a PromethION RNA Flow Cell (FLO-PRO004RA) and sequenced on the Oxford Nanopore PromethION device for 72 hours.
 
 For Direct cDNA sequencing, we utilized the Direct cDNA Sequencing Kit (SQK-DCS109, \gls{ont}) following the manufacturer's protocol.
 Briefly, \SI{5}{\micro\gram}  of total RNA was used as input for first-strand cDNA synthesis using Maxima H Minus Reverse Transcriptase (Thermo Fisher Scientific) with the SSP and VN primers provided in the kit.
@@ -524,7 +524,7 @@ An overlap threshold of 0.4 was used to determine the concordance between the tw
 
 \subsection{Heatmap Analysis for chromosomal connections}
 
-The dataset consisted of numerical values associated with 25 chromosomes (chromosome 1 to chromosome 22, chromosome X, chromosome Y and chromosome M). 
+The dataset consisted of numerical values associated with 25 chromosomes (chromosome 1 to chromosome 22, chromosome X, chromosome Y and chromosome M).
 Each chromosome was represented by a single numerical value, which means the number of connections.
 To standardize the data and facilitate comparisons between chromosomes, every value is divided by the length of the related chromosome.
 
@@ -600,7 +600,7 @@ The server also featured two NVIDIA A100 \glspl{gpu}, each with 80 GB of GPU mem
 
 \bmhead{Data Availability}
 
-The raw and processed data from the VCaP cell line that support the findings of this study have been deposited in the Gene Expression Omnibus (GEO) database under accession code GSE277934. 
+The raw and processed data from the VCaP cell line that support the findings of this study have been deposited in the Gene Expression Omnibus (GEO) database under accession code GSE277934.
 This dataset includes nanopore \gls{drs} data, and nanopore cDNA data.
 The deposited data are available in their raw format as well as in processed forms, including BAM files.
 All data are available for public access and can be downloaded directly from the GEO repository (https://www.ncbi.nlm.nih.gov/geo/) using the provided accession number.
