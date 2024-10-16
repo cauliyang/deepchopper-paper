@@ -21,15 +21,21 @@ def gather(samples: list[str]) -> pd.DataFrame:
         ]
     )
 
+    # sort p-value among sample groups
+    df = df.sort_values(["Sample", "PValue"])
     return df
 
 
 def main():
     samples = ["HCT116", "A549", "HepG2"]
     df = gather(samples)
+
+    print(df)
     styler = df.style
 
-    latex = styler.to_latex()
+    styler.format({"PValue": "{:.2e}"})
+    latex = styler.to_latex(siunitx=True)
+
     print(latex)
 
 
