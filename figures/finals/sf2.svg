@@ -27,15 +27,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="5.5961745"
-     inkscape:cx="683.94937"
-     inkscape:cy="162.70043"
+     inkscape:zoom="4.4497186"
+     inkscape:cx="245.63351"
+     inkscape:cy="79.66796"
      inkscape:window-width="3824"
      inkscape:window-height="2082"
      inkscape:window-x="1088"
      inkscape:window-y="40"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g14"
+     inkscape:current-layer="g5"
      showgrid="true"><inkscape:grid
        id="grid1"
        units="px"
@@ -5152,7 +5152,7 @@
            id="tspan78-4"
            x="-100.35535"
            y="-748.02972"
-           style="font-size:10.6667px;stroke-width:0.96378">Connection per bp </tspan></text><text
+           style="font-size:10.6667px;stroke-width:0.96378">Connection per kb </tspan></text><text
          id="text53-6-1"
          xml:space="preserve"
          transform="rotate(-90)"
@@ -7199,7 +7199,7 @@
            id="tspan2"
            style="stroke-width:0.763465"
            x="-722.10376"
-           y="15.460321">1e-5</tspan></text><path
+           y="15.460321">1e-2</tspan></text><path
          id="path139"
          d="m -723.59056,33.73609 3.87965,-1.46052"
          style="fill:none;stroke:#000000;stroke-width:0.255321;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" /><g
