@@ -27,15 +27,15 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="4.4497186"
-     inkscape:cx="245.63351"
-     inkscape:cy="79.66796"
+     inkscape:zoom="4.3552077"
+     inkscape:cx="489.8733"
+     inkscape:cy="150.27986"
      inkscape:window-width="3824"
      inkscape:window-height="2082"
      inkscape:window-x="1088"
      inkscape:window-y="40"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g5"
+     inkscape:current-layer="layer1"
      showgrid="true"><inkscape:grid
        id="grid1"
        units="px"
@@ -4428,41 +4428,37 @@
          x="-35.799107"
          y="152.62086"
          sodipodi:role="line"
-         id="tspan1584-5">Frequency</tspan></text><g
-       id="g4"
-       transform="translate(-5.288224,-8.0313032)"><g
-         id="g15"
-         transform="translate(1.3229166,0.19939148)"><path
-           id="path1586-0"
-           d="M 164.71177,21.512251 H 208.873 c 0.65508,0 0.98266,-0.166737 0.98266,-0.500202 v -6.886602 c 0,-0.333468 -0.32758,-0.500204 -0.98266,-0.500204 h -44.16123 c -0.65514,0 -0.98266,0.166736 -0.98266,0.500204 v 6.886602 c 0,0.333465 0.32752,0.500202 0.98266,0.500202 z"
-           style="fill:#ffffff;fill-opacity:0.8;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.219092;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:0.8"
-           sodipodi:nodetypes="sssssssss" /><path
-           id="path1587-3"
-           d="m 164.18767,16.407322 h 5.03939 v -1.763789 h -5.03939 z"
-           style="fill:#b7bec8;fill-opacity:1;fill-rule:nonzero;stroke:#b7bec8;stroke-width:0.007;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" /><text
-           id="text1587-1"
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.157481"
-           x="169.43045"
-           y="16.287285"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.157481"
-             x="169.43045"
-             y="16.287285"
-             sodipodi:role="line"
-             id="tspan1587-7">All expressed genes (N=19156)</tspan></text><path
-           id="path1588-2"
-           d="m 164.18767,20.002327 h 5.03939 v -1.763792 h -5.03939 z"
-           style="fill:#ff8080;fill-opacity:1;fill-rule:nonzero;stroke:#ff8080;stroke-width:0.00732488;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" /><text
-           id="text1588-8"
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.157481"
-           x="169.43045"
-           y="19.882288"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.157481"
-             x="169.43045"
-             y="19.882288"
-             sodipodi:role="line"
-             id="tspan1588-1">Chimeric artifacts-affected genes (N=7186)</tspan></text></g></g><text
+         id="tspan1584-5">Frequency</tspan></text><path
+       id="path1586-0"
+       d="m 160.78396,13.678939 h 45.78367 c 0.67915,0 1.01876,-0.166678 1.01876,-0.500025 V 6.294758 c 0,-0.3333495 -0.33961,-0.5000263 -1.01876,-0.5000263 h -45.78367 c -0.67921,0 -1.01876,0.1666768 -1.01876,0.5000263 v 6.884156 c 0,0.333347 0.33955,0.500025 1.01876,0.500025 z"
+       style="fill:#ffffff;fill-opacity:0.8;fill-rule:nonzero;stroke:#cccccc;stroke-width:0.223041;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:0.8"
+       sodipodi:nodetypes="sssssssss" /><path
+       id="path1587-3"
+       d="m 160.22236,8.5754103 h 5.03939 v -1.763789 h -5.03939 z"
+       style="fill:#b7bec8;fill-opacity:1;fill-rule:nonzero;stroke:#b7bec8;stroke-width:0.007;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" /><text
+       id="text1587-1"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.157481"
+       x="165.69765"
+       y="8.4553728"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.157481"
+         x="165.69765"
+         y="8.4553728"
+         sodipodi:role="line"
+         id="tspan1587-7">All expressed genes (N=19,156)</tspan></text><path
+       id="path1588-2"
+       d="m 160.22236,12.170415 h 5.03939 v -1.763792 h -5.03939 z"
+       style="fill:#ff8080;fill-opacity:1;fill-rule:nonzero;stroke:#ff8080;stroke-width:0.00732488;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" /><text
+       id="text1588-8"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.157481"
+       x="165.69765"
+       y="12.050376"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.157481"
+         x="165.69765"
+         y="12.050376"
+         sodipodi:role="line"
+         id="tspan1588-1">Chimera artifacts-affected genes (N=7,186)</tspan></text><text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.88056px;line-height:25;font-family:Arial;-inkscape-font-specification:'Arial Bold';text-decoration-color:#000000;fill:#000000;stroke-width:0.281001;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
        x="84.705208"
@@ -4877,7 +4873,7 @@
            id="tspan55"
            style="font-size:2.11667px;stroke-width:0.281"
            x="55.789852"
-           y="44.779835">Chimeric  artifacts-affected genes</tspan></text><text
+           y="44.779835">Chimera  artifacts-affected genes</tspan></text><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.46944px;line-height:25;font-family:Arial;-inkscape-font-specification:Arial;text-decoration-color:#000000;fill:#000000;stroke-width:0.281001;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
          x="-40.619186"
@@ -4922,7 +4918,7 @@
            id="tspan54-34"
            x="43.881489"
            y="46.517757"
-           style="font-size:2.11667px;stroke-width:0.281001">(N=19156)</tspan></text><text
+           style="font-size:2.11667px;stroke-width:0.281001">(N=19,156)</tspan></text><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;line-height:25;font-family:Arial;-inkscape-font-specification:Arial;text-decoration-color:#000000;fill:#000000;stroke-width:0.281001;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
          x="66.733086"
@@ -4933,7 +4929,7 @@
            id="tspan54-34-8"
            x="66.733086"
            y="46.170033"
-           style="font-size:2.11667px;stroke-width:0.281001">(N=7186)</tspan></text><text
+           style="font-size:2.11667px;stroke-width:0.281001">(N=7,186)</tspan></text><text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82223px;line-height:25;font-family:Arial;-inkscape-font-specification:Arial;text-decoration-color:#000000;fill:#000000;stroke-width:0.281001;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
          x="29.391697"
