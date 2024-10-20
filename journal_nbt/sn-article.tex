@@ -454,9 +454,16 @@ In this context, match length refers to the number of bases in the query sequenc
 
 Cross-platform validation of \gls{drs} chimera artifacts identified by DeepChopper was conducted leveraging \gls{ont} direct cDNA sequencing and additional cDNA-based sequencing platforms.
 
-Direct cDNA sequencing validation were performed using six cancer cell lines including VCaP dataset generated in this study and five published dataset (A549, K562, HepG2, MCF7, and HCT116) obtained from SG-NEx project [citation]. The direct cDNA data were processed as ...
+Direct cDNA sequencing validation were performed using six cancer cell lines including VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from SG-NEx project~\cite{chen2021systematic}.  The direct cDNA data in FAST5 format were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
+Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming enabled (--trim adapters) and the ``dna\_r9.4.1\_e8\_hac@v3.3'' model. The reads were then processed using Pychopper (https://github.com/epi2me-labs/pychopper, version 2.7.9) and Cutadapt (version 4.2)~\cite{martin2011cutadapt}, following the protocol~\cite{grunberger2022nanopore}. The oriented reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 
-WTC11 cell line data sequenced on five distinct platforms: \gls{ont} \gls{pcr}-cDNA, \gls{ont} CapTrap, \gls{ont} R2C2, \gls{pb} cDNA, and \gls{pb}CapTrap-seq. The raw data FASTQ files of these datasets were provided by the LRGASP project [citation]. \textbf{A description of how these data are processed and how chimeric alignments are defined in these data}
+
+WTC11 cell line data sequenced on five distinct platforms: \gls{ont} \gls{pcr}-cDNA, \gls{ont} CapTrap, \gls{ont} R2C2, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.  The raw data FASTQ files (\gls{ont} R2C2 with FASTA files) of these datasets were provided by the LRGASP project~\cite{pardo2024systematic}. For \gls{pcr}-cDNA data, The reads were then processed using Pychopper (https://github.com/epi2me-labs/pychopper, version 2.7.9) and Cutadapt (version 4.2)~\cite{martin2011cutadapt}, following the protocol~\cite{grunberger2022nanopore}.
+The reads from \gls{ont} were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with the parameters (-ax splice -uf -k14), while the reads from \gls{pb} were aligned with the parameters (-ax splice:hq -uf). 
+
+The \gls{ont} direct RNA data from A549, K562, HepG2, MCF7, HCT116, VCaP, and WTC11 cell lines was processed as previously described.
+The chimeric alignments were defined as alignments with the SA tag in the BAM files.
+%\textbf{A description of how these data are processed and how chimeric alignments are defined in these data}
 
 Consistency across platforms was assessed by calculating supporting rates, defined as the proportion of \gls{drs} detected chimeric alignments corroborated by other platforms. 
 
@@ -466,14 +473,14 @@ Consistency across platforms was assessed by calculating supporting rates, defin
 % To assess DeepChopper's accuracy in detecting terminal artificial sequences, we compared its predictions to the soft-clipped regions in untrimmed Dorado-processed data.
 % An overlap threshold of 0.4 was used to determine the concordance between the two methods.
 
-\subsection{Inter-chromosomal chimeric alignments analysis}
+%\subsection{Inter-chromosomal chimeric alignments analysis}
 
-We collected chimeric alignments containing two segments aligned to the reference genome.
-The result consisted of numerical values associated with autosomes, sex chromosomes, and mitochondrial DNA.
-Each chromosome was represented by a single numerical value, which means the number of connections.
-To standardize the data and facilitate comparisons between chromosomes, every value is divided by the length of the related chromosome.
+%We collected chimeric alignments containing two segments aligned with the reference genome.
+%The result consisted of numerical values associated with autosomes, sex chromosomes, and mitochondrial DNA.
+%Each chromosome was represented by a single numerical value, which means the number of connections.
+%To standardize the data and facilitate comparisons between chromosomes, every value is divided by the length of the related chromosome.
 
-\subsection{Gene expression analysis of chimeric artifacts}
+\subsection{Gene expression analysis and transcript classification}
 
 To identify chimeric artifacts, we first converted each chimeric read from both Dorado and DeepChopper into a list of genomic intervals.
 We then compared these lists of genomic intervals from Dorado and DeepChopper.
@@ -483,20 +490,18 @@ Following the identification of the chimeric artifacts, we proceeded to assess g
 
 \subsection{Gene fusion identification and visualization}
 
-For ONT direct RNA data, gene fusions were identified using FusionSeeker (v1.0.1)~\cite{chen2023gene} with default nanopore settings in Dorado-trimmed reads, Deepchopper-processed reads and chimeric reads of chimeric artifacts. For Illumina RNA-seq data of VCaP cell line, gene fusions were identified using Arriba (2.4.0)~\cite{uhrig2021accurate}. 
-The gene structure was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
+For \gls{ont} \gls{drs} data, gene fusions were identified using FusionSeeker (v1.0.1)~\cite{chen2023gene} with default settings. For VCaP cell line, short-read RNA-seq FastQ files were obtained from the CCLE project ~\cite{barretina2012cancer} with SRA accession SRX5417211. Raw reads were mapped to hg38 with STAR (2.7.11) ~\cite{dobin2013star} and gene fusion events were detected by Arriba (2.4.0)~\cite{uhrig2021accurate}. 
+The gene structure of RPS29-COX8A fusion was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
 Base quality scores were generated using a custom Python script, and ion current signals were visualized with Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}. 
-The gene fusion events were visualized using chimeraviz (1.30.0)~\cite{laagstad2017chimeraviz}.
+The circos plot for gene fusion events were visualized using chimeraviz (1.30.0)~\cite{laagstad2017chimeraviz}.
 
 \subsection{\gls{go} enrichment analysis}
 
-For each cell line, the fused genes were used for the \gls{go} enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID)~\cite{sherman2022david} to elucidate the biological processes they involved.
+\gls{go} enrichment analysis of biological processes for genes involved in chimera artifacts identified in \gls{drs} data was performed using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) webserver~\cite{sherman2022david}.
 
 \subsection{Computing resource}
 
-All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM.
-The server also featured two NVIDIA A100 \glspl{gpu}, each with 80 GB of GPU memory, providing substantial computational power for both CPU-intensive tasks and GPU-accelerated deep learning workloads.
-
+All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM. The server was also configured with two NVIDIA A100 \glspl{gpu}, each with 80 GB of memory, enabling efficient processing of both CPU-intensive tasks and GPU-accelerated deep learning workloads.
 
 % \section{Tables}\label{sec5}
 
@@ -555,7 +560,7 @@ For large-scale analyses, we recommend using DeepChopper on systems with GPU acc
 
 \bmhead{Acknowledgements}
 
-This project is supported in part by NIH grants R35GM142441 and R01CA259388 to RY. and NIH grants R01CA256741, R01CA278832, and R01CA285684to QC.
+This project was supported in part by NIH grants R35GM142441 and R01CA259388 awarded to RY, and NIH grants R01CA256741, R01CA278832, and R01CA285684 awarded to QC.
 
 \bmhead{Author Contributions}
 
@@ -587,14 +592,14 @@ No authors declare conflict of interests.
 \end{figure}
 
 \begin{figure}[!h]
-	\includegraphics[height=0.26\columnwidth]{finals/sf2}
-	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (b) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (c) Distribution of gene effective sizes for all expressed genes and chimeric artifacts-affected genes, showing that genes impacted by chimera artifacts have a similar size distribution to all expressed genes.}\label{fig:sf2}
+	\includegraphics[height=0.65\columnwidth]{finals/sf2}
+	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all expressed genes and chimeric artifacts-affected genes, showing that genes impacted by chimera artifacts have a similar size distribution to all expressed genes.  (c) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (d) The bar plot shows the number of transcripts  across different isoform classification categories for VCaP RNA 004 cell line. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. }\label{fig:sf2}
 \end{figure}
 
 
 \begin{figure}[!h]
 	\includegraphics[height=1.45\columnwidth]{finals/sf3}
-	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in the HCT116, A549, and HepG2 cell lines. The table lists enriched GO terms, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
+	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in the HCT116, A549, HepG2, and VCaP RNA004 cell lines. The table lists enriched GO terms, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
 \end{figure}
 
 
