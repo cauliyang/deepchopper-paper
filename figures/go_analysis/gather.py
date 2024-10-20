@@ -27,7 +27,7 @@ def gather(samples: list[str]) -> pd.DataFrame:
 
 
 def main():
-    samples = ["HCT116", "A549", "HepG2"]
+    samples = ["HCT116", "A549", "HepG2", "VCaP004"]
     df = gather(samples)
 
     print(df)
