@@ -290,8 +290,8 @@ We observed that DeepChopper consistently eliminated only the chimeric alignment
 Recently, \gls{ont} released a new SQK-RNA004 chemistry for \gls{drs}, but it remains unclear whether chimera artifacts persist with this update. 
 To investigate, we generated \gls{drs} data using the latest SQK-RNA004 kit for the VCaP cell line and performed zero-shot predictions of chimera artifacts using DeepChopper, despite the adapter sequence pattern of RNA004 not being included in its training.
 DeepChopper reduced chimeric alignments by 21\% compared to Dorado's base-called and adapter-trimmed long reads, increasing the proportion of cDNA-supported chimeric alignments from about 25\% to 30\% (\edfigref{fig:sf1}{b}).
-Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of xxx) and low \gls{blat} identity (mean of xxx) (\edfigref{fig:sf1}{c}).
-These findings strongly suggest that the issue of chimera artifacts continues to be present in the latest RNA004 \gls{drs} kit.
+Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of 7.8) and low \gls{blat} identity (mean of 0.38) (\edfigref{fig:sf1}{c}).
+These findings strongly suggest that chimera artifacts persist in the latest RNA004 \gls{drs} kit.
 
 \begin{figure}[H]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
