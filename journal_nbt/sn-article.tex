@@ -68,6 +68,9 @@
 
 % for collabration and will remove before submit
 
+\usepackage{caption}
+\usepackage{subfig}
+
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
     scientific-notation=false,
@@ -232,7 +235,7 @@ As a result, current adapter detection tools cannot exploit this feature to elim
 To address these challenges, we developed DeepChopper, a \gls{glm} specifically designed for long-read sequence analysis.
 Inspired by recent advances in \gls{llm} that can decipher complex patterns in genetic sequences~\cite{benegas2024genomic}, DeepChopper excels at processing long genomic contexts with single-nucleotide resolution, a crucial capability for identifying \gls{ont} adapter sequences directly from base-called long reads and thus facilitating the detection and removal of chimeric read artifacts in \gls{drs} data.
 Specifically, DeepChopper processes individual FASTQ records to identify and handle adapter sequences: When internal adapters are detected, the model splits the read into two or more records, while $3'$ end adapters are trimmed to produce a clean sequence (\figref{fig:f1}{a}).
-This method ensures the preservation of genuine biological sequences while effectively eliminating chimera artifacts. 
+This method ensures the preservation of genuine biological sequences while effectively eliminating chimera artifacts.
 
 To accomplish this, DeepChopper integrates the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling, with a residual block and a \gls{mlp} for fine-grained sequence analysis.
 This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena, he2016deep} (\figref{fig:f1}{a}).
@@ -244,7 +247,7 @@ Moreover, its efficient architecture—using only 7 million parameters—makes D
 This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences.
 
 % Result
-\begin{figure}[!h]
+\begin{figure}[p]
 	\includegraphics[height=0.78\columnwidth]{finals/figure1}
 	\caption{{\bf  Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms} (a) Overview of the architecture of the DeepChopper model. Created with BioRender.com (b) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (c) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (d) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (e) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, and DeepChopper. DeepChopper greatly reduces chimeric alignments not supported by direct cDNA sequencing. (f) Distribution of base qualities from identified internal adapters by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), and red (low). (g) \gls{blat} identity distribution of the internal adapter sequences mapping against human reference genome. (h) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming and DeepChopper. DeepChopper consistently reduces chimeric alignments not supported by cDNA sequencing across all cell lines. (i) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper reduces unsupported chimeric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f1}
 \end{figure}
@@ -254,13 +257,13 @@ We curated a training set of 540,000 long reads initially deemed free of adapter
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
 DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:sf1}{a}), demonstrating its high accuracy in detecting adapter sequences.
 To further assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
-This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data. 
+This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
 
 We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with that used in the SG-NEx project.
 Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}.
 DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
-DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads. 
+DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
 Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f1}{b}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
 
 We then analyzed the positions of DeepChopper identified adapter sequences within each long read.
@@ -275,23 +278,30 @@ While Dorado's adapter trimming had no effect on reducing chimeric alignments, D
 To further confirm the nature of the identified chimeric read artifacts, we examined the base quality scores of the internal adapter sequences identified by DeepChopper and aligned them with the human reference genome using \gls{blat}~\cite{kent2002blat}, a tool known for its high alignment accuracy.
 Our analysis revealed that the adapter sequences from the chimeric read artifacts exhibited low base quality scores (\figref{fig:f1}{f}) and poor alignment identity with the human reference genome (\figref{fig:f1}{g}), confirming their artifactual nature and non-human origin.
 
-To comprehensively assess DeepChopper’s performance in reducing chimera artifacts in \gls{drs}, we examined cDNA-supported chimeric alignments in the SG-NEx samples. 
-DeepChopper significantly reduced chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f1}{h}), indicating the prevalence of chimeric read artifacts in \gls{drs}. 
+To comprehensively assess DeepChopper’s performance in reducing chimera artifacts in \gls{drs}, we examined cDNA-supported chimeric alignments in the SG-NEx samples.
+DeepChopper significantly reduced chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f1}{h}), indicating the prevalence of chimeric read artifacts in \gls{drs}.
 
 To further validate DeepChopper's accuracy, we applied it to process \gls{drs} data from the human WTC11 induced pluripotent stem cell line, generated by the LRGASP project~\cite{pardo2024systematic}.
 Additionally, the LRGASP project generated cDNA-based long-read sequencing data from this cell line using distinct protocols (\gls{pcr}-cDNA, CapTrap, R2C2) on both \gls{ont} and \gls{pb} platforms, providing a valuable resource for benchmarking DeepChopper's performance.
 We observed that DeepChopper consistently eliminated only the chimeric alignments in the \gls{drs} data that were not supported by any cDNA-based sequencing method (\figref{fig:f1}{i}), demonstrating its precise ability to distinguish genuine chimeric reads from artifacts.
 
-Recently, \gls{ont} released a new SQK-RNA004 chemistry for \gls{drs}, but it remains unclear whether chimera artifacts persist with this update. 
+Recently, \gls{ont} released a new SQK-RNA004 chemistry for \gls{drs}, but it remains unclear whether chimera artifacts persist with this update.
 To investigate, we generated \gls{drs} data using the latest SQK-RNA004 kit for the VCaP cell line and performed zero-shot predictions of chimera artifacts using DeepChopper, despite the adapter sequence pattern of RNA004 not being included in its training.
 DeepChopper reduced chimeric alignments by 21\% compared to Dorado's base-called and adapter-trimmed long reads, increasing the proportion of cDNA-supported chimeric alignments from about 25\% to 30\% (\edfigref{fig:sf1}{b}).
 Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of 7.8) and low \gls{blat} identity (mean of 0.38) (\edfigref{fig:sf1}{c}).
 These findings strongly suggest that chimera artifacts persist in the latest RNA004 \gls{drs} kit.
 
-\begin{figure}[H]
+\begin{figure}[p]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term.}\label{fig:f2}
 \end{figure}
+
+% Continuation of the caption on next page
+\begin{figure}[H]
+    \ContinuedFloat
+    \caption{(e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}
+\end{figure}
+
 
 To investigate potential factors contributing to the formation of chimera artifacts, we examined the expression levels and sizes of the genes involved in these artifacts, we found that genes affected by chimera artifacts exhibited significantly higher expression levels compared to all expressed genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf2}{a}), while following a similar size distribution pattern (\edfigref{fig:sf2}{b}).
 We then analyzed the genomic patterns of improper connections generated by chimera artifacts across chromosomes in VCaP \gls{drs} data.
@@ -302,7 +312,7 @@ To evaluate the influence of chimera artifacts on downstream analyses, we invest
 IsoQuant~\cite{prjibelski2023accurate} was employed to detect and annotate transcripts from VCaP \gls{drs} data, focusing on chimeric read artifacts identified by DeepChopper.
 By comparing transcript identification with and without DeepChopper correction, we observed a substantial increase in the number of identified transcripts (\figref{fig:f2}{b}).
 Similarly, an increase in transcript detection was observed in VCaP dRNA-seq data generated using the latest RNA004 kit (\edfigref{fig:sf2}{d}).
-The increase in detected transcripts was most prominent in the full-length transcripts (\gls{fsm} category), with additional improvements noted across the alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}). 
+The increase in detected transcripts was most prominent in the full-length transcripts (\gls{fsm} category), with additional improvements noted across the alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
 Next, we evaluated whether DeepChopper could improve gene fusion detection by chimera artifact correction.
@@ -362,7 +372,7 @@ The final library was loaded onto a MinION R9.4 flow cell and sequenced on the O
 
 We acquired \gls{ont} \gls{drs} FAST5 data from the SG-NEx project, which includes six human cell lines: HEK293T, A549, K562, HepG2, MCF7, and HCT116~\cite{chen2021systematic}.
 The FAST5 files were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
-Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model. 
+Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model.
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 For adapter sequence extraction, we selected primary alignments without supplementary alignments and identified $3'$ end soft-clipped regions as adapter sequences, while aligned regions were considered non-adapter sequences.
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence to create FASTQ records.
@@ -415,7 +425,7 @@ The model evaluation metrics included accuracy, precision, recall and the F1 sco
 	\textrm{F1}        & = 2 \times \frac{\textrm{Precision} \times \textrm{Recall}}{\textrm{Precision} + \textrm{Recall}}
 \end{align*}
 
-The final selection of the model was based on the optimal performance in the validation set. 
+The final selection of the model was based on the optimal performance in the validation set.
 To identify the best hyperparameter configuration, the Hydra framework was used~\cite{Yadan2019Hydra}.
 
 \subsection{Sliding window approach for prediction refinement}
@@ -448,7 +458,7 @@ When internal adapters were removed, a single FASTQ record was converted to mult
 This post-processing workflow ensured that the final output remained accurate and biologically relevant.
 The combination of the sliding window technique and voting-based refinement markedly improved prediction quality by smoothing outputs and reducing false positives, leading to more reliable results essential for downstream applications.
 
-\subsection{\gls{blat} identity calculation} 
+\subsection{\gls{blat} identity calculation}
 
 The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
 A \gls{blat} identity score was defined as the ratio of matched bases to the total sequence length:
@@ -494,9 +504,9 @@ Gene expression levels from \gls{drs} were quantified using IsoQuant (v3.1.2)~\c
 
 For \gls{ont} \gls{drs} data, gene fusions were identified using FusionSeeker (v1.0.1)~\cite{chen2023gene} with default settings.
 For short-read RNA-seq data, FastQ files for the VCaP cell line were obtained from the CCLE project~\cite{barretina2012cancer} under SRA accession SRX5417211.
-Raw reads were mapped to the hg38 reference genome using STAR (2.7.11)~\cite{dobin2013star}, and gene fusion events were detected with Arriba (2.4.0)~\cite{uhrig2021accurate}. 
+Raw reads were mapped to the hg38 reference genome using STAR (2.7.11)~\cite{dobin2013star}, and gene fusion events were detected with Arriba (2.4.0)~\cite{uhrig2021accurate}.
 The gene structure of the RPS29-COX8A fusion was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
-Base quality scores were generated with a custom Python script, and ion current signals were visualized using Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}. 
+Base quality scores were generated with a custom Python script, and ion current signals were visualized using Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}.
 The circos plot for gene fusion events was visualized using chimeraviz (1.30.0)~\cite{laagstad2017chimeraviz}.
 
 \subsection{\gls{go} enrichment analysis}
@@ -578,7 +588,7 @@ No authors declare conflict of interests.
 \backmatter
 
 \begin{appendices}
-	\printglossaries[type=\acronymtype, title=Abbreviations]
+    \printglossaries
 \end{appendices}
 
 
@@ -598,14 +608,30 @@ No authors declare conflict of interests.
 
 \begin{figure}[!h]
 	\includegraphics[height=0.65\columnwidth]{finals/sf2}
-	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all expressed genes and genes affected by chimera artifacts, indicating that the size distributions of genes impacted by chimera artifacts are comparable to those of all expressed genes. (c) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (d) Number of detected transcripts across different isoform categories (\gls{fsm}, \gls{ism},  \gls{nic}, \gls{nnc}, and Other) from DeepChopper-identified chimeric read artifacts in VCaP RNA004 \gls{drs} data. DeepChopper-corrected reads resulted in a greater number of transcripts compared to adapter-trimmed reads by Dorado across all categories. }\label{fig:sf2}
+	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all expressed genes and genes affected by chimera artifacts, indicating that the size distributions of genes impacted by chimera artifacts are comparable to those of all expressed genes. (c) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (d) Number of detected transcripts across different isoform categories (\gls{fsm}, \gls{ism},  \gls{nic}, \gls{nnc}, and Other) from DeepChopper-identified chimeric read artifacts in VCaP RNA004 \gls{drs} data. DeepChopper-corrected reads resulted in a greater number of transcripts compared to adapter-trimmed reads by Dorado across all categories.}\label{fig:sf2}
 \end{figure}
 
-\begin{figure}[!h]
-	\includegraphics[height=1.5\columnwidth]{finals/sf3}
-	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
+
+
+% First part of the figure
+\begin{figure}[p]
+    \includegraphics[height=1.4\columnwidth]{finals/sf3}
+    \caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.}}
+    \label{fig:sf3}
 \end{figure}
 
+% Continuation of the caption on next page
+\begin{figure}[p]
+    \ContinuedFloat
+    \caption{(a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}
+\end{figure}
+
+%
+%\begin{figure}[!h]
+%	\includegraphics[height=1.45\columnwidth]{finals/sf3}
+%	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
+%\end{figure}
+%
 
 % \newpage
 
