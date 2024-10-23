@@ -385,7 +385,7 @@ This approach enables the model to capture fine-grained sequence details crucial
 
 For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence or not.
 The model’s architecture is designed specifically to achieve high precision in identifying adapter sequences embedded within biological data.
-At the core of DeepChopper is the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture that serves as the primary feature extractor. 
+At the core of DeepChopper is the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture that serves as the primary feature extractor.
 This framework efficiently processes and interprets complex nucleotide sequences, producing rich feature representations.
 These extracted features, with a dimensionality of 256, are then passed through a quality block that integrates base quality scores into the prediction pipeline.
 The quality block is composed of dense layers with residual connections, strategically incorporating sequence quality information to further refine the model's understanding of the input data.
@@ -449,16 +449,15 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 
 where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
+The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
+
 \subsection{Post-processing and filtering}
 
-Following prediction refinement, additional filters were applied to improve the quality of the results.
-Predicted adapter sequences shorter than 13 nucleotides were removed to minimize false positives arising from noise.
-Reads containing more than four predicted adapter sequences were excluded from further analysis.
-Subsequently, adapter sequences and their associated quality scores were removed.
-When internal adapters were removed, a single FASTQ record was converted to multiple records.
-
-This post-processing workflow ensured that the final output remained accurate and biologically relevant.
-The combination of the sliding window technique and voting-based refinement markedly improved prediction quality by smoothing outputs and reducing false positives, leading to more reliable results essential for downstream applications.
+Following prediction refinement, additional filtering steps were applied to enhance the quality of the results.
+Predicted adapter sequences shorter than 13 nucleotides were excluded to minimize false positives that could arise from random noise. Similarly, reads containing more than four predicted adapter sequences were not processed to prevent noise.
+After filtering, adapter sequences along with their associated quality scores were discarded.
+In cases where internal adapters were removed, a single FASTQ record was split into multiple records to reflect the updated structure of the reads.
+This post-processing workflow ensured that the final output was both accurate and biologically meaningful.
 
 \subsection{BLAT identity calculation}
 
