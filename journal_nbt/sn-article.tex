@@ -264,7 +264,7 @@ Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,17
 DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
 DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
-Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f1}{b}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
+Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f1}{b}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation (\url{https://nanoporetech.com/document/chemistry-technical-document}).
 
 We then analyzed the positions of DeepChopper identified adapter sequences within each long read.
 Among these, 212,478 reads contained internal adapters, while 7,777,624 reads had adapters at their $3'$ ends (\figref{fig:f1}{c}).
