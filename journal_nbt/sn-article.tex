@@ -379,20 +379,25 @@ In total, 600,000 data points were generated and divided into training (480,000)
 
 \subsection{Language model architecture}\label{ssec:lm}
 
-DeepChopper performs artificial adapter sequence detection as a token classification task, predicting whether each token belongs to an adapter sequence.
-The model architecture is specifically designed to accurately identify artificial sequence regions within biological data.
-At its core, DeepChopper utilizes the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture, as its primary feature extractor, allowing effective processing and interpretation of complex biological sequences.
-Following feature extraction, a quality block is integrated to incorporate sequence base quality information into the prediction process.
-This quality block consists of dense layers with residual connections, which combine quality scores with the extracted features to enrich the model's understanding of the input data.
-The resulting enriched features are passed to a classification head, which outputs the probability of each token being part of an adapter sequence.
-To optimize accuracy in artificial sequence detection, DeepChopper employs contextual information and quality metrics.
-The model classifies each token as either positive (adapter sequence) or negative (non-adapter sequence), providing a detailed analysis of the input data.
+DeepChopper identifies adapter sequences by framing the problem as a token classification task.
+Biological sequences are tokenized at the single-nucleotide level, where each nucleotide \emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}, is treated as a fundamental unit.
+This approach enables the model to capture fine-grained sequence details crucial for distinguishing between adapter sequences and native biological sequences.
+
+For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence or not.
+The model’s architecture is designed specifically to achieve high precision in identifying adapter sequences embedded within biological data.
+At the core of DeepChopper is the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture that serves as the primary feature extractor. 
+This framework efficiently processes and interprets complex nucleotide sequences, producing rich feature representations.
+These extracted features, with a dimensionality of 256, are then passed through a quality block that integrates base quality scores into the prediction pipeline.
+The quality block is composed of dense layers with residual connections, strategically incorporating sequence quality information to further refine the model's understanding of the input data.
+
+Finally, the enriched feature set is fed into a classification head, which computes the probability of each token being part of an adapter sequence.
+The model performs a binary classification for every nucleotide position, labeling each token as either part of an adapter or a non-adapter sequence, thus providing a comprehensive analysis of the entire input sequence.
+
 
 \subsection{Model training}\label{ssec:training}
 
-A tokenization strategy was used to convert biological sequences into single-nucleotide tokens, representing \emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N} as fundamental units, allowing the model to capture fine-grained sequence details. DeepChopper processes sequences up to 32,770 nucleotides in length, excluding any longer sequences from analysis.
+DeepChopper processes sequences up to 32,770 nucleotides in length, excluding any longer sequences from analysis.
 To ensure efficient batch processing, shorter sequences were padded to this maximum length.
-
 The model was trained using a supervised learning approach, utilizing sequences labeled with adapter annotations.
 Training was performed in a \gls{hpc} cluster using two A100 \glspl{gpu}.
 The batch size was set to 64, and validation was performed every 20,000 steps.
@@ -442,8 +447,7 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 	\end{cases}
 \]
 
-where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and \(p_j\) is the preliminary label (0 or 1 a.k.a. adapter or non-adapter) for the \(j\)-th nucleotide in the window.
-
+where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
 \subsection{Post-processing and filtering}
 
