@@ -142,19 +142,19 @@
 %%%%%=============================================================================%%%%
 
 %% as per the requirement new theorem styles can be included as shown below
-\theoremstyle{thmstyleone}%
-\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%\theoremstyle{thmstyleone}%
+%\newtheorem{theorem}{Theorem}%  meant for continuous numbers
 %%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
 %% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
-\newtheorem{proposition}[theorem]{Proposition}%
+%\newtheorem{proposition}[theorem]{Proposition}%
 %%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
 
-\theoremstyle{thmstyletwo}%
-\newtheorem{example}{Example}%
-\newtheorem{remark}{Remark}%
+%\theoremstyle{thmstyletwo}%
+%\newtheorem{example}{Example}%
+%\newtheorem{remark}{Remark}%
 
-\theoremstyle{thmstylethree}%
-\newtheorem{definition}{Definition}%
+%\theoremstyle{thmstylethree}%
+%\newtheorem{definition}{Definition}%
 
 \raggedbottom
 \unnumbered% uncomment this for unnumbered level heads
@@ -238,7 +238,7 @@ Specifically, DeepChopper processes individual FASTQ records to identify and han
 This method ensures the preservation of genuine biological sequences while effectively eliminating chimera artifacts.
 
 To accomplish this, DeepChopper integrates the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling, with a residual block and a \gls{mlp} for fine-grained sequence analysis.
-This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena, he2016deep} (\figref{fig:f1}{a}).
+This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena, he2015deep} (\figref{fig:f1}{a}).
 Additionally, DeepChopper incorporates base quality score information to improve prediction and employs an adaptive tokenization strategy that preserves single-nucleotide resolution while capturing higher-order sequence patterns (See \hyperref[sec:methods]{Methods} for details).
 DeepChopper offers several advantages over existing \glspl{glm}.
 
@@ -247,9 +247,9 @@ Moreover, its efficient architecture—using only 7 million parameters—makes D
 This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences.
 
 % Result
-\begin{figure}[!h]
+\begin{figure}[!ht]
 	\includegraphics[height=0.78\columnwidth]{finals/figure1}
-	\caption{{\bf  Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms} (a) Overview of the architecture of the DeepChopper model. Created with BioRender.com (b) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (c) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (d) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (e) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, and DeepChopper. DeepChopper greatly reduces chimeric alignments not supported by direct cDNA sequencing. (f) Distribution of base qualities from identified internal adapters by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), and red (low). (g) \gls{blat} identity distribution of the internal adapter sequences mapping against human reference genome. (h) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming and DeepChopper. DeepChopper consistently reduces chimeric alignments not supported by cDNA sequencing across all cell lines. (i) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper reduces unsupported chimeric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f1}
+	\caption{{\bf Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms} (a) Overview of the architecture of the DeepChopper model. Created with BioRender.com (b) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (c) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (d) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (e) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, and DeepChopper. DeepChopper greatly reduces chimeric alignments not supported by direct cDNA sequencing. (f) Distribution of base qualities from identified internal adapters by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), and red (low). (g) \gls{blat} identity distribution of the internal adapter sequences mapping against human reference genome. (h) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming and DeepChopper. DeepChopper consistently reduces chimeric alignments not supported by cDNA sequencing across all cell lines. (i) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper reduces unsupported chimeric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f1}
 \end{figure}
 
 To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the Singapore Nanopore Expression Project (SG-NEx)~\cite{chen2021systematic}.
@@ -291,7 +291,7 @@ DeepChopper reduced chimeric alignments by 21\% compared to Dorado's base-called
 Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of 7.8) and low \gls{blat} identity (mean of 0.38) (\edfigref{fig:sf1}{c}).
 These findings strongly suggest that chimera artifacts continue to be an issue with the latest RNA004 \gls{drs} kit.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
 	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}\label{fig:f2}
 \end{figure}
@@ -301,7 +301,6 @@ These findings strongly suggest that chimera artifacts continue to be an issue w
 %     \ContinuedFloat
 %     \caption{(e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}
 % \end{figure}
-
 
 To investigate potential factors contributing to the formation of chimera artifacts, we examined the expression levels and sizes of the genes involved in these artifacts, we found that genes affected by chimera artifacts exhibited significantly higher expression levels compared to all expressed genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf2}{a}), while following a similar size distribution pattern (\edfigref{fig:sf2}{b}).
 We then analyzed the genomic patterns of improper connections generated by chimera artifacts across chromosomes in VCaP \gls{drs} data.
@@ -317,7 +316,7 @@ These findings underscore the effectiveness of DeepChopper in mitigating the det
 
 Next, we assessed whether DeepChopper could improve gene fusion detection by correcting chimera artifacts. Gene fusion calls identified by FusionSeeker~\cite{chen2023gene} from DeepChopper-processed \gls{drs} reads exhibited an 89\% reduction compared to those detected from Dorado's adapter-trimmed reads.
 To further evaluate this reduction, we applied Arriba~\cite{uhrig2021accurate} to detect gene fusions using short-read RNA-seq of VCaP cells and found that none of the gene fusion calls reduced by DeepChopper were supported by those detected in RNA-seq data (\figref{fig:f2}{c}).
-This demonstrates that DeepChopper effectively reduces false positive gene fusion calls caused by chimera artifacts in \gls{drs}— an essential improvement for accurately identifying gene fusion drivers in cancer transcriptomes.
+This demonstrates that DeepChopper effectively reduces false positive gene fusion calls caused by chimera artifacts in \gls{drs}, an essential improvement for accurately identifying gene fusion drivers in cancer transcriptomes.
 
 Upon closer examination of the chimera artifact-derived gene fusion calls, we found a notable enrichment of ribosomal protein genes (\edfigref{fig:sf3}{a}).
 \gls{go} enrichment analysis in VCaP (\figref{fig:f2}{d}) and SG-NEx cell lines (\edfigref{fig:sf3}{b}) confirmed that housekeeping ribosomal protein genes are frequently involved in these artifacts.
@@ -457,7 +456,7 @@ When internal adapters were removed, a single FASTQ record was converted to mult
 This post-processing workflow ensured that the final output remained accurate and biologically relevant.
 The combination of the sliding window technique and voting-based refinement markedly improved prediction quality by smoothing outputs and reducing false positives, leading to more reliable results essential for downstream applications.
 
-\subsection{\gls{blat} identity calculation}
+\subsection{BLAT identity calculation}
 
 The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
 A \gls{blat} identity score was defined as the ratio of matched bases to the total sequence length:
@@ -508,7 +507,7 @@ The gene structure of the RPS29-COX8A fusion was visualized using GSDS (v2.0)~\c
 Base quality scores were generated with a custom Python script, and ion current signals were visualized using Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}.
 The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)~\cite{laagstad2017chimeraviz}.
 
-\subsection{\gls{go} enrichment analysis}
+\subsection{GO enrichment analysis}
 
 \gls{go} enrichment analysis of biological processes for genes involved in chimera artifacts identified in \gls{drs} data was performed using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) webserver~\cite{sherman2022david}.
 
@@ -591,7 +590,240 @@ No authors declare conflict of interests.
 \end{appendices}
 
 
-\bibliography{sn-bibliography}% common bib file
+%\bibliography{sn-bibliography}% common bib file
+\begin{thebibliography}{10}
+    \expandafter\ifx\csname url\endcsname\relax
+    \def\url#1{\burl{#1}}\fi
+    \expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+    \providecommand{\bibinfo}[2]{#2}
+    \providecommand{\eprint}[2][]{\url{#2}}
+    \providecommand{\doi}[1]{\url{https://doi.org/#1}}
+    \bibcommenthead
+
+    \bibitem{garalde2018highly}
+    \bibinfo{author}{Garalde, D.~R.} \emph{et~al.}
+    \newblock \bibinfo{title}{Highly parallel direct rna sequencing on an array of
+        nanopores}.
+    \newblock \emph{\bibinfo{journal}{Nature methods}}
+    \textbf{\bibinfo{volume}{15}}, \bibinfo{pages}{201--206}
+    (\bibinfo{year}{2018}).
+
+    \bibitem{jain2022advances}
+    \bibinfo{author}{Jain, M.}, \bibinfo{author}{Abu-Shumays, R.},
+    \bibinfo{author}{Olsen, H.~E.} \& \bibinfo{author}{Akeson, M.}
+    \newblock \bibinfo{title}{Advances in nanopore direct rna sequencing}.
+    \newblock \emph{\bibinfo{journal}{Nature methods}}
+    \textbf{\bibinfo{volume}{19}}, \bibinfo{pages}{1160--1164}
+    (\bibinfo{year}{2022}).
+
+    \bibitem{smith2020molecular}
+    \bibinfo{author}{Smith, M.~A.} \emph{et~al.}
+    \newblock \bibinfo{title}{Molecular barcoding of native rnas using nanopore
+        sequencing and deep learning}.
+    \newblock \emph{\bibinfo{journal}{Genome research}}
+    \textbf{\bibinfo{volume}{30}}, \bibinfo{pages}{1345--1353}
+    (\bibinfo{year}{2020}).
+
+    \bibitem{liu2024sequencing}
+    \bibinfo{author}{Liu-Wei, W.} \emph{et~al.}
+    \newblock \bibinfo{title}{Sequencing accuracy and systematic errors of nanopore
+        direct rna sequencing}.
+    \newblock \emph{\bibinfo{journal}{BMC genomics}} \textbf{\bibinfo{volume}{25}},
+    \bibinfo{pages}{528} (\bibinfo{year}{2024}).
+
+    \bibitem{benegas2024genomic}
+    \bibinfo{author}{Benegas, G.}, \bibinfo{author}{Ye, C.},
+    \bibinfo{author}{Albors, C.}, \bibinfo{author}{Li, J.~C.} \&
+    \bibinfo{author}{Song, Y.~S.}
+    \newblock \bibinfo{title}{Genomic language models: Opportunities and
+        challenges} (\bibinfo{year}{2024}).
+    \newblock \urlprefix\url{https://arxiv.org/abs/2407.11435}.
+    \newblock \eprint{2407.11435}.
+
+    \bibitem{nguyen2024hyenadna}
+    \bibinfo{author}{Nguyen, E.} \emph{et~al.}
+    \newblock \bibinfo{title}{Hyenadna: Long-range genomic sequence modeling at
+        single nucleotide resolution}.
+    \newblock \emph{\bibinfo{journal}{Advances in neural information processing
+            systems}} \textbf{\bibinfo{volume}{36}} (\bibinfo{year}{2024}).
+
+    \bibitem{poli2023hyena}
+    \bibinfo{author}{Poli, M.} \emph{et~al.}
+    \newblock \bibinfo{title}{Hyena hierarchy: Towards larger convolutional
+        language models}.
+    \newblock \eprint{2302.10866}.
+
+    \bibitem{he2015deep}
+    \bibinfo{author}{He, K.}, \bibinfo{author}{Zhang, X.}, \bibinfo{author}{Ren,
+        S.} \& \bibinfo{author}{Sun, J.}
+    \newblock \bibinfo{title}{Deep {{Residual Learning}} for {{Image
+                Recognition}}}.
+    \newblock \eprint{1512.03385}.
+
+    \bibitem{zhou2023dnabert2}
+    \bibinfo{author}{Zhou, Z.} \emph{et~al.}
+    \newblock \bibinfo{title}{{{DNABERT-2}}: Efficient foundation model and
+        benchmark for multi-species genome}.
+    \newblock \eprint{2306.15006}.
+
+    \bibitem{dalla2023nucleotide}
+    \bibinfo{author}{Dalla-Torre, H.} \emph{et~al.}
+    \newblock \bibinfo{title}{The nucleotide transformer: Building and evaluating
+        robust foundation models for human genomics}.
+    \newblock \emph{\bibinfo{journal}{BioRxiv}} \bibinfo{pages}{2023--01}
+    (\bibinfo{year}{2023}).
+
+    \bibitem{nguyen2024sequence}
+    \bibinfo{author}{Nguyen, E.} \emph{et~al.}
+    \newblock \bibinfo{title}{Sequence modeling and design from molecular to genome
+        scale with evo}.
+    \newblock \emph{\bibinfo{journal}{bioRxiv}}  (\bibinfo{year}{2024}).
+    \newblock
+    \urlprefix\url{https://www.biorxiv.org/content/early/2024/02/27/2024.02.27.582234}.
+
+    \bibitem{chen2021systematic}
+    \bibinfo{author}{Chen, Y.} \emph{et~al.}
+    \newblock \bibinfo{title}{A systematic benchmark of nanopore long read rna
+        sequencing for transcript level analysis in human cell lines}.
+    \newblock \emph{\bibinfo{journal}{BioRxiv}} \bibinfo{pages}{2021--04}
+    (\bibinfo{year}{2021}).
+
+    \bibitem{li2018minimap2}
+    \bibinfo{author}{Li, H.}
+    \newblock \bibinfo{title}{Minimap2: pairwise alignment for nucleotide
+        sequences}.
+    \newblock \emph{\bibinfo{journal}{Bioinformatics}}
+    \textbf{\bibinfo{volume}{34}}, \bibinfo{pages}{3094--3100}
+    (\bibinfo{year}{2018}).
+
+    \bibitem{kent2002blat}
+    \bibinfo{author}{Kent, W.~J.}
+    \newblock \bibinfo{title}{Blat—the blast-like alignment tool}.
+    \newblock \emph{\bibinfo{journal}{Genome research}}
+    \textbf{\bibinfo{volume}{12}}, \bibinfo{pages}{656--664}
+    (\bibinfo{year}{2002}).
+
+    \bibitem{pardo2024systematic}
+    \bibinfo{author}{Pardo-Palacios, F.~J.} \emph{et~al.}
+    \newblock \bibinfo{title}{Systematic assessment of long-read rna-seq methods
+        for transcript identification and quantification}.
+    \newblock \emph{\bibinfo{journal}{Nature methods}} \bibinfo{pages}{1--15}
+    (\bibinfo{year}{2024}).
+
+    \bibitem{prjibelski2023accurate}
+    \bibinfo{author}{Prjibelski, A.~D.} \emph{et~al.}
+    \newblock \bibinfo{title}{Accurate isoform discovery with isoquant using long
+        reads}.
+    \newblock \emph{\bibinfo{journal}{Nature Biotechnology}}
+    \textbf{\bibinfo{volume}{41}}, \bibinfo{pages}{915--918}
+    (\bibinfo{year}{2023}).
+
+    \bibitem{chen2023gene}
+    \bibinfo{author}{Chen, Y.} \emph{et~al.}
+    \newblock \bibinfo{title}{Gene fusion detection and characterization in
+        long-read cancer transcriptome sequencing data with fusionseeker}.
+    \newblock \emph{\bibinfo{journal}{Cancer research}}
+    \textbf{\bibinfo{volume}{83}}, \bibinfo{pages}{28--33}
+    (\bibinfo{year}{2023}).
+
+    \bibitem{uhrig2021accurate}
+    \bibinfo{author}{Uhrig, S.} \emph{et~al.}
+    \newblock \bibinfo{title}{Accurate and efficient detection of gene fusions from
+        rna sequencing data}.
+    \newblock \emph{\bibinfo{journal}{Genome research}}
+    \textbf{\bibinfo{volume}{31}}, \bibinfo{pages}{448--460}
+    (\bibinfo{year}{2021}).
+
+    \bibitem{li2009sequence}
+    \bibinfo{author}{Li, H.} \emph{et~al.}
+    \newblock \bibinfo{title}{The sequence alignment/map format and samtools}.
+    \newblock \emph{\bibinfo{journal}{bioinformatics}}
+    \textbf{\bibinfo{volume}{25}}, \bibinfo{pages}{2078--2079}
+    (\bibinfo{year}{2009}).
+
+    \bibitem{kingma2014adam}
+    \bibinfo{author}{Kingma, D.~P.} \& \bibinfo{author}{Ba, J.}
+    \newblock \bibinfo{title}{Adam: A method for stochastic optimization}.
+    \newblock \emph{\bibinfo{journal}{arXiv preprint arXiv:1412.6980}}
+    (\bibinfo{year}{2014}).
+
+    \bibitem{li2024pxblat}
+    \bibinfo{author}{Li, Y.} \& \bibinfo{author}{Yang, R.}
+    \newblock \bibinfo{title}{{PxBLAT: an efficient python binding library for
+            BLAT}}.
+    \newblock \emph{\bibinfo{journal}{BMC Bioinf.}} \textbf{\bibinfo{volume}{25}},
+    \bibinfo{pages}{1--8} (\bibinfo{year}{2024}).
+
+    \bibitem{martin2011cutadapt}
+    \bibinfo{author}{Martin, M.}
+    \newblock \bibinfo{title}{Cutadapt removes adapter sequences from
+        high-throughput sequencing reads}.
+    \newblock \emph{\bibinfo{journal}{EMBnet. journal}}
+    \textbf{\bibinfo{volume}{17}}, \bibinfo{pages}{10--12}
+    (\bibinfo{year}{2011}).
+
+    \bibitem{grunberger2022nanopore}
+    \bibinfo{author}{Gr{\"u}nberger, F.}, \bibinfo{author}{Ferreira-Cerca, S.} \&
+    \bibinfo{author}{Grohmann, D.}
+    \newblock \bibinfo{title}{Nanopore sequencing of rna and cdna molecules in
+        escherichia coli}.
+    \newblock \emph{\bibinfo{journal}{Rna}} \textbf{\bibinfo{volume}{28}},
+    \bibinfo{pages}{400--417} (\bibinfo{year}{2022}).
+
+    \bibitem{tardaguila2018sqanti}
+    \bibinfo{author}{Tardaguila, M.} \emph{et~al.}
+    \newblock \bibinfo{title}{Sqanti: extensive characterization of long-read
+        transcript sequences for quality control in full-length transcriptome
+        identification and quantification}.
+    \newblock \emph{\bibinfo{journal}{Genome research}}
+    \textbf{\bibinfo{volume}{28}}, \bibinfo{pages}{396--411}
+    (\bibinfo{year}{2018}).
+
+    \bibitem{barretina2012cancer}
+    \bibinfo{author}{Barretina, J.} \emph{et~al.}
+    \newblock \bibinfo{title}{The cancer cell line encyclopedia enables predictive
+        modelling of anticancer drug sensitivity}.
+    \newblock \emph{\bibinfo{journal}{Nature}} \textbf{\bibinfo{volume}{483}},
+    \bibinfo{pages}{603--607} (\bibinfo{year}{2012}).
+
+    \bibitem{dobin2013star}
+    \bibinfo{author}{Dobin, A.} \emph{et~al.}
+    \newblock \bibinfo{title}{Star: ultrafast universal rna-seq aligner}.
+    \newblock \emph{\bibinfo{journal}{Bioinformatics}}
+    \textbf{\bibinfo{volume}{29}}, \bibinfo{pages}{15--21}
+    (\bibinfo{year}{2013}).
+
+    \bibitem{hu2015gsds}
+    \bibinfo{author}{Hu, B.} \emph{et~al.}
+    \newblock \bibinfo{title}{Gsds 2.0: an upgraded gene feature visualization
+        server}.
+    \newblock \emph{\bibinfo{journal}{Bioinformatics}}
+    \textbf{\bibinfo{volume}{31}}, \bibinfo{pages}{1296--1297}
+    (\bibinfo{year}{2015}).
+
+    \bibitem{samarakoon2024interactive}
+    \bibinfo{author}{Samarakoon, H.} \emph{et~al.}
+    \newblock \bibinfo{title}{Interactive visualisation of raw nanopore signal data
+        with squigualiser}.
+    \newblock \emph{\bibinfo{journal}{Biorxiv}} \bibinfo{pages}{2024--02}
+    (\bibinfo{year}{2024}).
+
+    \bibitem{laagstad2017chimeraviz}
+    \bibinfo{author}{L{\aa}gstad, S.} \emph{et~al.}
+    \newblock \bibinfo{title}{chimeraviz: a tool for visualizing chimeric rna}.
+    \newblock \emph{\bibinfo{journal}{Bioinformatics}}
+    \textbf{\bibinfo{volume}{33}}, \bibinfo{pages}{2954--2956}
+    (\bibinfo{year}{2017}).
+
+    \bibitem{sherman2022david}
+    \bibinfo{author}{Sherman, B.~T.} \emph{et~al.}
+    \newblock \bibinfo{title}{David: a web server for functional enrichment
+        analysis and functional annotation of gene lists (2021 update)}.
+    \newblock \emph{\bibinfo{journal}{Nucleic acids research}}
+    \textbf{\bibinfo{volume}{50}}, \bibinfo{pages}{W216--W221}
+    (\bibinfo{year}{2022}).
+
+\end{thebibliography}
 
 \newpage
 
@@ -600,12 +832,12 @@ No authors declare conflict of interests.
 \renewcommand{\figurename}{Extended Data Fig.}
 
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 	\includegraphics[height=0.29\columnwidth]{finals/sf1}
 	\caption{ {\bf Benchmarking of DeepChopper predictions on chimeric read artifacts using synthetic data and \gls{drs} data generated with the SQK-RNA004 kit from the VCaP cell line.} (a) Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper. (b) Number of chimeric alignments (in thousands) identified in VCaP RNA004 \gls{drs} reads processed by Dorado with and without adapter trimming, and by DeepChopper. The bar colors indicate chimeric reads supported by cDNA sequencing (red) and those lacking support (grey). (c) Base quality scores (left) and \gls{blat} alignment identity scores (right) for internal adapter sequences identified by DeepChopper in RNA004 \gls{drs} reads.}\label{fig:sf1}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 	\includegraphics[height=0.65\columnwidth]{finals/sf2}
 	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit significantly higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all expressed genes and genes affected by chimera artifacts, indicating that the size distributions of genes impacted by chimera artifacts are comparable to those of all expressed genes. (c) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (d) Number of detected transcripts across different isoform categories (\gls{fsm}, \gls{ism},  \gls{nic}, \gls{nnc}, and Other) from DeepChopper-identified chimeric read artifacts in VCaP RNA004 \gls{drs} data. DeepChopper-corrected reads resulted in a greater number of transcripts compared to adapter-trimmed reads by Dorado across all categories.}\label{fig:sf2}
 \end{figure}
@@ -626,7 +858,7 @@ No authors declare conflict of interests.
 % \end{figure}
 
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 	\includegraphics[height=1.45\columnwidth]{finals/sf3}
 	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
 \end{figure}
