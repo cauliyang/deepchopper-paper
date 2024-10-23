@@ -289,7 +289,7 @@ Recently, \gls{ont} released a new SQK-RNA004 chemistry for \gls{drs}, but it re
 To investigate, we generated \gls{drs} data using the latest SQK-RNA004 kit for the VCaP cell line and performed zero-shot predictions of chimera artifacts using DeepChopper, despite the adapter sequence pattern of RNA004 not being included in its training.
 DeepChopper reduced chimeric alignments by 21\% compared to Dorado's base-called and adapter-trimmed long reads, increasing the proportion of cDNA-supported chimeric alignments from about 25\% to 30\% (\edfigref{fig:sf1}{b}).
 Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of 7.8) and low \gls{blat} identity (mean of 0.38) (\edfigref{fig:sf1}{c}).
-These findings strongly suggest that chimera artifacts persist in the latest RNA004 \gls{drs} kit.
+These findings strongly suggest that chimera artifacts continue to be an issue with the latest RNA004 \gls{drs} kit.
 
 \begin{figure}[p]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
@@ -311,8 +311,8 @@ A similar pattern of improper inter-chromosomal connections was also observed in
 To evaluate the influence of chimera artifacts on downstream analyses, we investigated the impact of DeepChopper-mediated correction on transcript annotation.
 IsoQuant~\cite{prjibelski2023accurate} was employed to detect and annotate transcripts from VCaP \gls{drs} data, focusing on chimeric read artifacts identified by DeepChopper.
 By comparing transcript identification with and without DeepChopper correction, we observed a substantial increase in the number of identified transcripts (\figref{fig:f2}{b}).
-Similarly, an increase in transcript detection was observed in VCaP dRNA-seq data generated using the latest RNA004 kit (\edfigref{fig:sf2}{d}).
-The increase in detected transcripts was most prominent in the full-length transcripts (\gls{fsm} category), with additional improvements noted across the alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}).
+Similarly, an increase in transcript detection was also noted in VCaP RNA004 \gls{drs} data (\edfigref{fig:sf2}{d}).
+The most prominent increase occurred in the full-length transcripts (\gls{fsm} category), with additional improvements observed across alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
 Next, we evaluated whether DeepChopper could improve gene fusion detection by chimera artifact correction.
