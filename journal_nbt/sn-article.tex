@@ -379,19 +379,27 @@ In total, 600,000 data points were generated and divided into training (480,000)
 
 \subsection{Language model architecture}\label{ssec:lm}
 
-DeepChopper identifies adapter sequences by framing the problem as a token classification task.
-Biological sequences are tokenized at the single-nucleotide level, where each nucleotide \emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}, is treated as a fundamental unit.
-This approach enables the model to capture fine-grained sequence details crucial for distinguishing between adapter sequences and native biological sequences.
+DeepChopper identifies adapter sequences by framing the problem as a token classification task. The model tokenizes biological sequences at the single-nucleotide level, treating each nucleotide (\emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}) as a fundamental unit. This approach enables fine-grained sequence analysis crucial for distinguishing artificial adapter sequences from native biological sequences.
 
-For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence or not.
-The model’s architecture is designed specifically to achieve high precision in identifying adapter sequences embedded within biological data.
-At the core of DeepChopper is the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture that serves as the primary feature extractor.
-This framework efficiently processes and interprets complex nucleotide sequences, producing rich feature representations.
-These extracted features, with a dimensionality of 256, are then passed through a quality block that integrates base quality scores into the prediction pipeline.
-The quality block is composed of dense layers with residual connections, strategically incorporating sequence quality information to further refine the model's understanding of the input data.
+For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence. The model's architecture is optimized for high-precision identification of adapter sequences within biological data. At its core, DeepChopper utilizes the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics architecture that serves as the primary feature extractor. This framework efficiently processes nucleotide sequences to produce rich feature representations with a dimensionality of 256.
 
-Finally, the enriched feature set is fed into a classification head, which computes the probability of each token being part of an adapter sequence.
-The model performs a binary classification for every nucleotide position, labeling each token as either part of an adapter or a non-adapter sequence, thus providing a comprehensive analysis of the entire input sequence.
+These extracted features then pass through a quality block that integrates base quality scores. The quality block consists of dense layers with residual connections, incorporating sequence quality information to enhance the model's interpretation of the input data.
+
+The enriched features are ultimately fed into a classification head that computes the probability of each token being part of an adapter sequence. Through binary classification at every nucleotide position, the model labels each token as either adapter or non-adapter sequence, providing a comprehensive analysis of the entire input sequence.
+
+%DeepChopper identifies adapter sequences by framing the problem as a token classification task.
+%Biological sequences are tokenized at the single-nucleotide level, where each nucleotide \emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}, is treated as a fundamental unit.
+%This approach enables the model to capture fine-grained sequence details crucial for distinguishing between adapter sequences and native biological sequences.
+
+%For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence or not.
+%The model’s architecture is designed specifically to achieve high precision in identifying adapter sequences embedded within biological data.
+%At the core of DeepChopper is the HyenaDNA framework~\cite{nguyen2024hyenadna}, a specialized genomics model architecture that serves as the primary feature extractor.
+%This framework efficiently processes and interprets complex nucleotide sequences, producing rich feature representations.
+%These extracted features, with a dimensionality of 256, are then passed through a quality block that integrates base quality scores into the prediction pipeline.
+%The quality block is composed of dense layers with residual connections, strategically incorporating sequence quality information to further refine the model's understanding of the input data.
+
+%Finally, the enriched feature set is fed into a classification head, which computes the probability of each token being part of an adapter sequence.
+%The model performs a binary classification for every nucleotide position, labeling each token as either part of an adapter or a non-adapter sequence, thus providing a comprehensive analysis of the entire input sequence.
 
 
 \subsection{Model training}\label{ssec:training}
@@ -482,7 +490,7 @@ The reads were then processed using Pychopper (\url{https://github.com/epi2me-la
 The oriented reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized parameters (-ax splice -uf -k14) for spliced alignment.
 The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 
-Additional cDNA-based long-read sequencing data from the WTC11 cell line were used for further validation, incorporating five distinct platforms: \gls{ont} \gls{pcr}-cDNA, \gls{ont} CapTrap, \gls{ont} R2C2, \gls{pb} cDNA, and \gls{pb} CapTrap-seq.
+Additional cDNA-based long-read sequencing data from the WTC11 cell line were used for further validation, incorporating five distinct platforms: \gls{ont} \gls{pcr}-cDNA, \gls{ont} CapTrap, \gls{ont} R2C2, \gls{pb} cDNA, and \gls{pb} CapTrap.
 The raw FASTQ files (and FASTA files for \gls{ont} R2C2) from these datasets were provided by the LRGASP project~\cite{pardo2024systematic}.
 For the \gls{pcr}-cDNA data, the reads were processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, v2.7.9) and Cutadapt (v4.2)~\cite{martin2011cutadapt}, following the protocol described in reference~\cite{grunberger2022nanopore}. \gls{ont} reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with the parameters (-ax splice -uf -k14), while \gls{pb} reads were aligned using the parameters (-ax splice:hq -uf).
 The \gls{ont} \gls{drs} data from A549, K562, HepG2, MCF7, HCT116, VCaP, and WTC11 cell lines were processed as previously described.
@@ -504,7 +512,7 @@ Gene expression levels from \gls{drs} were quantified using IsoQuant (v3.1.2)~\c
 \subsection{Gene fusion identification and visualization}
 
 For \gls{ont} \gls{drs} data, gene fusions were identified using FusionSeeker (v1.0.1)~\cite{chen2023gene} with default settings.
-For short-read RNA-seq data, FastQ files for the VCaP cell line were obtained from the CCLE project~\cite{barretina2012cancer} under SRA accession SRX5417211.
+For short-read RNA-seq data, FASTQ files for the VCaP cell line were obtained from the CCLE project~\cite{barretina2012cancer} under SRA accession SRX5417211.
 Raw reads were mapped to the hg38 reference genome using STAR (v2.7.11)~\cite{dobin2013star}, and gene fusion events were detected with Arriba (v2.4.0)~\cite{uhrig2021accurate}.
 The gene structure of the RPS29-COX8A fusion was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
 Base quality scores were generated with a custom Python script, and ion current signals were visualized using Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}.
