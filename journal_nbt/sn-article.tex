@@ -293,14 +293,14 @@ These findings strongly suggest that chimera artifacts persist in the latest RNA
 
 \begin{figure}[p]
 	\includegraphics[height=1\columnwidth]{finals/figure2}
-	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term.}\label{fig:f2}
+	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}\label{fig:f2}
 \end{figure}
 
-% Continuation of the caption on next page
-\begin{figure}[H]
-    \ContinuedFloat
-    \caption{(e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}
-\end{figure}
+% % Continuation of the caption on next page
+% \begin{figure}[H]
+%     \ContinuedFloat
+%     \caption{(e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}
+% \end{figure}
 
 
 To investigate potential factors contributing to the formation of chimera artifacts, we examined the expression levels and sizes of the genes involved in these artifacts, we found that genes affected by chimera artifacts exhibited significantly higher expression levels compared to all expressed genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf2}{a}), while following a similar size distribution pattern (\edfigref{fig:sf2}{b}).
@@ -596,7 +596,7 @@ No authors declare conflict of interests.
 
 \newpage
 
-\section{Extend data}
+\section{Extended data}
 
 \renewcommand{\figurename}{Extended Data Fig.}
 
@@ -613,25 +613,25 @@ No authors declare conflict of interests.
 
 
 
-% First part of the figure
-\begin{figure}[p]
-    \includegraphics[height=1.4\columnwidth]{finals/sf3}
-    \caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.}}
-    \label{fig:sf3}
+% % First part of the figure
+% \begin{figure}[p]
+%     \includegraphics[height=1.4\columnwidth]{finals/sf3}
+%     \caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.}}
+%     \label{fig:sf3}
+% \end{figure}
+
+% % Continuation of the caption on next page
+% \begin{figure}[p]
+%     \ContinuedFloat
+%     \caption{(a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}
+% \end{figure}
+
+
+\begin{figure}[!h]
+	\includegraphics[height=1.45\columnwidth]{finals/sf3}
+	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
 \end{figure}
 
-% Continuation of the caption on next page
-\begin{figure}[p]
-    \ContinuedFloat
-    \caption{(a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}
-\end{figure}
-
-%
-%\begin{figure}[!h]
-%	\includegraphics[height=1.45\columnwidth]{finals/sf3}
-%	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf3}
-%\end{figure}
-%
 
 % \newpage
 
