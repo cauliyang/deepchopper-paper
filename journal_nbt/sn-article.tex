@@ -315,16 +315,15 @@ Similarly, an increase in transcript detection was also noted in VCaP RNA004 \gl
 The most prominent increase occurred in the full-length transcripts (\gls{fsm} category), with additional improvements observed across alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
-Next, we evaluated whether DeepChopper could improve gene fusion detection by chimera artifact correction.
-Gene fusion calls detected by FusionSeeker~\cite{chen2023gene} from DeepChopper-processed \gls{drs} reads showed a 89\% reduction compared to those from adapter-trimmed \gls{drs} reads processed by Dorado.
-To further assess this reduction, we applied Arriba~\cite{uhrig2021accurate} to detect gene fusions using short-read RNA-seq of VCaP cells and found that none of the gene fusion calls reduced by DeepChopper were supported by those detected in RNA-seq data (\figref{fig:f2}{c}).
+Next, we assessed whether DeepChopper could improve gene fusion detection by correcting chimera artifacts. Gene fusion calls identified by FusionSeeker~\cite{chen2023gene} from DeepChopper-processed \gls{drs} reads exhibited an 89\% reduction compared to those detected from Dorado's adapter-trimmed reads.
+To further evaluate this reduction, we applied Arriba~\cite{uhrig2021accurate} to detect gene fusions using short-read RNA-seq of VCaP cells and found that none of the gene fusion calls reduced by DeepChopper were supported by those detected in RNA-seq data (\figref{fig:f2}{c}).
 This demonstrates that DeepChopper effectively reduces false positive gene fusion calls caused by chimera artifacts in \gls{drs}— an essential improvement for accurately identifying gene fusion drivers in cancer transcriptomes.
 
 Upon closer examination of the chimera artifact-derived gene fusion calls, we found a notable enrichment of ribosomal protein genes (\edfigref{fig:sf3}{a}).
 \gls{go} enrichment analysis in VCaP (\figref{fig:f2}{d}) and SG-NEx cell lines (\edfigref{fig:sf3}{b}) confirmed that housekeeping ribosomal protein genes are frequently involved in these artifacts.
-Additionally, ribosomal protein genes were also enriched in chimera artifacts associated with RNA004 \gls{drs} chemistry (\edfigref{fig:sf3}{b}).
+Additionally, ribosomal protein genes were also enriched in the chimera artifacts associated with RNA004 chemistry (\edfigref{fig:sf3}{b}).
 A manual inspection of a chimeric read identified as an RPS29-COX8A fusion, involving the 40S ribosomal protein S29 in VCaP \gls{drs} data, revealed that the DeepChopper-processed region aligned with raw current signals showing low intensity, indicative of \gls{ont} adapters (\figref{fig:f2}{e}).
-The presence of polyA and open pore signals at the boundary of this region further suggested that this chimeric read resulted from improperly joined mRNA transcripts, rather than a genuine gene fusion event.
+The presence of polyA and open pore signals at the boundary of this region further suggested that this chimeric read resulted from improperly joined mRNA transcripts, rather than representing a genuine gene fusion event.
 
 In conclusion, DeepChopper demonstrates a significant potential for leveraging \gls{llm} to analyze long-read sequences, particularly by addressing the previously overlooked issue of chimera artifacts in nanopore \gls{drs}.
 DeepChopper significantly enhances the quality of the \gls{drs} data by identifying and removing \gls{ont} adapters directly from the base-called long-read sequences, thereby boosting the precision of subsequent transcript and gene fusion analyses.
