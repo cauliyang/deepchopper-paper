@@ -23,7 +23,7 @@
 %% to compile with pdflatex/xelatex use pdflatex option %%
 %%======================================================%%
 
-%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+% \documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
 
 %%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis.\\
 
@@ -68,8 +68,8 @@
 
 % for collabration and will remove before submit
 
-\usepackage{caption}
-\usepackage{subfig}
+% \usepackage{caption}
+% \usepackage{subfig}
 
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
@@ -202,8 +202,8 @@
 %%==================================%%
 
 \abstract{
-Chimera artifacts in nanopore \gls{drs} data can confound transcriptome analyses, yet no existing tools are capable of detecting and removing them due to limitations in basecalling models. We present DeepChopper, a genomic language model that accurately identifies and eliminates adapter sequences within base-called \gls{drs} reads, effectively removing chimeric read artifacts. DeepChopper significantly improves critical downstream analyses, including transcript annotation and gene fusion detection, enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
-%	Nanopore \gls{drs} has transformed transcriptomics by enabling full-length RNA analysis in a single read, but its utility is hindered by chimera artifacts that compromise data quality. We introduce DeepChopper, a genomic large language model designed to process long-read nanopore \gls{drs} data by efficiently identifying and removing adapter sequences directly from base-called reads, without the need for raw signal or alignment data. DeepChopper leverages long-range dependency modeling and quality-aware processing, enabling it to achieve broad contextual understanding while maintaining single-nucleotide resolution. Applied across multiple cell lines and sequencing platforms, DeepChopper reduced chimeric read artifacts by up to 91\% and decreased false-positive gene fusion calls by 89\%. This enhanced accuracy significantly improved downstream analyses, including transcript annotation and gene fusion detection in cancer transcriptomes. Our findings demonstrate the potential of large language models to tackle complex biological data, offering a robust tool for advancing genomics and biotechnology applications.
+	Chimera artifacts in nanopore \gls{drs} data can confound transcriptome analyses, yet no existing tools are capable of detecting and removing them due to limitations in basecalling models. We present DeepChopper, a genomic language model that accurately identifies and eliminates adapter sequences within base-called \gls{drs} reads, effectively removing chimeric read artifacts. DeepChopper significantly improves critical downstream analyses, including transcript annotation and gene fusion detection, enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
+	%	Nanopore \gls{drs} has transformed transcriptomics by enabling full-length RNA analysis in a single read, but its utility is hindered by chimera artifacts that compromise data quality. We introduce DeepChopper, a genomic large language model designed to process long-read nanopore \gls{drs} data by efficiently identifying and removing adapter sequences directly from base-called reads, without the need for raw signal or alignment data. DeepChopper leverages long-range dependency modeling and quality-aware processing, enabling it to achieve broad contextual understanding while maintaining single-nucleotide resolution. Applied across multiple cell lines and sequencing platforms, DeepChopper reduced chimeric read artifacts by up to 91\% and decreased false-positive gene fusion calls by 89\%. This enhanced accuracy significantly improved downstream analyses, including transcript annotation and gene fusion detection in cancer transcriptomes. Our findings demonstrate the potential of large language models to tackle complex biological data, offering a robust tool for advancing genomics and biotechnology applications.
 }
 \maketitle
 
@@ -260,7 +260,7 @@ To further assess DeepChopper’s ability to detect chimera artifacts in real da
 This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
 
 We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with that used in the SG-NEx project.
-Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}.
+Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software (\url{https://github.com/nanoporetech/dorado}, v0.5.2).
 DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
 DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
@@ -372,7 +372,7 @@ The final library was loaded onto a MinION R9.4 flow cell and sequenced on the O
 
 We acquired \gls{ont} \gls{drs} FAST5 data from the SG-NEx project, which includes six human cell lines: HEK293T, A549, K562, HepG2, MCF7, and HCT116~\cite{chen2021systematic}.
 The FAST5 files were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
-Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model.
+Subsequently, FASTQ files were generated using Dorado (\url{https://github.com/nanoporetech/dorado}, v0.5.2) with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model.
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 For adapter sequence extraction, we selected primary alignments without supplementary alignments and identified $3'$ end soft-clipped regions as adapter sequences, while aligned regions were considered non-adapter sequences.
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence to create FASTQ records.
@@ -406,14 +406,14 @@ A learning rate scheduler was used to reduce the learning rate when validation l
 The cross-entropy loss function was used to update the model parameters, defined as follows:
 
 \[
-\mathcal{L}_{\textrm{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
+	\mathcal{L}_{\textrm{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
 \]
 
 where \(\mathcal{L}_{BCE}\) is the binary cross-entropy loss, \(N\) is the total number of tokens in the input sequence, \(y_i\) is the true label (0 or 1 a.k.a. adapter or non-adapter) for the \(i\)-th token, and \(\hat{y}_i\) is the predicted probability of class 1 for the \(i\)-th token.
 
 The average cross-entropy loss across the mini-batch is computed as:
 \[
-\mathcal{L}{\textrm{BatchBCE}} = \frac{1}{\textrm{B}} \sum_{j=1}^{\textrm{B}} \mathcal{L}_{\textrm{BCE}}(\mathbf{y}_j, \hat{\mathbf{y}}_j)
+	\mathcal{L}{\textrm{BatchBCE}} = \frac{1}{\textrm{B}} \sum_{j=1}^{\textrm{B}} \mathcal{L}_{\textrm{BCE}}(\mathbf{y}_j, \hat{\mathbf{y}}_j)
 \]
 
 where \(\mathcal{L}_{BatchBCE}\) is the average binary cross-entropy loss for the mini-batch, \(\textrm{B}\) is the batch size (number of sequences in the mini-batch),  and \(\mathbf{y}_j\) and \(\hat{\mathbf{y}}_j\) are the true labels and predicted probabilities for the \(j\)-th sequence in the batch.
@@ -476,8 +476,8 @@ The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
 Cross-platform validation of \gls{drs} chimera artifacts identified by DeepChopper was conducted leveraging \gls{ont} direct cDNA sequencing and additional cDNA-based sequencing platforms.
 Direct cDNA sequencing validation was performed using six cancer cell lines, including the VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from the SG-NEx project~\cite{chen2021systematic}.
 The direct cDNA data in FAST5 format were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
-Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming enabled (\texttt{--trim} adapters) and the ``dna\_r9.4.1\_e8\_hac@v3.3'' model.
-The reads were then processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, version 2.7.9) and Cutadapt (version 4.2)~\cite{martin2011cutadapt} according to a published protocol~\cite{grunberger2022nanopore}.
+Subsequently, FASTQ files were generated using Dorado (\url{https://github.com/nanoporetech/dorado}, v0.5.2) with adapter trimming enabled (\texttt{--trim} adapters) and the ``dna\_r9.4.1\_e8\_hac@v3.3'' model.
+The reads were then processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, v2.7.9) and Cutadapt (version 4.2)~\cite{martin2011cutadapt} according to a published protocol~\cite{grunberger2022nanopore}.
 The oriented reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized parameters (-ax splice -uf -k14) for spliced alignment.
 The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 
@@ -588,11 +588,12 @@ No authors declare conflict of interests.
 \backmatter
 
 \begin{appendices}
-    \printglossaries
+	\printglossaries
 \end{appendices}
 
 
 \bibliography{sn-bibliography}% common bib file
+
 
 \newpage
 
