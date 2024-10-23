@@ -260,7 +260,7 @@ To further assess DeepChopper’s ability to detect chimera artifacts in real da
 This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
 
 We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with that used in the SG-NEx project.
-Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software (\url{https://github.com/nanoporetech/dorado}, v0.5.2).
+Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software (\url{https://github.com/nanoporetech/dorado}).
 DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
 DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
