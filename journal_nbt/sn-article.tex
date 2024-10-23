@@ -376,7 +376,7 @@ The final library was loaded onto a MinION R9.4 flow cell and sequenced on the O
 
 We acquired \gls{ont} \gls{drs} FAST5 data from the \gls{sgnex} project, which includes six human cell lines: HEK293T, A549, K562, HepG2, MCF7, and HCT116~\cite{chen2021systematic}.
 The FAST5 files were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
-Subsequently, FASTQ files were generated using Dorado (\url{https://github.com/nanoporetech/dorado}, v0.5.2) with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model.
+Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (\texttt{--no-trim}) and the ``rna002\_70bps\_hac@v3'' model.
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 For adapter sequence extraction, we selected primary alignments without supplementary alignments and identified $3'$ end soft-clipped regions as adapter sequences, while aligned regions were considered non-adapter sequences.
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence to create FASTQ records.
@@ -485,7 +485,7 @@ The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
 Cross-platform validation of \gls{drs} chimera artifacts identified by DeepChopper was conducted leveraging \gls{ont} direct cDNA sequencing and additional cDNA-based sequencing platforms.
 Direct cDNA sequencing validation was performed using six cancer cell lines, including the VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from the \gls{sgnex} project~\cite{chen2021systematic}.
 The direct cDNA data in FAST5 format were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
-Subsequently, FASTQ files were generated using Dorado (\url{https://github.com/nanoporetech/dorado}, v0.5.2) with adapter trimming enabled (\texttt{--trim} adapters) and the ``dna\_r9.4.1\_e8\_hac@v3.3'' model.
+Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming enabled (\texttt{--trim} adapters) and the ``dna\_r9.4.1\_e8\_hac@v3.3'' model.
 The reads were then processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, v2.7.9) and Cutadapt (v4.2)~\cite{martin2011cutadapt} according to a published protocol~\cite{grunberger2022nanopore}.
 The oriented reads were aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with optimized parameters (-ax splice -uf -k14) for spliced alignment.
 The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
@@ -524,7 +524,7 @@ The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)
 
 \subsection{Computing resource}
 
-All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM. The server was also configured with two NVIDIA A100 \glspl{gpu}, each with 80 GB of memory, enabling efficient processing of both CPU-intensive tasks and GPU-accelerated deep learning workloads.
+All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM. The server was also configured with two NVIDIA A100 \glspl{gpu}, each with 80 GB of memory, enabling efficient processing of both CPU-intensive tasks and \gls{gpu}-accelerated deep learning workloads.
 
 % \section{Tables}\label{sec5}
 
@@ -580,7 +580,7 @@ Raw and processed data generated in this study, including \gls{drs} using the SQ
 DeepChopper, implemented in Rust and Python, is open source and available on GitHub (\url{https://github.com/ylab-hi/DeepChopper}) under the Apache License, Version 2.0.
 The package can be installed via PyPI (\url{https://pypi.org/project/deepchopper/}) using pip, with wheel distributions provided for Windows, Linux, and macOS to ensure easy cross-platform installation.
 An interactive demo is available on Hugging Face (\url{https://huggingface.co/spaces/yangliz5/deepchopper}), allowing users to test DeepChopper's functionality without local installation.
-For large-scale analyses, we recommend using DeepChopper on systems with GPU acceleration. Detailed system requirements and optimization guidelines are available in the repository's documentation.
+For large-scale analyses, we recommend using DeepChopper on systems with \gls{gpu} acceleration. Detailed system requirements and optimization guidelines are available in the repository's documentation.
 
 \bmhead{Acknowledgements}
 
