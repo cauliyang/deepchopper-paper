@@ -315,9 +315,9 @@ A similar pattern of improper inter-chromosomal connections was also observed in
 
 To evaluate the influence of chimera artifacts on downstream analyses, we investigated the impact of DeepChopper-mediated correction on transcript annotation.
 IsoQuant~\cite{prjibelski2023accurate} was employed to detect and annotate transcripts from VCaP \gls{drs} data, focusing on chimeric read artifacts identified by DeepChopper.
-By comparing transcript identification with and without DeepChopper correction, we observed a substantial increase in the number of identified transcripts (\figref{fig:f2}{b}).
-Similarly, an increase in transcript detection was also noted in VCaP RNA004 \gls{drs} data (\edfigref{fig:sf2}{d}).
-The most prominent increase occurred in the full-length transcripts (\gls{fsm} category), with additional improvements observed across alternatively spliced transcript categories (\gls{ism}, \gls{nic}, and \gls{nnc}).
+By comparing transcript identification with and without DeepChopper correction, we observed an approximately 2-fold increase in the number of identified transcripts (\figref{fig:f2}{b}).
+Similar results were also noted for VCaP RNA004 \gls{drs} data (\edfigref{fig:sf2}{d}).
+The most prominent increase occurred in the full-length transcripts (\gls{fsm} category), with additional improvements observed across alternatively spliced transcripts (\gls{ism}, \gls{nic}, and \gls{nnc} categories).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
 Next, we assessed whether DeepChopper could improve gene fusion detection by correcting chimera artifacts. Gene fusion calls identified by FusionSeeker~\cite{chen2023gene} from DeepChopper-processed \gls{drs} reads exhibited an 89\% reduction compared to those detected from Dorado's adapter-trimmed reads.
