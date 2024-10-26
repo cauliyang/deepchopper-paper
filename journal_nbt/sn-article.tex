@@ -209,7 +209,7 @@
 %%==================================%%
 
 \abstract{
-	Chimera artifacts in nanopore \gls{drs} can significantly distort transcriptome analyses, yet their detection and removal remains challenging due to limitations in existing basecalling models. We present DeepChopper, a genomic language model that precisely identifies and removes adapter sequences from base-called \gls{drs} long reads at single-base resolution, operating independently of raw signal or alignment information to effectively eliminate chimeric read artifacts. By removing these artifacts, DeepChopper substantially improves the accuracy of critical downstream analyses, such as transcript annotation and gene fusion detection, thereby enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
+	Chimera artifacts in nanopore \gls{drs} can significantly distort transcriptome analyses, yet their detection and removal remain challenging due to limitations in existing basecalling models. We present DeepChopper, a genomic language model that precisely identifies and removes adapter sequences from base-called \gls{drs} long reads at single-base resolution, operating independently of raw signal or alignment information to effectively eliminate chimeric read artifacts. By removing these artifacts, DeepChopper substantially improves the accuracy of critical downstream analyses, such as transcript annotation and gene fusion detection, thereby enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
 
 	%	Nanopore \gls{drs} has transformed transcriptomics by enabling full-length RNA analysis in a single read, but its utility is hindered by chimera artifacts that compromise data quality. We introduce DeepChopper, a genomic large language model designed to process long-read nanopore \gls{drs} data by efficiently identifying and removing adapter sequences directly from base-called reads, without the need for raw signal or alignment data. DeepChopper leverages long-range dependency modeling and quality-aware processing, enabling it to achieve broad contextual understanding while maintaining single-nucleotide resolution. Applied across multiple cell lines and sequencing platforms, DeepChopper reduced chimeric read artifacts by up to 91\% and decreased false-positive gene fusion calls by 89\%. This enhanced accuracy significantly improved downstream analyses, including transcript annotation and gene fusion detection in cancer transcriptomes. Our findings demonstrate the potential of large language models to tackle complex biological data, offering a robust tool for advancing genomics and biotechnology applications.
 }
@@ -574,7 +574,7 @@ All computations were performed on a \gls{hpc} server equipped with a 64-core In
 \bmhead{Data Availability}
 
 Raw and processed data generated in this study, including \gls{drs} using the SQK-RNA002 and SQK-RNA004 kits, as well as direct cDNA sequencing of VCaP cells, have been deposited in the \gls{geo} under the accession number GSE277934.
-A secure token (sdwfckwmbzqdbyx) has been provided for reviewers to access the deposited data.
+% A secure token (sdwfckwmbzqdbyx) has been provided for reviewers to access the deposited data.
 
 \bmhead{Code Availability}
 
