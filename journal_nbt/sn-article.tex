@@ -70,6 +70,7 @@
 
 % \usepackage{caption}
 % \usepackage{subfig}
+\usepackage{enumitem}
 
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
@@ -414,18 +415,15 @@ Training was carried out over \num{60} epochs, with early stopping applied based
 The Adam optimizer was used for parameter optimization, with settings of \( \beta_{1} = 0.9 \) and \( \beta_{2} = 0.999 \)~\cite{kingma2014adam}.
 A learning rate scheduler was used to reduce the learning rate when validation loss ceased improving, starting with an initial learning rate of \( 2 \times 10^{-5} \).
 The cross-entropy loss function was used to update the model parameters, defined as follows:
-
 \[
 	\mathcal{L}_{\textrm{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
 \]
-
 where \(\mathcal{L}_{BCE}\) is the binary cross-entropy loss, \(N\) is the total number of tokens in the input sequence, \(y_i\) is the ground true label for the \(i\)-th token, and \(\hat{y}_i\) is the predicted probability for the \(i\)-th token.
 
 The average cross-entropy loss across the mini-batch is computed as:
 \[
 	\mathcal{L}{\textrm{BatchBCE}} = \frac{1}{\textrm{B}} \sum_{j=1}^{\textrm{B}} \mathcal{L}_{\textrm{BCE}}(\mathbf{y}_j, \hat{\mathbf{y}}_j)
 \]
-
 where \(\mathcal{L}_{BatchBCE}\) is the average binary cross-entropy loss for the mini-batch, \(\textrm{B}\) is the batch size (number of sequences in the mini-batch),  and \(\mathbf{y}_j\) and \(\hat{\mathbf{y}}_j\) are the true labels and predicted probabilities for the \(j\)-th sequence in the batch.
 
 The model evaluation metrics included accuracy, precision, recall and the F1 score, calculated using the following equations:
@@ -454,7 +452,6 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 		0 & \text{otherwise}
 	\end{cases}
 \]
-
 where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
 The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
@@ -462,14 +459,14 @@ The combination of the sliding window technique and voting-based refinement sign
 \subsection{Post-processing and filtering}
 
 After refining the adapter predictions, four filtering steps were applied to enhance the quality of the final results:
-
-\begin{enumerate}
+\vspace{.5em}
+\begin{enumerate}[leftmargin=2em]
     \item A predicted adapter sequence must be at least 13 nucleotides long. Sequences shorter than this length threshold are not considered valid adapters.
     \item If a read contains more than four adapter sequences, the entire read sequence is retained without any adapter removal.
     \item For reads containing four or fewer adapter sequences, the identified adapters are removed and the read is divided into smaller segments.
     \item Any segments resulting from this process that are less than 20 nucleotides long are discarded.
 \end{enumerate}
-
+\vspace{.5em}
 Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
 This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
 
@@ -477,11 +474,9 @@ This filtering process separates chimeric read artifacts containing internal ada
 
 The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
 A \gls{blat} identity score was defined as the ratio of matched bases to the total sequence length:
-
 \[
 	\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
 \]
-
 In this context, match length refers to the number of bases in the query sequence that align with the reference genome, while sequence length denotes the total length of the query sequence.
 This score provides a quantitative measure of how closely each identified sequence aligns with the reference genome, serving as an indicator of detection accuracy.
 The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
