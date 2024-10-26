@@ -208,7 +208,8 @@
 %%==================================%%
 
 \abstract{
-	Chimera artifacts in nanopore \gls{drs} data can confound transcriptome analyses, yet no existing tools are capable of detecting and removing them due to limitations in basecalling models. We present DeepChopper, a genomic language model that directly identifies and removes adapter sequences from base-called \gls{drs} reads, without examining raw signal or alignment data, effectively eliminating chimeric read artifacts. DeepChopper significantly improves critical downstream analyses, including transcript annotation and gene fusion detection, enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
+    Chimera artifacts in nanopore \gls{drs} can significantly distort transcriptome analyses, yet their detection and removal remains challenging due to limitations in existing basecalling models. We present DeepChopper, a genomic language model that precisely identifies and removes adapter sequences from base-called \gls{drs} long reads at single-base resolution, operating independently of raw signal or alignment information to effectively eliminate chimeric read artifacts. By removing these artifacts, DeepChopper substantially improves the accuracy of critical downstream analyses, such as transcript annotation and gene fusion detection, thereby enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
+    
 	%	Nanopore \gls{drs} has transformed transcriptomics by enabling full-length RNA analysis in a single read, but its utility is hindered by chimera artifacts that compromise data quality. We introduce DeepChopper, a genomic large language model designed to process long-read nanopore \gls{drs} data by efficiently identifying and removing adapter sequences directly from base-called reads, without the need for raw signal or alignment data. DeepChopper leverages long-range dependency modeling and quality-aware processing, enabling it to achieve broad contextual understanding while maintaining single-nucleotide resolution. Applied across multiple cell lines and sequencing platforms, DeepChopper reduced chimeric read artifacts by up to 91\% and decreased false-positive gene fusion calls by 89\%. This enhanced accuracy significantly improved downstream analyses, including transcript annotation and gene fusion detection in cancer transcriptomes. Our findings demonstrate the potential of large language models to tackle complex biological data, offering a robust tool for advancing genomics and biotechnology applications.
 }
 \maketitle
@@ -238,10 +239,9 @@ Importantly, chimeric read artifacts frequently contain internal adapter sequenc
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
 As a result, current adapter detection tools cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved.
 
-To address these challenges, we developed DeepChopper, a \gls{glm} specifically designed for long-read sequence analysis.
-Inspired by recent advances in \gls{llm} that can decipher complex patterns in genetic sequences~\cite{benegas2024genomic}, DeepChopper excels at processing long genomic contexts with single-nucleotide resolution, a crucial capability for identifying \gls{ont} adapter sequences directly from base-called long reads and thus facilitating the detection and removal of chimeric read artifacts in \gls{drs} data.
-Specifically, DeepChopper processes individual FASTQ records to identify and handle adapter sequences: When internal adapters are detected, the model splits the read into two or more records, while $3'$ end adapters are trimmed to produce a clean sequence (\figref{fig:f1}{a}).
-This method ensures the preservation of genuine biological sequences while effectively eliminating chimera artifacts.
+To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
+Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
+This capability enables precise identification of \gls{ont} adapter sequences within base-called long reads, facilitating the detection and removal of chimeric read artifacts in \gls{drs} data. DeepChopper analyzes individual FASTQ records to locate and process adapter sequences: it splits reads containing internal adapters into multiple records (\figref{fig:f1}{a}) and trims adapters at the $3'$ ends, thereby preserving genuine biological sequences while eliminating chimera artifacts.
 
 To accomplish this, DeepChopper integrates the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling, with a residual block and a \gls{mlp} for fine-grained sequence analysis.
 This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena, he2015deep} (\figref{fig:f1}{a}).
@@ -461,11 +461,17 @@ The combination of the sliding window technique and voting-based refinement sign
 
 \subsection{Post-processing and filtering}
 
-Following prediction refinement, additional filtering steps were applied to enhance the quality of the results.
-Predicted adapter sequences shorter than 13 nucleotides were excluded to minimize false positives that could arise from random noise. Similarly, reads containing more than four predicted adapter sequences were not processed to prevent noise.
-After filtering, adapter sequences along with their associated quality scores were discarded.
-In cases where internal adapters were removed, a single FASTQ record was split into multiple records to reflect the updated structure of the reads.
-This post-processing workflow ensured that the final output was both accurate and biologically meaningful.
+After refining the adapter predictions, four filtering steps were applied to enhance the quality of the final results:
+
+\begin{enumerate}
+    \item A predicted adapter sequence must be at least 13 nucleotides long. Sequences shorter than this length threshold are not considered valid adapters.
+    \item If a read contains more than four adapter sequences, the entire read sequence is retained without any adapter removal.
+    \item For reads containing four or fewer adapter sequences, the identified adapters are removed and the read is divided into smaller segments.
+    \item Any segments resulting from this process that are less than 20 nucleotides long are discarded.
+\end{enumerate}
+
+Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
+This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
 
 \subsection{BLAT identity calculation}
 
