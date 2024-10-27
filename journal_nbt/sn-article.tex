@@ -418,13 +418,13 @@ The cross-entropy loss function was used to update the model parameters, defined
 \[
 	\mathcal{L}_{\textrm{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]
 \]
-where \(\mathcal{L}_{BCE}\) is the binary cross-entropy loss, \(N\) is the total number of tokens in the input sequence, \(y_i\) is the ground true label for the \(i\)-th token, and \(\hat{y}_i\) is the predicted probability for the \(i\)-th token.
+where \(\mathcal{L}_{\textrm{BCE}}\) is the binary cross-entropy loss, \(N\) is the total number of tokens in the input sequence, \(y_i\) is the ground true label for the \(i\)-th token, and \(\hat{y}_i\) is the predicted probability for the \(i\)-th token.
 
 The average cross-entropy loss across the mini-batch is computed as:
 \[
-	\mathcal{L}{\textrm{BatchBCE}} = \frac{1}{\textrm{B}} \sum_{j=1}^{\textrm{B}} \mathcal{L}_{\textrm{BCE}}(\mathbf{y}_j, \hat{\mathbf{y}}_j)
+	\mathcal{L}_{\textrm{BatchBCE}} = \frac{1}{B} \sum_{j=1}^{B} \mathcal{L}_{\textrm{BCE}}(\mathbf{y}_j, \hat{\mathbf{y}}_j)
 \]
-where \(\mathcal{L}_{BatchBCE}\) is the average binary cross-entropy loss for the mini-batch, \(\textrm{B}\) is the batch size (number of sequences in the mini-batch),  and \(\mathbf{y}_j\) and \(\hat{\mathbf{y}}_j\) are the true labels and predicted probabilities for the \(j\)-th sequence in the batch.
+where \(\mathcal{L}_{\textrm{BatchBCE}}\) is the average binary cross-entropy loss for the mini-batch, \(B\) is the batch size (number of sequences in the mini-batch),  and \(\mathbf{y}_j\) and \(\hat{\mathbf{y}}_j\) are the true labels and predicted probabilities for the \(j\)-th sequence in the batch.
 
 The model evaluation metrics included accuracy, precision, recall and the F1 score, calculated using the following equations:
 \begin{align*}
