@@ -387,6 +387,7 @@ In total, 600,000 data points were generated and divided into training (480,000)
 \subsection{Language model architecture}\label{ssec:lm}
 
 DeepChopper identifies adapter sequences by framing the problem as a token classification task.
+The model consists of 4.6 million trainable parameters.
 The model tokenizes biological sequences at the single-nucleotide level, treating each nucleotide (\emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}) as a fundamental unit.
 This approach enables fine-grained sequence analysis crucial for distinguishing artificial adapter sequences from native biological sequences.
 
