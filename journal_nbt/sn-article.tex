@@ -257,24 +257,11 @@ By both identifying and addressing this problem, our work enhances the reliabili
     \caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
 
-<<<<<<< HEAD
+
 DeepChopper incorporates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at modeling long-range dependencies~\figref{fig:f1}{a}.
 While HyenaDNA cannot directly process sequence base quality information, DeepChopper addresses this limitation through a dedicated quality block, a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep}, to effectively utilize this crucial feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
 This hybrid architecture combines broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, enabling DeepChopper to effectively identify and process internal adapters~\figref{fig:f1}{a}.
 The system splits reads containing internal adapters into multiple records while simultaneously trimming $3'$ end adapters, thus preserving authentic biological sequences and eliminating chimeric artifacts.
-||||||| parent of 9549e4e (update figure 1)
-DeepChopper integrates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling~\figref{fig:f1}{a}.
-However, HyenaDNA cannot take the base quality of the sequence as input.
-Hence, DeepChopper uses a nuerual network named quality block that includes multiple \glspl{mlp} and residual connection~\cite{he2015deep} in order to use the base quality of sequence efficiently~\figref{fig:f1}{b} since the base quality of the sequence is an important feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
-This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena} (\figref{fig:f1}{a}).
-Through this comprehensive approach, DeepChopper effectively splits reads containing internal adapters into multiple records while trimming adapters at the $3'$ ends, thereby preserving authentic biological sequences and eliminating chimera artifacts (\figref{fig:f1}{a}).
-=======
-DeepChopper integrates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling~\figref{fig:f1}{a}.
-However, HyenaDNA cannot take the base quality of the sequence as input.
-Hence, DeepChopper uses a nuerual network named quality block that includes multiple \glspl{mlp} and residual connection~\cite{he2015deep} in order to use the base quality of sequence efficiently~\figref{fig:f1}{b} since the base quality of the sequence is an important feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
-This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena} (\figref{fig:f1}{a}).
-Through this comprehensive approach, DeepChopper effectively splits reads containing internal adapters into multiple records while trimming adapters at the $3'$ ends, thereby preserving authentic biological sequences and eliminating chimera artifacts (\figref{fig:f1}{a}).
->>>>>>> 9549e4e (update figure 1)
 
 To enhance prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach~\figref{fig:f1}{c}.
 The system applies a 21-nucleotide sliding window with stride 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
