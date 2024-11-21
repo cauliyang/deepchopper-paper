@@ -241,25 +241,38 @@ Importantly, chimeric read artifacts frequently contain internal adapter sequenc
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
 As a result, current adapter detection tools cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved.
 
-To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis. Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution. This capability enables precise identification of \gls{ont} adapter sequences within base-called long reads, facilitating the detection and removal of chimeric read artifacts in \gls{drs} data. Through analysis of both existing and newly generated \gls{drs} data, including those using the most recent RNA004 chemistry, we uncovered the prevalence of chimera artifacts—a critical issue previously overlooked in the long-read sequencing field. We demonstrated that these artifacts significantly impact transcriptomic analysis by complicating gene fusion detection, transcript annotation, and alternative splicing studies. By both identifying and addressing this problem, our work enhances the reliability and precision of \gls{drs} data, substantially improving its utility in transcriptomic research.
+To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
+Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
+This capability enables precise identification of \gls{ont} adapter sequences within base-called long reads, facilitating the detection and removal of chimeric read artifacts in \gls{drs} data.
+Through analysis of both existing and newly generated \gls{drs} data, including those using the most recent RNA004 chemistry, we uncovered the prevalence of chimera artifacts—a critical issue previously overlooked in the long-read sequencing field.
+We demonstrated that these artifacts significantly impact transcriptomic analysis by complicating gene fusion detection, transcript annotation, and alternative splicing studies.
+By both identifying and addressing this problem, our work enhances the reliability and precision of \gls{drs} data, substantially improving its utility in transcriptomic research.
 
 \section{Results and Discussion}
+
 \subsection{DeepChopper Architecture and Training}
-DeepChopper integrates the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling, with a residual block and a \gls{mlp} for fine-grained sequence analysis.
-This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena, he2015deep} (\figref{fig:f1}{a}).
-Additionally, DeepChopper incorporates base quality score information to improve prediction and employs an adaptive tokenization strategy that preserves single-nucleotide resolution while capturing higher-order sequence patterns (See \hyperref[sec:methods]{Methods} for details). Through this comprehensive approach, DeepChopper effectively split reads containing internal adapters into multiple records while trimming adapters at the $3'$ ends, thereby preserving authentic biological sequences and eliminating chimera artifacts (\figref{fig:f1}{a}).
 
-Compared to existing general-purpose \glspl{glm} like DNABERT2~\cite{zhou2023dnabert2} and Nucleotide Transformer~\cite{dalla2023nucleotide}, DeepChopper is specifically designed for long-read sequence analysis. It processes up to 32 kilobase pairs, a sufficiently long context to capture most mRNAs, and employs single-nucleotide tokenization to identify non-human reference sequences, such as \gls{ont} adapters, with base-pair precision. Its efficient architecture—using only 7 million parameters—makes DeepChopper computationally practical for large-scale \gls{drs} analysis, in contrast to resource-intensive models like Evo~\cite{nguyen2024sequence}, which rely on billions of parameters. This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences.
-
-
-% Result
 \begin{figure}[!ht]
     \includegraphics[height=0.63\columnwidth]{finals/figure1}
-    \caption{{\bf Overview of the architecture of the DeepChopper model.} (a)  Created with BioRender.com (b) (c) }\label{fig:f1}
+    \caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
 
+DeepChopper integrates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling~\figref{fig:f1}{a}.
+However, HyenaDNA cannot take the base quality of the sequence as input. 
+Hence, DeepChopper uses a nuerual network named quality block that includes multiple \glspl{mlp} and residual connection~\cite{he2015deep} in order to use the base quality of sequence efficiently~\figref{fig:f1}{b} since the base quality of the sequence is an important feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
+This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena} (\figref{fig:f1}{a}).
+Through this comprehensive approach, DeepChopper effectively splits reads containing internal adapters into multiple records while trimming adapters at the $3'$ ends, thereby preserving authentic biological sequences and eliminating chimera artifacts (\figref{fig:f1}{a}).
 
+To refine the adapter sequence predictions, DeepChopper employs a sliding window and majority vote approach for each window in its post-processing stage~\figref{fig:f1}{c}.
+After obtaining initial predictions for adapter locations, we apply a sliding window of 21 nucleotides with stride 1 across the read (See \hyperref[sec:methods]{Methods} for details).
+Within each window, we analyze the distribution of predicted adapter positions to smooth potential irregularities and eliminate isolated false positives.
+This refinement step helps ensure the predicted adapter sequences are contiguous and biologically plausible, improving the overall accuracy of adapter identification.
+The sliding window strategy effectively filters out spurious predictions while preserving genuine adapter signals that show consistent patterns across adjacent windows.
 
+Compared to existing general-purpose \glspl{glm} like DNABERT2~\cite{zhou2023dnabert2} and Nucleotide Transformer~\cite{dalla2023nucleotide}, DeepChopper is specifically designed for long-read sequence analysis.
+It processes up to 32 kilobase pairs, a sufficiently long context to capture most mRNAs, and employs single-nucleotide tokenization to identify non-human reference sequences, such as \gls{ont} adapters, with base-pair precision.
+Its efficient architecture, comprising just 7 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
+This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences.
 
 % Result
 \begin{figure}[!ht]
