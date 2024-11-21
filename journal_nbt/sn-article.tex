@@ -257,21 +257,18 @@ By both identifying and addressing this problem, our work enhances the reliabili
     \caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
 
-DeepChopper integrates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, optimized for efficient long-range dependency modeling~\figref{fig:f1}{a}.
-However, HyenaDNA cannot take the base quality of the sequence as input. 
-Hence, DeepChopper uses a nuerual network named quality block that includes multiple \glspl{mlp} and residual connection~\cite{he2015deep} in order to use the base quality of sequence efficiently~\figref{fig:f1}{b} since the base quality of the sequence is an important feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
-This hybrid architecture enables both broad context understanding and precise single-nucleotide resolution~\cite{poli2023hyena} (\figref{fig:f1}{a}).
-Through this comprehensive approach, DeepChopper effectively splits reads containing internal adapters into multiple records while trimming adapters at the $3'$ ends, thereby preserving authentic biological sequences and eliminating chimera artifacts (\figref{fig:f1}{a}).
+DeepChopper incorporates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at modeling long-range dependencies~\figref{fig:f1}{a}.
+While HyenaDNA cannot directly process sequence base quality information, DeepChopper addresses this limitation through a dedicated quality block, a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep}, to effectively utilize this crucial feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
+This hybrid architecture combines broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, enabling DeepChopper to effectively identify and process internal adapters~\figref{fig:f1}{a}.
+The system splits reads containing internal adapters into multiple records while simultaneously trimming $3'$ end adapters, thus preserving authentic biological sequences and eliminating chimeric artifacts.
 
-To refine the adapter sequence predictions, DeepChopper employs a sliding window and majority vote approach for each window in its post-processing stage~\figref{fig:f1}{c}.
-After obtaining initial predictions for adapter locations, we apply a sliding window of 21 nucleotides with stride 1 across the read (See \hyperref[sec:methods]{Methods} for details).
-Within each window, we analyze the distribution of predicted adapter positions to smooth potential irregularities and eliminate isolated false positives.
-This refinement step helps ensure the predicted adapter sequences are contiguous and biologically plausible, improving the overall accuracy of adapter identification.
-The sliding window strategy effectively filters out spurious predictions while preserving genuine adapter signals that show consistent patterns across adjacent windows.
+To enhance prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach~\figref{fig:f1}{c}.
+The system applies a 21-nucleotide sliding window with stride 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
+This refinement process ensures predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
 
 Compared to existing general-purpose \glspl{glm} like DNABERT2~\cite{zhou2023dnabert2} and Nucleotide Transformer~\cite{dalla2023nucleotide}, DeepChopper is specifically designed for long-read sequence analysis.
 It processes up to 32 kilobase pairs, a sufficiently long context to capture most mRNAs, and employs single-nucleotide tokenization to identify non-human reference sequences, such as \gls{ont} adapters, with base-pair precision.
-Its efficient architecture, comprising just 7 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
+Its efficient architecture, comprising just 4.6 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
 This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences.
 
 % Result
@@ -415,22 +412,14 @@ In total, 600,000 data points were generated and divided into training (480,000)
 
 \subsection{Language model architecture}\label{ssec:lm}
 
-DeepChopper identifies adapter sequences by framing the problem as a token classification task.
-The model consists of 4.6 million trainable parameters.
-The model tokenizes biological sequences at the single-nucleotide level, treating each nucleotide (\emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}) as a fundamental unit.
-This approach enables fine-grained sequence analysis crucial for distinguishing artificial adapter sequences from native biological sequences.
-
-For each nucleotide token, DeepChopper predicts whether it belongs to an adapter sequence.
-The model's architecture is optimized for high-precision identification of adapter sequences within biological data.
-At its core, DeepChopper utilizes the HyenaDNA~\cite{nguyen2024hyenadna}, a specialized genomics architecture that serves as the primary feature extractor.
-This framework efficiently processes nucleotide sequences to produce rich feature representations with a dimensionality of 256.
-
-These extracted features then pass through a quality block that integrates base quality scores.
-The quality block consists of dense layers with residual connections, incorporating sequence quality information to enhance the model's interpretation of the input data.
-
-The enriched features are ultimately fed into a classification head that computes the probability of each token being part of an adapter sequence.
-Through binary classification at every nucleotide position, the model labels each token as either adapter or non-adapter sequence, providing a comprehensive analysis of the entire input sequence.
-
+DeepChopper approaches adapter sequence identification as a token classification task, utilizing a model with 4.6 million trainable parameters. 
+The system tokenizes biological sequences at single-nucleotide resolution, with each nucleotide (\emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}) serving as a fundamental token.
+This nucleotide-level granularity enables precise discrimination between artificial adapter sequences and native biological sequences.
+At its core, DeepChopper employs HyenaDNA~\cite{nguyen2024hyenadna} as its primary feature extractor, processing nucleotide sequences into rich 256-dimensional feature representations.
+These features are then refined through a quality block that incorporates standardized base quality scores.
+The quality block, comprising two \glspl{mlp} with residual connections, processes normalized quality information to prevent numerical instability while enhancing the model's sequence interpretation capabilities.
+The processed features are subsequently fed into a classification head that computes per-nucleotide adapter probabilities.
+Through this binary classification approach, DeepChopper generates precise adapter/non-adapter predictions for each nucleotide position across the input sequence, enabling comprehensive adapter identification.
 
 \subsection{Model training}\label{ssec:training}
 
