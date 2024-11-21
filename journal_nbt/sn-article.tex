@@ -261,7 +261,7 @@ DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which 
 To address HyenaDNA's inability to process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
 This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
 By combining broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
-Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimeric artifacts.
+Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimera artifacts.
 
 To further refine the prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach, as illustrated in~\figref{fig:f1}{c}.
 The model applies a 21-nucleotide sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
@@ -660,7 +660,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.41\columnwidth]{finals/sf3}
-	\caption{ {\bf Benchmarking of DeepChopper predictions on chimeric read artifacts using \gls{drs} data generated with the SQK-RNA004 kit from the VCaP cell line.} (a) Number of chimeric alignments (in thousands) identified in VCaP RNA004 \gls{drs} reads processed by Dorado with and without adapter trimming, and by DeepChopper. The bar colors indicate chimeric reads supported by cDNA sequencing (red) and those lacking support (grey). (b) Base quality scores (left) and \gls{blat} alignment identity scores (right) for internal adapter sequences identified by DeepChopper in RNA004 \gls{drs} reads.}\label{fig:sf3}
+	\caption{ {\bf Evaluation of DeepChopper's predictions on chimeric read artifacts in \gls{drs} data generated using the SQK-RNA004 kit from the VCaP cell line.} (a) Number of chimeric alignments (in thousands) identified in VCaP RNA004 \gls{drs} reads processed by Dorado with and without adapter trimming, and by DeepChopper. The bar colors indicate chimeric reads supported by cDNA sequencing (red) and those lacking support (grey). (b) Base quality scores (left) and \gls{blat} alignment identity scores (right) for internal adapter sequences identified by DeepChopper in RNA004 \gls{drs} reads.}\label{fig:sf3}
 \end{figure}
 
 
