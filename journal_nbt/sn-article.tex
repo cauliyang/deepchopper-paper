@@ -282,7 +282,7 @@ This combination of long context processing, high-resolution accuracy, and compu
 To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2021systematic}.
 We curated a training set of 540,000 long reads initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
-DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:sf1}), demonstrating its high accuracy in detecting adapter sequences.
+DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:sf1}{}), demonstrating its high accuracy in detecting adapter sequences.
 To further assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
 This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
 
@@ -316,7 +316,7 @@ We then applied DeepChopper to the human WTC11 induced pluripotent stem cell lin
 The project's cDNA-based long-read sequencing data, generated using diverse protocols (\gls{pcr}-cDNA, CapTrap, R2C2) across \gls{ont} and \gls{pb} platforms, provided a robust benchmarking resource. DeepChopper consistently eliminated only the chimeric alignments not supported by any cDNA-based sequencing method (\figref{fig:f2}{h}), demonstrating its precise ability to distinguish genuine chimeric reads from artifacts.
 
 To further assess DeepChopper's generalizability, we extended our analysis to the F121-9 mouse embryonic stem cell line data, also provided by the \gls{lrgasp} project.
-Remarkably, DeepChopper robustly removed chimeric read artifacts not supported by cDNA-based long reads across multiple sequencing platforms (\edfigref{fig:sf2}), confirming its effectiveness in chimera artifact correction across different species.
+Remarkably, DeepChopper robustly removed chimeric read artifacts not supported by cDNA-based long reads across multiple sequencing platforms (\edfigref{fig:sf2}{}), confirming its effectiveness in chimera artifact correction across different species.
 
 \subsection{Chimera Artifact Analysis in RNA004 Chemistry}
 
