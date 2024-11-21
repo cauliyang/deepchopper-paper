@@ -254,18 +254,19 @@ By both identifying and addressing this problem, our work enhances the reliabili
 
 \begin{figure}[!ht]
     \includegraphics[height=0.63\columnwidth]{finals/figure1}
-    \caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
+    \caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence (Value greater than 0.5 indicate adapter sequence; value less than or equal to 0.5 indicate non-adapter sequence.). (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
 
+DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at capturing long-range dependencies (\figref{fig:f1}{a}).
+To address HyenaDNA's inability to process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
+This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
+By combining broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
+Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimeric artifacts.
 
-DeepChopper incorporates \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at modeling long-range dependencies~\figref{fig:f1}{a}.
-While HyenaDNA cannot directly process sequence base quality information, DeepChopper addresses this limitation through a dedicated quality block, a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep}, to effectively utilize this crucial feature~\figref{fig:f1}{b} (See \hyperref[sec:methods]{Methods} for details).
-This hybrid architecture combines broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, enabling DeepChopper to effectively identify and process internal adapters~\figref{fig:f1}{a}.
-The system splits reads containing internal adapters into multiple records while simultaneously trimming $3'$ end adapters, thus preserving authentic biological sequences and eliminating chimeric artifacts.
-
-To enhance prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach~\figref{fig:f1}{c}.
-The system applies a 21-nucleotide sliding window with stride 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
-This refinement process ensures predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
+To further refine the prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach, as illustrated in~\figref{fig:f1}{c}.
+The model applies a 21-nucleotide sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
+This refinement process ensures that the predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
+By applying this iterative refinement strategy, DeepChopper is able to optimize the final predictions and improve the overall accuracy of the adapter detection.
 
 Compared to existing general-purpose \glspl{glm} like DNABERT2~\cite{zhou2023dnabert2} and Nucleotide Transformer~\cite{dalla2023nucleotide}, DeepChopper is specifically designed for long-read sequence analysis.
 It processes up to 32 kilobase pairs, a sufficiently long context to capture most mRNAs, and employs single-nucleotide tokenization to identify non-human reference sequences, such as \gls{ont} adapters, with base-pair precision.
@@ -292,27 +293,27 @@ Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,17
 DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
 DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
-Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f1}{b}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
+Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
 
 We then analyzed the positions of DeepChopper identified adapter sequences within each long read.
-Among these, 212,478 reads contained internal adapters, while 7,777,624 reads had adapters at their $3'$ ends (\figref{fig:f1}{c}).
+Among these, 212,478 reads contained internal adapters, while 7,777,624 reads had adapters at their $3'$ ends (\figref{fig:f2}{b}).
 This reveals that chimeric read artifacts, evidenced by internal adapters, are present in VCaP \gls{drs} data and may reflect a common problem inherent to \gls{drs} long reads.
-Further examination of adapter-trimmed reads showed that chimera artifacts could arise from the joining of multiple long reads, with the most prevalent type involving two reads connected by an internal adapter to form a single chimeric read (\figref{fig:f1}{d}).
+Further examination of adapter-trimmed reads showed that chimera artifacts could arise from the joining of multiple long reads, with the most prevalent type involving two reads connected by an internal adapter to form a single chimeric read (\figref{fig:f2}{c}).
 
 To validate the chimeric read artifacts identified by DeepChopper in the VCaP \gls{drs} data, we analyzed the chimeric alignments generated by minimap2~\cite{li2018minimap2}, as chimeric reads typically produce such alignments.
 To distinguish genuine chimeric reads from artifacts, we generated nanopore direct cDNA sequencing data for VCaP cells and considered chimeric reads with alignments fully supported by cDNA sequencing as bona fide (See \hyperref[sec:methods]{Methods} for details).
 Additionally, we assessed whether the adapter trimming function of \gls{ont}'s Dorado basecaller could mitigate chimeric read artifacts.
-While Dorado's adapter trimming had no effect on reducing chimeric alignments, DeepChopper achieved a 91\% reduction and increased the proportion of cDNA-supported chimeric alignments from 5\% to 47\% (\figref{fig:f1}{e}).
+While Dorado's adapter trimming had no effect on reducing chimeric alignments, DeepChopper achieved a 91\% reduction and increased the proportion of cDNA-supported chimeric alignments from 5\% to 47\% (\figref{fig:f2}{d}).
 To further confirm the nature of the identified chimeric read artifacts, we examined the base quality scores of the internal adapter sequences identified by DeepChopper and aligned them with the human reference genome using \gls{blat}~\cite{kent2002blat}, a tool known for its high alignment accuracy.
-Our analysis revealed that the adapter sequences from the chimeric read artifacts exhibited low base quality scores (\figref{fig:f1}{f}) and poor alignment identity with the human reference genome (\figref{fig:f1}{g}), confirming their artifactual nature and non-human origin.
+Our analysis revealed that the adapter sequences from the chimeric read artifacts exhibited low base quality scores (\figref{fig:f2}{e}) and poor alignment identity with the human reference genome (\figref{fig:f2}{f}), confirming their artifactual nature and non-human origin.
 
 \subsection{Multi-sample Validation Across Platforms and Species}
 
 To comprehensively assess DeepChopper’s performance in reducing chimera artifacts in \gls{drs}, we first examined cDNA-supported chimeric alignments in the \gls{sgnex} samples.
-DeepChopper significantly reduced chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f1}{h}), indicating the prevalence of chimeric read artifacts in \gls{drs}.
+DeepChopper significantly reduced chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f2}{g}), indicating the prevalence of chimeric read artifacts in \gls{drs}.
 
 We then applied DeepChopper to the human WTC11 induced pluripotent stem cell line, leveraging the \gls{lrgasp} project's comprehensive dataset~\cite{pardo2024systematic}.
-The project's cDNA-based long-read sequencing data, generated using diverse protocols (\gls{pcr}-cDNA, CapTrap, R2C2) across \gls{ont} and \gls{pb} platforms, provided a robust benchmarking resource. DeepChopper consistently eliminated only the chimeric alignments not supported by any cDNA-based sequencing method (\figref{fig:f1}{i}), demonstrating its precise ability to distinguish genuine chimeric reads from artifacts.
+The project's cDNA-based long-read sequencing data, generated using diverse protocols (\gls{pcr}-cDNA, CapTrap, R2C2) across \gls{ont} and \gls{pb} platforms, provided a robust benchmarking resource. DeepChopper consistently eliminated only the chimeric alignments not supported by any cDNA-based sequencing method (\figref{fig:f2}{h}), demonstrating its precise ability to distinguish genuine chimeric reads from artifacts.
 
 To further assess DeepChopper's generalizability, we extended our analysis to the F121-9 mouse embryonic stem cell line data, also provided by the \gls{lrgasp} project.
 Remarkably, DeepChopper robustly removed chimeric read artifacts not supported by cDNA-based long reads across multiple sequencing platforms (\edfigref{fig:sf2}), confirming its effectiveness in chimera artifact correction across different species.
@@ -416,11 +417,20 @@ In total, 600,000 data points were generated and divided into training (480,000)
 DeepChopper approaches adapter sequence identification as a token classification task, utilizing a model with 4.6 million trainable parameters.
 The system tokenizes biological sequences at single-nucleotide resolution, with each nucleotide (\emph{A}, \emph{C}, \emph{G}, \emph{T}, and \emph{N}) serving as a fundamental token.
 This nucleotide-level granularity enables precise discrimination between artificial adapter sequences and native biological sequences.
-At its core, DeepChopper employs HyenaDNA~\cite{nguyen2024hyenadna} as its primary feature extractor, processing nucleotide sequences into rich 256-dimensional feature representations.
-These features are then refined through a quality block that incorporates standardized base quality scores.
-The quality block, comprising two \glspl{mlp} with residual connections, processes normalized quality information to prevent numerical instability while enhancing the model's sequence interpretation capabilities.
-The processed features are subsequently fed into a classification head that computes per-nucleotide adapter probabilities.
+
+At its core, DeepChopper employs HyenaDNA~\cite{nguyen2024hyenadna} as its primary feature extractor.
+HyenaDNA processes the input sequence using multiple attention-free linear layers with a receptive field, transforming the nucleotide tokens into rich 256-dimensional feature representations.
+The model handles variable-length sequences through a padding approach, maintaining consistent performance across different sequence lengths while efficiently capturing long-range dependencies.
+
+These features are then fed through a quality block that incorporates standardized base quality scores.
+Prior to processing, the quality scores are normalized using z-score standardization ($\mu=0$, $\sigma=1$) to ensure numerical stability.
+The quality block, comprising two \glspl{mlp} with residual connections (hidden dimensions: 256), processes this normalized quality information while preserving the original sequence features.
+Each \gls{mlp} layer is followed by ReLU activation, enhancing the model's ability to learn complex quality-sequence relationships.
+
+The processed features are subsequently fed into a classification head consisting of a two-layer neural network.
+This head computes per-nucleotide adapter probabilities using a sigmoid activation function, producing values between 0 and 1 for each position.
 Through this binary classification approach, DeepChopper generates precise adapter/non-adapter predictions for each nucleotide position across the input sequence, enabling comprehensive adapter identification.
+During inference, a probability threshold of 0.5 is used to make final adapter/non-adapter decisions.
 
 \subsection{Model training}\label{ssec:training}
 
