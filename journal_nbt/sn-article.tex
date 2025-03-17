@@ -294,34 +294,26 @@ This independent dataset provides a robust framework for evaluating chimera arti
 
 
 % For the specific subsection you want to highlight:
-{
-    \titleformat{\subsection}
-    {\normalfont\large\bfseries}
-    {\thesubsection}
-    {1em}
-    {\colorbox{yellow}}  % This highlights the subsection title
+%{
+%    \titleformat{\subsection}
+%    {\normalfont\large\bfseries}
+%    {\thesubsection}
+%    {1em}
+%    {\colorbox{yellow}}  % This highlights the subsection title
 
 %\subsection{Runtime Performance and Resource Utilization}
-\subsection{DeepChopper Pipeline and Computational Performance}
-}
-
-\hl{DeepChopper employs a three-stage pipeline for adapter prediction. First, FASTQ inputs are converted to the Parquet format to enhance computational efficiency. Second, the core model predicts adapter sequences. Third, post-processing refines these predictions. We implemented computationally intensive components in Rust while developing the neural network architecture in Python.}
-
-\hl{We optimized computational efficiency through multiple strategies: (1) utilizing Parquet format for enhanced data access speed, (2) implementing computationally intensive components in Rust programming language, (3) leveraging GPU acceleration for neural network inference, and (4) employing parallelization techniques across pre-processing and post-processing operations.}
-
-\hl{Performance evaluation on a VCaP cell line dataset (9,177,639 reads) demonstrated that FASTQ to Parquet conversion required an average of 25 minutes with peak memory usage of 40 GB. The adapter prediction stage, executed with a batch size of 64, completed in approximately 3 hours and 42 minutes, utilizing a maximum of 33 GB GPU and 3.7 GB CPU memory. Post-processing required an average of 55 minutes with peak memory consumption of 41 GB. In total, DeepChopper processed the entire dataset in 5 hours and 2 minutes.} (\edtableref{tab:st2}{})
-
-\hl{These benchmarks demonstrate that DeepChopper is practical for large-scale sequencing projects, capable of processing millions of reads within hours on standard high-performance computing infrastructure. The memory requirements and processing times are reasonable considering the complexity of the task and the volume of data being processed.}
-
-
+%\subsection{DeepChopper Pipeline and Computational Performance}
+%}
 
 \subsection{Chimeric Read Artifact Detection}
 
-We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with that used in the \gls{sgnex} project.
-Using a MinION sequencer with four R9.4 flow cells, we generated a total of 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}.
-DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
-Notably, DeepChopper increased the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.
-DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
+We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with the \gls{sgnex} project. Using a MinION sequencer with four R9.4 flow cells, we generated 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}.
+
+\hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
+
+\hl{Performance benchmarking on the VCaP dataset demonstrated that DeepChopper processed all 9,177,639 reads in 5 hours and 2 minutes} (\edtableref{tab:st2}{}). \hl{Specifically, FASTQ to Parquet conversion took 25 minutes with peak memory usage of 40 GB, adapter prediction (batch size 64) completed in 3 hours and 42 minutes utilizing a maximum of 33 GB GPU and 3.7 GB CPU memory, and post-processing required 55 minutes with peak memory consumption of 41 GB. These benchmarks demonstrate that DeepChopper is practical for large-scale sequencing projects, capable of processing millions of reads within hours on standard high-performance computing infrastructure} (See \hyperref[sec:methods]{Methods} for details).
+
+By improving processing speed while maintaining reasonable computational requirements, DeepChopper effectively increases the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
 Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
 
 We then analyzed the positions of DeepChopper identified adapter sequences within each long read.
@@ -463,20 +455,15 @@ Prior to processing, the quality scores are normalized using z-score standardiza
 The quality block, comprising two \glspl{mlp} with residual connections (hidden dimensions: 256), processes this normalized quality information while preserving the original sequence features.
 Each \gls{mlp} layer is followed by ReLU activation, enhancing the model's ability to learn complex quality-sequence relationships.
 
-\hl{The processed sequence features are subsequently fed into a classification head consisting of a two-layer neural network. This specialized architecture transforms the feature representations into classification outputs for each nucleotide position.
-The classification head employs a softmax activation function to compute probability distributions across two classes: adapter and non-adapter.
+\hl{The processed sequence features are subsequently fed into a classification head consisting of a two-layer neural network. This architecture transforms the feature representations into classification outputs at the nucleotide level. The classification module employs a softmax activation function to compute probability distributions across two classes: adapter and non-adapter.
 For a given nucleotide position with output logits $z_1$ and $z_2$ (corresponding to adapter and non-adapter classes), the softmax function computes class probabilities as:}
 
 \[ P(y_i=c) = \frac{e^{z_c}}{\sum_{j=1}^{2} e^{z_j}} \]
 
 \hl{where $P(y_i=c)$ represents the probability that nucleotide position $i$ belongs to class $c$.
-For each nucleotide position, the softmax function generates normalized probabilities that sum to 1, effectively quantifying the model's confidence in its classification decision.
-Our approach selects the class with the higher probability. In other words, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > P(y_i = \textrm{non-adaper})$. Since these probabilities are complementary (they sum to 1), this is mathematically equivalent to classifying a position as an adapter when $P(y_i = \textrm{adapter}) > 0.5$.}
+The final classification decision is based on the class with the higher probability score. Specifically, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > 0.5$, as the probabilities for the two classes are complementary and sum to 1. }
 
-
-\hl{Through this binary classification approach, DeepChopper performs fine-grained discrimination at each nucleotide position by selecting the class with the higher probability score as the final prediction.
-This strategy enables precise boundary detection between adapter and non-adapter regions, facilitating comprehensive adapter identification throughout the input sequence.
-The position-wise classification paradigm allows DeepChopper to effectively handle both terminal and internal adapter occurrences, providing a unified solution for adapter trimming across diverse direct RNA sequencing datasets.}
+\hl{This position-wise classification approach enables precise identification of adapter sequences at both terminal and internal positions within reads. By performing fine-grained nucleotide-level classification, DeepChopper accurately defines adapter boundaries, facilitating effective trimming across diverse direct RNA sequencing datasets.}
 
 \subsection{Model training}\label{ssec:training}
 
@@ -710,7 +697,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{table}[htbp]
     \centering
-    \caption{Comparison of Adapter Trimming Tools}
+    \caption{Comparison of adapter trimming tools}
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Adapter trimming tool} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\terminal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\internal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Trimming existing\\dRNA-seq datasets\\(post-basecalling)\end{tabular}} \\
@@ -727,7 +714,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{table}[htbp]
     \centering
-    \caption{DeepChopper Runtime and Resource Usage for VCaP (9,177,639 Reads)}
+    \caption{DeepChopper runtime and resource usage for processing VCaP \gls{drs} data with 9,177,639 raw reads}
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Pipeline Stage} & \textbf{Trial 1} & \textbf{Trial 2} & \textbf{Trial 3} & \textbf{Average} \\
