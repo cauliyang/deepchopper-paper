@@ -265,15 +265,19 @@ By both identifying and addressing this problem, our work enhances the reliabili
 DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at capturing long-range dependencies (\figref{fig:f1}{a}).
 To address HyenaDNA's inability to process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
 This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
+\hl{Our ablation study demonstrated a clear benefit from incorporating the quality block component into the model architecture.
+As shown in \mbox{\edtableref{tab:st2}{}}, models with the quality block achieved an F1 score of 0.99, compared to 0.97 for models without this component.}
 By combining broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
 Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimera artifacts.
 
 To further refine the prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach, as illustrated in~\figref{fig:f1}{c}.
-The model applies a 21-nucleotide sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
+The model applies sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
 This refinement process ensures that the predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
 By applying this iterative refinement strategy, DeepChopper is able to optimize the final predictions and improve the overall accuracy of the adapter detection.
 
+
 \hl{Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis with single-nucleotide resolution.
+This fine-grained resolution represents a critical advantage for genomic analysis tasks requiring precise base-level predictions.
 While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2023nucleotide}} to 6,000 bp, DeepChopper processes sequences up to 32 kilobases—a context length sufficient to capture most complete mRNA transcripts.}
 This extended sequence capacity, combined with single-nucleotide tokenization, enables DeepChopper to precisely identify non-reference elements such as \gls{ont} adapters with base-pair accuracy, a critical advantage for detecting chimeric artifacts in \gls{drs} sequencing data.
 Its efficient architecture, comprising just 4.6 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
@@ -514,6 +518,24 @@ The final selection of the model was based on the optimal performance in the val
 The model is implemented by PyTorch (v2.5.0)~\cite{paszke2019pytorch}.
 To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yadan2019Hydra} framework was used.
 
+% For the specific subsection you want to highlight:
+{
+    \titleformat{\subsection}
+    {\normalfont\large\bfseries}
+    {\thesubsection}
+    {1em}
+    {\colorbox{yellow}}  % This highlights the subsection title
+
+\subsection{Ablation Study of Quality Block Component}
+}
+
+\hl{To evaluate the contribution of the quality block to our model's performance, we conducted an ablation study comparing two model configurations: one with the quality block and one without.
+Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model trainnnig}}, but with a dataset consisting of 100,000 samples in total.
+The training procedure maintained consistent hyperparameters across both configurations, including learning rate, batch size, and optimization algorithm.
+The only difference between the two models was the presence or absence of the quality block component.
+Performance was evaluated using the F1 score metric on a held-out test set.}
+
+
 \subsection{Sliding window approach for prediction refinement}
 
 To improve the accuracy and smoothness of the predictions, a sliding window approach was implemented.
@@ -726,6 +748,22 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
     \footnotetext{\checkmark~indicates the tool supports this functionality; \texttimes~indicates the tool does not support this functionality.}
     \label{tab:st1}
 \end{table}
+
+
+\begin{table}[ht]
+    \centering
+    \caption{Ablation Study Results for Quality Block}
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Model Configuration} & \textbf{F1 Score} \\
+        \midrule
+        With Quality Block & \textbf{0.99} \\
+        Without Quality Block & 0.97 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:st2}
+\end{table}
+
 
 
 \begin{figure}[!ht]
