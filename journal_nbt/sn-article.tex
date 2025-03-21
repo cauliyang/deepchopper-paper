@@ -244,7 +244,7 @@ These artifacts may result from ligation during library preparation or chimeric 
 Detecting these chimera artifacts is challenging because long-read aligners often produce chimeric alignments from such artifacts that are indistinguishable from those derived from true gene fusion events.
 Importantly, chimeric read artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, which could theoretically serve as a distinguishing feature to differentiate them from true gene fusion-derived reads.
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
-\hl{As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved} (\edtableref{tab:st1}{}).
+\hl{As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved} (\edtableref{tab:st1}{}).
 
 To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
 Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
@@ -289,6 +289,8 @@ To train DeepChopper for identifying adapter sequences within \gls{drs} long rea
 We curated a training set of 540,000 long reads initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
 DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:sf1}{}), demonstrating its high accuracy in detecting adapter sequences.
+\hl{The benchmarking results clearly demonstrate that existing adapter trimming tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} fail to identify adapter sequences in \mbox{\gls{drs}} data.}
+
 To further assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
 This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
 
@@ -311,7 +313,7 @@ We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, con
 
 \hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
 
-\hl{Performance benchmarking on the VCaP dataset demonstrated that DeepChopper processed all 9,177,639 reads in 5 hours and 2 minutes} (\edtableref{tab:st2}{}). \hl{Specifically, FASTQ to Parquet conversion took 25 minutes with peak memory usage of 40 GB, adapter prediction (batch size 64) completed in 3 hours and 42 minutes utilizing a maximum of 33 GB GPU and 3.7 GB CPU memory, and post-processing required 55 minutes with peak memory consumption of 41 GB. These benchmarks demonstrate that DeepChopper is practical for large-scale sequencing projects, capable of processing millions of reads within hours on standard high-performance computing infrastructure} (See \hyperref[sec:methods]{Methods} for details).
+\hl{Performance benchmarking on the VCaP dataset demonstrated that DeepChopper processed all 9,177,639 reads in 5 hours and 2 minutes}. \hl{Specifically, FASTQ to Parquet conversion took 25 minutes with peak memory usage of 40 GB, adapter prediction (batch size 64) completed in 3 hours and 42 minutes utilizing a maximum of 33 GB GPU and 3.7 GB CPU memory, and post-processing required 55 minutes with peak memory consumption of 41 GB. These benchmarks demonstrate that DeepChopper is practical for large-scale sequencing projects, capable of processing millions of reads within hours on standard high-performance computing infrastructure} (See \hyperref[sec:methods]{Methods} for details).
 
 By improving processing speed while maintaining reasonable computational requirements, DeepChopper effectively increases the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
 Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
@@ -461,7 +463,8 @@ For a given nucleotide position with output logits $z_1$ and $z_2$ (correspondin
 \[ P(y_i=c) = \frac{e^{z_c}}{\sum_{j=1}^{2} e^{z_j}} \]
 
 \hl{where $P(y_i=c)$ represents the probability that nucleotide position $i$ belongs to class $c$.
-The final classification decision is based on the class with the higher probability score. Specifically, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > 0.5$, as the probabilities for the two classes are complementary and sum to 1. }
+The final classification decision is based on the class with the higher probability score.
+In other words, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > P(y_i = \textrm{non-adapter})$.}
 
 \hl{This position-wise classification approach enables precise identification of adapter sequences at both terminal and internal positions within reads. By performing fine-grained nucleotide-level classification, DeepChopper accurately defines adapter boundaries, facilitating effective trimming across diverse direct RNA sequencing datasets.}
 
@@ -703,6 +706,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
         \textbf{Adapter trimming tool} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\terminal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\internal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Trimming existing\\dRNA-seq datasets\\(post-basecalling)\end{tabular}} \\
         \midrule
         Porechop~\cite{Wick2017} & \texttimes & \texttimes & \texttimes \\
+        Porechop\_ABI~\cite{bonenfant2023porechop} & \texttimes & \texttimes & \texttimes \\
         Pychopper~\cite{pychopper} & \texttimes & \texttimes & \texttimes \\
         Dorado~\cite{dorado2023} & \checkmark & \texttimes & \texttimes \\
         DeepChopper & \checkmark & \checkmark & \checkmark \\
@@ -712,36 +716,21 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
     \label{tab:st1}
 \end{table}
 
-\begin{table}[htbp]
-    \centering
-    \caption{DeepChopper runtime and resource usage for processing VCaP \gls{drs} data with 9,177,639 raw reads}
-    \begin{tabular}{lcccc}
-        \toprule
-        \textbf{Pipeline Stage} & \textbf{Trial 1} & \textbf{Trial 2} & \textbf{Trial 3} & \textbf{Average} \\
-        \midrule
-        \multicolumn{5}{l}{\textit{Runtime}} \\
-        FASTQ to Parquet Conversion & 24 min & 25 min & 26 min & 25 min \\
-        Adapter Prediction & 3 h 45 min & 3 h 41 min & 3 h 40 min & 3 h 42 min \\
-        Post-processing & 51 min & 58 min & 56 min & 55 min \\
-        \textbf{Total} & \textbf{5 h} & \textbf{5 h 4 min} & \textbf{5 h 2 min} & \textbf{5 h 2 min} \\
-        \midrule
-        \multicolumn{5}{l}{\textit{Peak Memory Usage}} \\
-        CPU Memory (FASTQ Conversion) & 39 GB & 40 GB & 41 GB & 40 GB \\
-        CPU Memory (Prediction) & 3.5 GB & 3.7 GB & 3.9 GB & 3.7 GB \\
-        CPU Memory (Post-processing) & 40 GB & 41 GB & 42 GB & 41 GB \\
-        GPU Memory (Prediction) & 32 GB & 33 GB & 34 GB & 33 GB \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:st2}
-%     \footnotetext{All benchmarks conducted on high-performance computing infrastructure with 16 CPU cores, 60 GB RAM, and dual NVIDIA A100 GPUs (80 GB memory each). Adapter prediction stage used a batch size of 64.}
-\end{table}
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.4\columnwidth]{finals/sf1}
+	\caption{{\bf Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}\label{fig:sf1}
+\end{figure}
 
 
 
 \begin{figure}[!ht]
-	\includegraphics[height=0.4\columnwidth]{finals/sf1}
-	\caption{{\bf Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper.}}\label{fig:sf1}
+    \includegraphics[height=0.4\columnwidth]{finals/sf2a}
+    \caption{ {\bf Computational performance metrics across different data sizes from VCaP cell line sequencing.} (a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same VCaP data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}\label{fig:sf2a}
 \end{figure}
+
+
+
 
 
 \begin{figure}[!ht]
