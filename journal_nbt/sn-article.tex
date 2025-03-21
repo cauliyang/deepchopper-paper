@@ -313,7 +313,18 @@ We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, con
 
 \hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
 
-\hl{Performance benchmarking on the VCaP dataset demonstrated that DeepChopper processed all 9,177,639 reads in 5 hours and 2 minutes}. \hl{Specifically, FASTQ to Parquet conversion took 25 minutes with peak memory usage of 40 GB, adapter prediction (batch size 64) completed in 3 hours and 42 minutes utilizing a maximum of 33 GB GPU and 3.7 GB CPU memory, and post-processing required 55 minutes with peak memory consumption of 41 GB. These benchmarks demonstrate that DeepChopper is practical for large-scale sequencing projects, capable of processing millions of reads within hours on standard high-performance computing infrastructure} (See \hyperref[sec:methods]{Methods} for details).
+
+\hl{We evaluated the computational performance of our pipeline using sequencing data from the VCaP cell line at various sampling depths.
+\mbox{\edfigref{fig:sf2a}{}} illustrates the runtime and memory requirements across different data sizes (0.1M, 0.5M, 1M reads, and the full dataset).
+As shown in \mbox{\edfigref{fig:sf2a}{a}}, the total processing time increased non-linearly with data size, from approximately 0.1 hours for the smallest sample (0.1M) to 5 hours for the full dataset.
+The prediction stage emerged as the primary computational bottleneck, accounting for over 70\% of the total runtime in the full dataset.
+FASTQ conversion and post-processing times also increased with data size but remained relatively modest compared to the prediction stage.
+Memory utilization (\mbox{\edfigref{fig:sf2a}{b}}) demonstrated similar scaling patterns with increasing data size.
+The prediction stage on CPU required the highest memory resources, approaching 70GB for the 1M and full datasets.
+Notably, GPU-based prediction consistently required less memory than its CPU counterpart across all data sizes, though the difference narrowed as data size increased.
+FASTQ conversion memory requirements remained minimal for smaller datasets but increased substantially for the full dataset, reaching approximately 40GB.
+Post-processing showed a gradual increase in memory usage, with requirements of approximately 40GB for the full dataset.
+These performance metrics highlight the computational demands of processing VCaP cell line data at scale and identify the prediction stage as the critical factor affecting overall pipeline efficiency} (See \hyperref[sec:methods]{Methods} for details).
 
 By improving processing speed while maintaining reasonable computational requirements, DeepChopper effectively increases the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
 Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
@@ -466,7 +477,7 @@ For a given nucleotide position with output logits $z_1$ and $z_2$ (correspondin
 The final classification decision is based on the class with the higher probability score.
 In other words, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > P(y_i = \textrm{non-adapter})$.}
 
-\hl{This position-wise classification approach enables precise identification of adapter sequences at both terminal and internal positions within reads. By performing fine-grained nucleotide-level classification, DeepChopper accurately defines adapter boundaries, facilitating effective trimming across diverse direct RNA sequencing datasets.}
+\hl{This position-wise classification approach enables precise identification of adapter sequences at both terminal and internal positions within reads. By performing fine-grained nucleotide-level classification, DeepChopper accurately defines adapter boundaries, facilitating effective trimming across diverse \mbox{\gls{drs}} datasets.}
 
 \subsection{Model training}\label{ssec:training}
 
