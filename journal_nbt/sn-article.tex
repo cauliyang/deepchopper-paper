@@ -454,14 +454,14 @@ Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023}
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 
 \hl{For adapter sequence extraction, we selected primary alignments without supplementary alignments and implemented a refined identification protocol. While $3'$ end soft-clipped regions were candidates for adapter sequences, we did not assume all such regions corresponded to adapters.
-    Instead, we incorporated a critical biological refinement step: we first identified polyA tails at the beginning of soft-clipped regions, as these represent reliable biological indicators of transcript termination.
-    Only sequences following these polyA tails were designated as potential adapter sequences, while aligned regions were classified as non-adapter sequences.
-    This approach significantly improved the precision of our training data by distinguishing true adapter sequences from other non-adapter soft-clipped regions that might result from alignment artifacts or sequencing errors.
-    By anchoring our adapter identification to known biological features, we reduced the risk of misclassification and ensured the training data more accurately reflected the natural transcript-adapter boundaries encountered in direct RNA sequencing.}
+Instead, we incorporated a critical biological refinement step: we first identified polyA tails at the beginning of soft-clipped regions, as these represent reliable biological indicators of transcript termination.
+Only sequences following these polyA tails were designated as potential adapter sequences, while aligned regions were classified as non-adapter sequences.
+This approach significantly improved the precision of our training data by distinguishing true adapter sequences from other non-adapter soft-clipped regions that might result from alignment artifacts or sequencing errors.
+By anchoring our adapter identification to known biological features, we reduced the risk of misclassification and ensured the training data more accurately reflected the natural transcript-adapter boundaries encountered in direct RNA sequencing.}
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence to create FASTQ records.
 The dataset consists of positive examples containing adapter sequences (with a 1:1 ratio of $3'$ end and internal adapters) and negative examples without any adapter sequences, in a 9:1 ratio.
-In total, 600,000 data points were generated and divided into training (480,000), validation (60,000), and test sets (60,000) in an 8:1:1 ratio using stratified random sampling.
+In total, 600,000 data points were generated and divided into training ($N=480,000$), validation ($N=60,000$), and test sets ($N=60,000$) in an 8:1:1 ratio using stratified random sampling.
 
 \subsection{Language model architecture}\label{ssec:lm}
 
@@ -525,16 +525,16 @@ The final selection of the model was based on the optimal performance in the val
 The model is implemented by PyTorch (v2.5.0)~\cite{paszke2019pytorch}.
 To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yadan2019Hydra} framework was used.
 
-    % For the specific subsection you want to highlight:
-    {
-        \titleformat{\subsection}
-        {\normalfont\large\bfseries}
-        {\thesubsection}
-        {1em}
-        {\colorbox{yellow}}  % This highlights the subsection title
+% For the specific subsection you want to highlight:
+{
+    \titleformat{\subsection}
+    {\normalfont\large\bfseries}
+    {\thesubsection}
+    {1em}
+    {\colorbox{yellow}}  % This highlights the subsection title
 
-        \subsection{Ablation Study of Quality Block Component}
-    }
+    \subsection{Ablation Study of Quality Block Component}
+}
 
 \hl{To evaluate the contribution of the quality block to our model's performance, we conducted an ablation study comparing two model configurations: one with the quality block and one without.
     Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model trainnnig}}, but with a dataset consisting of 100,000 samples in total.
@@ -631,7 +631,6 @@ Supporting rates were calculated as the proportion of \gls{drs} chimeric alignme
 % To assess DeepChopper's accuracy in detecting terminal artificial sequences, we compared its predictions to the soft-clipped regions in untrimmed Dorado-processed data.
 % An overlap threshold of 0.4 was used to determine the concordance between the two methods.
 
-
 \subsection{Gene expression analysis and transcript classification}
 
 Gene expression levels from \gls{drs} were quantified using IsoQuant (v3.1.2)~\cite{prjibelski2023accurate}, with the parameters (\texttt{--}data\_type nanopore \texttt{--}stranded forward \texttt{--}model\_construction\_strategy default\_ont \texttt{--}sqanti\_output). The ``\texttt{--}sqanti\_output'' option enables IsoQuant to generate files containing transcript classification information, analogous to the output provided by SQANTI~\cite{tardaguila2018sqanti}.
@@ -696,7 +695,6 @@ All computations were performed on a \gls{hpc} server equipped with a 64-core In
 % 	% \footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
 % 	% \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
 % \end{table}
-
 
 \bmhead{Data Availability}
 
@@ -777,7 +775,6 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
     \includegraphics[height=0.4\columnwidth]{finals/sf1}
     \caption{{\bf Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}\label{fig:sf1}
 \end{figure}
-
 
 \begin{figure}[!ht]
     \includegraphics[height=0.35\columnwidth]{finals/adaprob}
