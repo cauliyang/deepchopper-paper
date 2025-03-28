@@ -382,7 +382,7 @@ These findings strongly suggest that chimera artifacts continue to be an issue w
 \hl{While DeepChopper demonstrates effectiveness with RNA004 data despite being trained exclusively on RNA002 chemistry, the observed difference in chimeric alignment reduction (91\% for RNA002 vs. 21\% for RNA004) warrants further explanation.
 This disparity reflects two key factors: DeepChopper's training optimization for RNA002 patterns and fundamental improvements in the RNA004 chemistry itself.
 The RNA004 kit represents a significant advancement in \mbox{\gls{ont}}, designed specifically to produce cleaner reads with inherently fewer artifacts\mbox{~\cite{hewel2024direct}}.
-Despite this, the model's ability to further reduce chimeric alignments in RNA004 data through zero-shot transfer learning highlights its robust generalization capabilities across different sequencing chemistries, suggesting that DeepChopper can effectively adapt to evolving Nanopore technologies without requiring retraining.}
+Despite this, the model's ability to further reduce chimeric alignments in RNA004 data through zero-shot transfer learning highlights its robust generalization capabilities across different sequencing chemistries.}
 
 \begin{figure}[!ht]
 	\includegraphics[height=1\columnwidth]{finals/figure3}
@@ -563,8 +563,6 @@ To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yada
 To improve the accuracy and smoothness of the predictions, a sliding window approach was implemented.
 This method extends the predicted regions and minimizes noisy predictions, aligning with the typical length of adapter sequences observed in the \gls{ont} \gls{drs} data.
 The sliding window strategy effectively maintains continuity in regions predicted to contain adapter sequences, preventing fragmented and unrealistic results.
-
-A sliding window size of 21 nucleotides was selected based on empirical optimization, balancing the need for smoothing while retaining sensitivity to shorter adapter sequences.
 Within each window, a voting mechanism was applied to refine the predictions.
 The final classification $y_i$ for each nucleotide \( x_i \) was determined by the majority vote of all predictions within the window, as defined by the following equation:
 \[
@@ -575,6 +573,11 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 \]
 where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
+\hl{The majority voting approach in DeepChopper uses a straightforward plurality system.
+For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.
+The category that receives more votes (adapter or non-adapter) determines the final classification.
+In cases where votes are tied, we maintain the current label to preserve sequence continuity.}
+    
 The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
 
 \subsection{Post-processing and filtering}
@@ -590,7 +593,8 @@ After refining the adapter predictions, four filtering steps were applied to enh
 \vspace{.5em}
 Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
 This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
-
+\hl{We acknowledge that optimal parameters may vary depending on specific dataset characteristics and experimental conditions. To facilitate adaptation to diverse research contexts, we have implemented configurable command-line parameters that allow users to customize these settings for their specific applications.}
+    
 \subsection{BLAT identity calculation}
 
 The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
@@ -753,7 +757,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{table}[htbp]
 	\centering
-	\caption{Summary of Adapter Trimming Tools for analyzing \gls{drs} data}
+	\caption{\hl{Summary of Adapter Trimming Tools for analyzing \mbox{\gls{drs}} data}}
 	\begin{tabular}{lcccc}
 		\toprule
 		\textbf{Adapter trimming tool}             & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\terminal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\internal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Trimming existing\\dRNA-seq datasets\\(post-basecalling)\end{tabular}} \\
@@ -772,7 +776,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{table}[ht]
 	\centering
-	\caption{Ablation Study Results for Quality Block}
+	\caption{\hl{Ablation Study Results for Quality Block}}
 	\begin{tabular}{lc}
 		\toprule
 		\textbf{Model Configuration} & \textbf{F1 Score} \\
@@ -788,18 +792,17 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/sf1}
-	\caption{{\bf Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}\label{fig:sf1}
+	\caption{{\bf \hl{Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}}\label{fig:sf1}
 \end{figure}
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.35\columnwidth]{finals/adaprob}
-	\caption{{\bf Prediction probability distributions of DeepChopper for the held-out test dataset.} (a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.
-	}\label{fig:adaprob}
+	\caption{{\bf \hl{Prediction probability distributions of DeepChopper for the held-out test dataset.}} \hl{(a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.}}\label{fig:adaprob}
 \end{figure}
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/sf2a}
-	\caption{ {\bf Computational performance metrics across different data sizes from VCaP cell line sequencing.} (a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset (9M)) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same VCaP data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}\label{fig:sf2a}
+	\caption{ {\bf \hl{Computational performance metrics across different data sizes from VCaP cell line sequencing.}} \hl{(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset (9M)) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same VCaP data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}}\label{fig:sf2a}
 \end{figure}
 
 
