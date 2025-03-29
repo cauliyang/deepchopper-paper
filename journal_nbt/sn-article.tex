@@ -577,7 +577,7 @@ where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the 
 For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.
 The category that receives more votes (adapter or non-adapter) determines the final classification.
 In cases where votes are tied, we maintain the current label to preserve sequence continuity.}
-    
+
 The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
 
 \subsection{Post-processing and filtering}
@@ -594,7 +594,7 @@ After refining the adapter predictions, four filtering steps were applied to enh
 Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
 This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
 \hl{We acknowledge that optimal parameters may vary depending on specific dataset characteristics and experimental conditions. To facilitate adaptation to diverse research contexts, we have implemented configurable command-line parameters that allow users to customize these settings for their specific applications.}
-    
+
 \subsection{BLAT identity calculation}
 
 The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
@@ -843,6 +843,24 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 \begin{figure}[!ht]
 	\includegraphics[height=1.45\columnwidth]{finals/sf5}
 	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf5}
+\end{figure}
+
+
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=0.95\textwidth]{finals/slidewindow}
+    \end{center}
+    \caption{ {\bf Effect of window size on chimeric alignment detection and read fragmentation.}
+        (a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
+        nucleotides) showing the number of chimeric alignments detected (x-axis, ×
+        1000) with corresponding percentage of cDNA-supported alignments (red bars).
+        Higher percentages indicate better support. (b) Distribution of the number
+        of segments per read after trimming (x-axis) for window sizes 11 (gray)
+        and 21 (pink), shown on a logarithmic scale (y-axis). Window size 21
+        maintains similar detection sensitivity to window size 11 while producing
+        significantly fewer fragmented reads.}
+    \label{fig:slidewindow}
 \end{figure}
 
 
