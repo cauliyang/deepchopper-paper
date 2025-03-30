@@ -328,6 +328,13 @@ We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, con
 
 \hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
 
+\hl{To determine the optimal sliding window size in the post-processing, we conducted a comprehensive evaluation across different window configurations (\mbox{\edfigref{fig:slidewindow}{}}).
+As shown in \mbox{\edfigref{fig:slidewindow}{a}}, we observed a clear trend in support distribution as window size varies.
+Window sizes of 11, 21, 31, 41, and 51 were systematically tested, with cDNA support percentages of 47.5\%, 47.4\%, 46.3\%, 44.9\%, and 43.3\% respectively in VCaP \mbox{\gls{drs}} data.
+While smaller windows (11-21) demonstrated marginally higher cDNA support percentages, \mbox{\edfigref{fig:slidewindow}{b}} reveals that window size 21 offers superior segmentation efficiency.
+Specifically, when examining the number of segments per read after trimming, window size 21 shows fewer instances of excessive fragmentation (4+ segments) compared to window size 11, while maintaining comparable performance for reads with 1-3 segments (\mbox{\edfigref{fig:slidewindow}{b}}).
+This balance between support percentage and fragmentation efficiency led us to select 21 as our optimal sliding window size, providing sufficient contextual information for accurate classification while minimizing unnecessary segmentation of reads.
+Additionaly, we recognize that optimal parameters may vary depending on specific dataset characteristics. For this reason, we have implemented a flexible approach by providing the parameter \emph{--smooth-window} in our software, which allows users to adjust the window size according to their specific data requirements.}
 
 \hl{We evaluated the computational performance of our pipeline using sequencing data from the VCaP cell line at various sampling depths.
 	\mbox{\edfigref{fig:sf2a}{}} illustrates the runtime and memory requirements across different data sizes (0.1M, 0.5M, 1M reads, and the full dataset (9M)).
@@ -553,7 +560,7 @@ To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yada
 
 \hl{To evaluate the contribution of the quality block to our model's performance, we conducted an ablation study comparing two model configurations: one with the quality block and one without.
 	Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model trainnnig}}, but with a dataset consisting of 100,000 samples in total.
-	The training procedure maintained consistent hyperparameters across both configurations, including learning rate, batch size, and optimization algorithm.
+	The training procedure maintained consistent hyperparameters across both configurations, including learning rate, batch size, and optimization algorithm as previously.
 	The only difference between the two models was the presence or absence of the quality block component.
 	Performance was evaluated using the F1 score metric on a held-out test set.}
 
@@ -564,6 +571,8 @@ To improve the accuracy and smoothness of the predictions, a sliding window appr
 This method extends the predicted regions and minimizes noisy predictions, aligning with the typical length of adapter sequences observed in the \gls{ont} \gls{drs} data.
 The sliding window strategy effectively maintains continuity in regions predicted to contain adapter sequences, preventing fragmented and unrealistic results.
 Within each window, a voting mechanism was applied to refine the predictions.
+\hl{The majority voting approach uses a straightforward plurality system.
+    For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.}
 The final classification $y_i$ for each nucleotide \( x_i \) was determined by the majority vote of all predictions within the window, as defined by the following equation:
 \[
 	y_i = \begin{cases}
@@ -573,10 +582,12 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 \]
 where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
-\hl{The majority voting approach in DeepChopper uses a straightforward plurality system.
-For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.
-The category that receives more votes (adapter or non-adapter) determines the final classification.
-In cases where votes are tied, we maintain the current label to preserve sequence continuity.}
+
+
+\hl{Multiple window sizes were evaluated to determine optimal parameters for the algorithm.
+The selection process involved testing window sizes of 11, 21, 31, 41, and 51 nucleotides across the VCaP dataset.
+For each window size configuration, we applied DeepChopper and quantified two key metrics: (1) the proportion of chimeric alignments classified with cDNA support versus no support, and (2) the distribution of resulting segments per read after trimming, conducted on a sampling of 1M reads from VCaP.
+The window size selection aimed to balance the algorithm's ability to identify genuine adapter regions while minimizing excessive fragmentation of reads.}
 
 The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
 
@@ -792,22 +803,36 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/sf1}
-	\caption{{\bf \hl{Performance evaluation in a held-out test dataset showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}}\label{fig:sf1}
+	\caption{{\bf \hl{Performance evaluation in a held-out test dataset ($N=60,000$) showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}}\label{fig:sf1}
 \end{figure}
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.35\columnwidth]{finals/adaprob}
-	\caption{{\bf \hl{Prediction probability distributions of DeepChopper for the held-out test dataset.}} \hl{(a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.}}\label{fig:adaprob}
+	\caption{{\bf \hl{Prediction probability distributions of DeepChopper for the held-out test dataset  ($N=60,000$).}} \hl{(a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.}}\label{fig:adaprob}
+\end{figure}
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=0.95\textwidth]{finals/slidewindow}
+    \end{center}
+    \caption{ {\bf \hl{Effect of window size on chimeric alignment detection and read fragmentation.}}
+        \hl{(a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
+            nucleotides) showing the percentage of cDNA-supported chimeric alignments (red bars) in VCaP.
+            Higher percentages indicate better support.
+            (b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents sampling of 1M reads from VCaP dataset. Window size 21
+            maintains similar detection sensitivity to window size 11 while producing
+            significantly fewer fragmented reads.}}
+    \label{fig:slidewindow}
 \end{figure}
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/sf2a}
-	\caption{ {\bf \hl{Computational performance metrics across different data sizes from VCaP cell line sequencing.}} \hl{(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset (9M)) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same VCaP data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}}\label{fig:sf2a}
+	\caption{ {\bf \hl{Computational performance metrics across different data sizes from VCaP cell line sequencing.}} \hl{(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset (9M)) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}}\label{fig:sf2a}
 \end{figure}
 
 
 \begin{figure}[!ht]
-	\includegraphics[height=0.21\columnwidth]{finals/sf2}
+	\includegraphics[height=0.2\columnwidth]{finals/sf2}
 	\caption{ {\bf Chimeric alignments from \gls{drs} of the F121-9 cell line (mouse), evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimeric alignments across all methods compared to Dorado with adapter trimming. The bar colors indicate chimeric alignments supported by additional sequencing data (red) and those lacking support (grey).}}\label{fig:sf2}
 \end{figure}
 
@@ -846,22 +871,6 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 \end{figure}
 
 
-
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=0.95\textwidth]{finals/slidewindow}
-    \end{center}
-    \caption{ {\bf Effect of window size on chimeric alignment detection and read fragmentation.}
-        (a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
-        nucleotides) showing the number of chimeric alignments detected (x-axis, ×
-        1000) with corresponding percentage of cDNA-supported alignments (red bars).
-        Higher percentages indicate better support. (b) Distribution of the number
-        of segments per read after trimming (x-axis) for window sizes 11 (gray)
-        and 21 (pink), shown on a logarithmic scale (y-axis). Window size 21
-        maintains similar detection sensitivity to window size 11 while producing
-        significantly fewer fragmented reads.}
-    \label{fig:slidewindow}
-\end{figure}
 
 
 % \newpage
