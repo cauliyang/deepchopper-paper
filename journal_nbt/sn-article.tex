@@ -266,7 +266,7 @@ DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which 
 To address HyenaDNA's inability to process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
 This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
 \hl{Our ablation study demonstrated a clear benefit from incorporating the quality block component into the model architecture.
-As shown in \mbox{\edtableref{tab:st2}{}}, models with the quality block achieved an F1 score of 0.99, compared to 0.97 for models without this component.}
+	As shown in \mbox{\edtableref{tab:st2}{}}, models with the quality block achieved an F1 score of 0.99, compared to 0.97 for models without this component.}
 By combining broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
 Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimera artifacts.
 
@@ -277,12 +277,12 @@ By applying this iterative refinement strategy, DeepChopper is able to optimize 
 
 
 \hl{Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis with single-nucleotide resolution.
-This fine-grained resolution represents a critical advantage for genomic analysis tasks requiring precise base-level predictions.
-While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper processes sequences up to 32 kilobases—a context length sufficient to capture most complete mRNA transcripts.
-We limited the maximum input sequence length in DeepChopper to 32K nucleotides based on both technical and biological considerations.
-From a technical perspective, this constraint stems from architectural limitations of the underlying HyenaDNA model and its context window size.
-From a biological perspective, this constraint has minimal implications for the vast majority of transcriptome analyses, as human mRNA transcripts typically have a median length of approximately 1.5-2kb with most transcripts falling well below our processing threshold\mbox{~\cite{lopes2021gene}}.
-Addtionally, Nanopore sequencing studies showing that the maximum aligned length of native RNA reads is typically around 21kb\mbox{~\cite{workman2019nanopore}}}.
+	This fine-grained resolution represents a critical advantage for genomic analysis tasks requiring precise base-level predictions.
+	While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper processes sequences up to 32 kilobases—a context length sufficient to capture most complete mRNA transcripts.
+	We limited the maximum input sequence length in DeepChopper to 32K nucleotides based on both technical and biological considerations.
+	From a technical perspective, this constraint stems from architectural limitations of the underlying HyenaDNA model and its context window size.
+	From a biological perspective, this constraint has minimal implications for the vast majority of transcriptome analyses, as human mRNA transcripts typically have a median length of approximately 1.5-2kb with most transcripts falling well below our processing threshold\mbox{~\cite{lopes2021gene}}.
+	Addtionally, Nanopore sequencing studies showing that the maximum aligned length of native RNA reads is typically around 21kb\mbox{~\cite{workman2019nanopore}}}.
 This extended sequence capacity, combined with single-nucleotide tokenization, enables DeepChopper to precisely identify non-reference elements such as \gls{ont} adapters with base-pair accuracy, a critical advantage for detecting chimeric artifacts in \gls{drs} sequencing data.
 Its efficient architecture, comprising just 4.6 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
 This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences (\edtableref{tab:st2}{}).
@@ -301,10 +301,10 @@ DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:
 
 
 \hl{Our model demonstrated exceptional binary classification performance in differentiating adapter from non-adapter sequences at single base pair resolution when evaluated on the independent test set.
-\mbox{\edfigref{fig:adaprob}{}}  illustrates the probability distributions of model predictions on this held-out data, stratified by ground truth labels.
-For true adapter base pairs (\mbox{\edfigref{fig:adaprob}{a}}), the model assigned high probabilities ($>0.8$) to the adapter class, while confidently predicting low probabilities ($<0.2$) for the non-adapter class.
-Conversely, for true non-adapter base pairs (\mbox{\edfigref{fig:adaprob}{b}}), the model correctly assigned high probabilities ($>0.8$) to the non-adapter class and low probabilities ($<0.2$) to the adapter class.
-The strongly bimodal nature of these distributions on unseen test data, with minimal intermediate probability values, indicates the model's decisive classification capabilities at single-nucleotide resolution with little uncertainty between classes, suggesting robust feature extraction, decision boundary formation during training, and excellent generalization to independent samples.}
+	\mbox{\edfigref{fig:adaprob}{}}  illustrates the probability distributions of model predictions on this held-out data, stratified by ground truth labels.
+	For true adapter base pairs (\mbox{\edfigref{fig:adaprob}{a}}), the model assigned high probabilities ($>0.8$) to the adapter class, while confidently predicting low probabilities ($<0.2$) for the non-adapter class.
+	Conversely, for true non-adapter base pairs (\mbox{\edfigref{fig:adaprob}{b}}), the model correctly assigned high probabilities ($>0.8$) to the non-adapter class and low probabilities ($<0.2$) to the adapter class.
+	The strongly bimodal nature of these distributions on unseen test data, with minimal intermediate probability values, indicates the model's decisive classification capabilities at single-nucleotide resolution with little uncertainty between classes, suggesting robust feature extraction, decision boundary formation during training, and excellent generalization to independent samples.}
 
 To further assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
 This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
@@ -329,12 +329,12 @@ We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, con
 \hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
 
 \hl{To determine the optimal sliding window size in the post-processing, we conducted a comprehensive evaluation across different window configurations (\mbox{\edfigref{fig:slidewindow}{}}).
-As shown in \mbox{\edfigref{fig:slidewindow}{a}}, we observed a clear trend in support distribution as window size varies.
-Window sizes of 11, 21, 31, 41, and 51 were systematically tested, with cDNA support percentages of 47.5\%, 47.4\%, 46.3\%, 44.9\%, and 43.3\% respectively in VCaP \mbox{\gls{drs}} data.
-While smaller windows (11-21) demonstrated marginally higher cDNA support percentages, \mbox{\edfigref{fig:slidewindow}{b}} reveals that window size 21 offers superior segmentation efficiency.
-Specifically, when examining the number of segments per read after trimming, window size 21 shows fewer instances of excessive fragmentation (4+ segments) compared to window size 11, while maintaining comparable performance for reads with 1-3 segments (\mbox{\edfigref{fig:slidewindow}{b}}).
-This balance between support percentage and fragmentation efficiency led us to select 21 as our optimal sliding window size, providing sufficient contextual information for accurate classification while minimizing unnecessary segmentation of reads.
-Additionaly, we recognize that optimal parameters may vary depending on specific dataset characteristics. For this reason, we have implemented a flexible approach by providing the parameter \emph{--smooth-window} in our software, which allows users to adjust the window size according to their specific data requirements.}
+	As shown in \mbox{\edfigref{fig:slidewindow}{a}}, we observed a clear trend in support distribution as window size varies.
+	Window sizes of 11, 21, 31, 41, and 51 were systematically tested, with cDNA support percentages of 47.5\%, 47.4\%, 46.3\%, 44.9\%, and 43.3\% respectively in VCaP \mbox{\gls{drs}} data.
+	While smaller windows (11-21) demonstrated marginally higher cDNA support percentages, \mbox{\edfigref{fig:slidewindow}{b}} reveals that window size 21 offers superior segmentation efficiency.
+	Specifically, when examining the number of segments per read after trimming, window size 21 shows fewer instances of excessive fragmentation (4+ segments) compared to window size 11, while maintaining comparable performance for reads with 1-3 segments (\mbox{\edfigref{fig:slidewindow}{b}}).
+	This balance between support percentage and fragmentation efficiency led us to select 21 as our optimal sliding window size, providing sufficient contextual information for accurate classification while minimizing unnecessary segmentation of reads.
+	Additionaly, we recognize that optimal parameters may vary depending on specific dataset characteristics. For this reason, we have implemented a flexible approach by providing the parameter \emph{--smooth-window} in our software, which allows users to adjust the window size according to their specific data requirements.}
 
 \hl{We evaluated the computational performance of our pipeline using sequencing data from the VCaP cell line at various sampling depths.
 	\mbox{\edfigref{fig:sf2a}{}} illustrates the runtime and memory requirements across different data sizes (0.1M, 0.5M, 1M reads, and the full dataset (9M)).
@@ -387,9 +387,9 @@ Furthermore, the internal adapter sequences identified by DeepChopper within the
 These findings strongly suggest that chimera artifacts continue to be an issue with the latest RNA004 \gls{drs} kit.
 
 \hl{While DeepChopper demonstrates effectiveness with RNA004 data despite being trained exclusively on RNA002 chemistry, the observed difference in chimeric alignment reduction (91\% for RNA002 vs. 21\% for RNA004) warrants further explanation.
-This disparity reflects two key factors: DeepChopper's training optimization for RNA002 patterns and fundamental improvements in the RNA004 chemistry itself.
-The RNA004 kit represents a significant advancement in \mbox{\gls{ont}}, designed specifically to produce cleaner reads with inherently fewer artifacts\mbox{~\cite{hewel2024direct}}.
-Despite this, the model's ability to further reduce chimeric alignments in RNA004 data through zero-shot transfer learning highlights its robust generalization capabilities across different sequencing chemistries.}
+	This disparity reflects two key factors: DeepChopper's training optimization for RNA002 patterns and fundamental improvements in the RNA004 chemistry itself.
+	The RNA004 kit represents a significant advancement in \mbox{\gls{ont}}, designed specifically to produce cleaner reads with inherently fewer artifacts\mbox{~\cite{hewel2024direct}}.
+	Despite this, the model's ability to further reduce chimeric alignments in RNA004 data through zero-shot transfer learning highlights its robust generalization capabilities across different sequencing chemistries.}
 
 \begin{figure}[!ht]
 	\includegraphics[height=1\columnwidth]{finals/figure3}
@@ -501,7 +501,7 @@ The quality block, comprising two \glspl{mlp} with residual connections (hidden 
 Each \gls{mlp} layer is followed by ReLU activation, enhancing the model's ability to learn complex quality-sequence relationships.
 
 \hl{The processed sequence features are subsequently fed into a classification head consisting of a two-layer neural network. This architecture transforms the feature representations into classification outputs at the nucleotide level. The classification module employs a softmax activation function to compute probability distributions across two classes: adapter and non-adapter.
-For a given nucleotide position with output logits $z_1$ and $z_2$ (corresponding to adapter and non-adapter classes), the softmax function computes class probabilities as:}
+	For a given nucleotide position with output logits $z_1$ and $z_2$ (corresponding to adapter and non-adapter classes), the softmax function computes class probabilities as:}
 
 \[ P(y_i=c) = \frac{e^{z_c}}{\sum_{j=1}^{2} e^{z_j}} \]
 
@@ -572,7 +572,7 @@ This method extends the predicted regions and minimizes noisy predictions, align
 The sliding window strategy effectively maintains continuity in regions predicted to contain adapter sequences, preventing fragmented and unrealistic results.
 Within each window, a voting mechanism was applied to refine the predictions.
 \hl{The majority voting approach uses a straightforward plurality system.
-    For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.}
+	For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.}
 The final classification $y_i$ for each nucleotide \( x_i \) was determined by the majority vote of all predictions within the window, as defined by the following equation:
 \[
 	y_i = \begin{cases}
@@ -585,9 +585,9 @@ where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the 
 
 
 \hl{Multiple window sizes were evaluated to determine optimal parameters for the algorithm.
-The selection process involved testing window sizes of 11, 21, 31, 41, and 51 nucleotides across the VCaP dataset.
-For each window size configuration, we applied DeepChopper and quantified two key metrics: (1) the proportion of chimeric alignments classified with cDNA support versus no support, and (2) the distribution of resulting segments per read after trimming, conducted on a sampling of 1M reads from VCaP.
-The window size selection aimed to balance the algorithm's ability to identify genuine adapter regions while minimizing excessive fragmentation of reads.}
+	The selection process involved testing window sizes of 11, 21, 31, 41, and 51 nucleotides across the VCaP dataset.
+	For each window size configuration, we applied DeepChopper and quantified two key metrics: (1) the proportion of chimeric alignments classified with cDNA support versus no support, and (2) the distribution of resulting segments per read after trimming, conducted on a sampling of 1M reads from VCaP.
+	The window size selection aimed to balance the algorithm's ability to identify genuine adapter regions while minimizing excessive fragmentation of reads.}
 
 The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
 
@@ -812,17 +812,17 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 \end{figure}
 
 \begin{figure}
-    \begin{center}
-        \includegraphics[width=0.95\textwidth]{finals/slidewindow}
-    \end{center}
-    \caption{ {\bf \hl{Effect of window size on chimeric alignment detection and read fragmentation.}}
-        \hl{(a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
-            nucleotides) showing the percentage of cDNA-supported chimeric alignments (red bars) in VCaP.
-            Higher percentages indicate better support.
-            (b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents sampling of 1M reads from VCaP dataset. Window size 21
-            maintains similar detection sensitivity to window size 11 while producing
-            significantly fewer fragmented reads.}}
-    \label{fig:slidewindow}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{finals/slidewindow}
+	\end{center}
+	\caption{ {\bf \hl{Effect of window size on chimeric alignment detection and read fragmentation.}}
+		\hl{(a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
+			nucleotides) showing the percentage of cDNA-supported chimeric alignments (red bars) in VCaP.
+			Higher percentages indicate better support.
+			(b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents sampling of 1M reads from VCaP dataset. Window size 21
+			maintains similar detection sensitivity to window size 11 while producing
+			significantly fewer fragmented reads.}}
+	\label{fig:slidewindow}
 \end{figure}
 
 \begin{figure}[!ht]
