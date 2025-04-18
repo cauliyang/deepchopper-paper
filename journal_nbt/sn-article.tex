@@ -63,6 +63,26 @@
 \usepackage{soul}
 \usepackage{titlesec}
 
+% Configure hyperref unique identifiers for sections, figures, tables
+\makeatletter
+\usepackage{etoolbox}
+
+% First ensure every section type has a distinct prefix in hyperref
+\def\theHchapter{ch.\thechapter}
+\def\theHsection{sec.\thesection}
+\def\theHsubsection{subsec.\thesubsection}
+\def\theHsubsubsection{subsubsec.\thesubsubsection}
+\def\theHparagraph{para.\theparagraph}
+\def\theHsubparagraph{subpara.\thesubparagraph}
+\def\theHfigure{fig.\thefigure}
+\def\theHtable{tab.\thetable}
+
+% Force phantomsection to ensure proper hyperref anchors
+\pretocmd{\section}{\phantomsection}{}{}
+\pretocmd{\subsection}{\phantomsection}{}{}
+\pretocmd{\figure}{\phantomsection}{}{}
+\pretocmd{\table}{\phantomsection}{}{}
+\makeatother
 
 % for collabration and will remove before submit
 \newcommand{\yy}[1]{\textcolor{cyan}{\textbf{[Yangyang: #1]}}}
@@ -290,6 +310,7 @@ This is in contrast to models like Evo\mbox{~\cite{nguyen2024sequence}}, which r
 	\caption{{\bf Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms}  (a) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (b) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (c) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (d) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. DeepChopper-involved methods greatly reduce chimeric alignments not supported by direct cDNA sequencing. (e) Distribution of base qualities from identified internal adapters by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), and red (low). (f) \gls{blat} identity distribution of the internal adapter sequences mapping against human reference genome. (g) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. DeepChopper-involved methods consistently reduce chimeric alignments not supported by cDNA sequencing across all cell lines. (h) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimseric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f2}
 \end{figure}
 
+
 To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2021systematic}.
 We curated a training set of 540,000 long reads initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
@@ -421,7 +442,9 @@ The presence of polyA and open pore signals at the boundary of this region furth
 
 In conclusion, DeepChopper demonstrates the effective application of language models in long-read sequence analysis by addressing the previously unrecognized issue of chimera artifacts in nanopore \gls{drs}. By precisely identifying and removing \gls{ont} adapters from base-called long-read sequences, DeepChopper substantially improves \gls{drs} data quality, allowing for more accurate transcript and gene fusion analyses. Beyond its immediate application in enhancing \gls{drs} data integrity, this work establishes a practical framework for applying language models to resolve complex challenges in long-read sequencing technologies. Looking forward, DeepChopper could be adapted to detect additional artifact types or expanded to support other aspects of long-read analysis, ultimately advancing capabilities across diverse research domains.
 
+
 \section{Methods}\label{sec:methods}
+
 
 \subsection{Cell culture}
 
@@ -550,7 +573,7 @@ To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yada
 	}
 
 \hl{To evaluate the contribution of the quality block to our model's performance, we conducted an ablation study comparing two model configurations: one with the quality block and one without.
-	Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model trainnnig}}, but with a dataset consisting of 100,000 samples in total.
+	Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model training}}, but with a dataset consisting of 100,000 samples in total.
 	The training procedure maintained consistent hyperparameters across both configurations, including learning rate, batch size, and optimization algorithm as previously.
 	The only difference between the two models was the presence or absence of the quality block component.
 	Performance was evaluated using the F1 score metric on a held-out test set.}
