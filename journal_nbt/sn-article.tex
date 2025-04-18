@@ -255,7 +255,7 @@ By both identifying and addressing this problem, our work enhances the reliabili
 
 \section{Results and Discussion}
 
-\subsection{DeepChopper Architecture and Training}
+\subsection{DeepChopper Architecture and Training}\label{subsec:deepchopper_architecture}
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.63\columnwidth]{finals/figure1}
@@ -263,11 +263,9 @@ By both identifying and addressing this problem, our work enhances the reliabili
 \end{figure}
 
 DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at capturing long-range dependencies (\figref{fig:f1}{a}).
-To address HyenaDNA's inability to process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
+process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
 This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
-\hl{Our ablation study demonstrated a clear benefit from incorporating the quality block component into the model architecture.
-	As shown in \mbox{\edtableref{tab:st2}{}}, models with the quality block achieved an F1 score of 0.99, compared to 0.97 for models without this component.}
-By combining broad contextual understanding with nucleotide-level precision~\cite{poli2023hyena}, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
+By combining broad contextual understanding with nucleotide-level precision, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
 Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimera artifacts.
 
 To further refine the prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach, as illustrated in~\figref{fig:f1}{c}.
@@ -275,17 +273,16 @@ The model applies sliding window with a stride of 1 across the read, analyzing t
 This refinement process ensures that the predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
 By applying this iterative refinement strategy, DeepChopper is able to optimize the final predictions and improve the overall accuracy of the adapter detection.
 
+\hl{Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis at single-nucleotide resolution.
+This fine-grained resolution provides a critical advantage for genomic analysis tasks requiring precise base-level predictions.
+While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to input sequences of approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper supports input lengths up to 32 kilobases—sufficient to encompass most complete mRNA transcripts.
+This 32K nucleotide input limit was selected based on both technical and biological considerations. Technically, the constraint reflects the architectural design and context window limitations of the underlying HyenaDNA model.
+Biologically, the vast majority of human mRNA transcripts fall well within this range, with a median length of approximately 1.5–2 kb, and the majority well below the maximum input threshold\mbox{~\cite{lopes2021gene}}.
+Moreover, Nanopore sequencing studies report that the typical maximum aligned length of native RNA reads is around 21 kb\mbox{~\cite{workman2019nanopore}}, further supporting the adequacy of this design.}
 
-\hl{Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis with single-nucleotide resolution.
-	This fine-grained resolution represents a critical advantage for genomic analysis tasks requiring precise base-level predictions.
-	While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper processes sequences up to 32 kilobases—a context length sufficient to capture most complete mRNA transcripts.
-	We limited the maximum input sequence length in DeepChopper to 32K nucleotides based on both technical and biological considerations.
-	From a technical perspective, this constraint stems from architectural limitations of the underlying HyenaDNA model and its context window size.
-	From a biological perspective, this constraint has minimal implications for the vast majority of transcriptome analyses, as human mRNA transcripts typically have a median length of approximately 1.5-2kb with most transcripts falling well below our processing threshold\mbox{~\cite{lopes2021gene}}.
-	Addtionally, Nanopore sequencing studies showing that the maximum aligned length of native RNA reads is typically around 21kb\mbox{~\cite{workman2019nanopore}}}.
-This extended sequence capacity, combined with single-nucleotide tokenization, enables DeepChopper to precisely identify non-reference elements such as \gls{ont} adapters with base-pair accuracy, a critical advantage for detecting chimeric artifacts in \gls{drs} sequencing data.
-Its efficient architecture, comprising just 4.6 million parameters, makes DeepChopper computationally practical for large-scale \gls{drs} analysis, unlike resource-intensive models such as Evo~\cite{nguyen2024sequence}, which requires billions of parameters.
-This combination of long context processing, high-resolution accuracy, and computational efficiency makes DeepChopper particularly well-suited for analyzing massive long-read sequences (\edtableref{tab:st2}{}).
+The combination of extended input capacity and single-nucleotide tokenization enables DeepChopper to accurately identify non-reference elements, such as \gls{ont} adapter sequences, with base-pair precision—an essential capability for detecting chimera artifacts in \gls{drs} data.
+In addition, DeepChopper’s lightweight architecture, consisting of only 4.6 million parameters, makes it computationally efficient and scalable for large-scale \gls{drs} analysis.
+This is in contrast to models like Evo\mbox{~\cite{nguyen2024sequence}}, which require billions of parameters and significantly more computational resources.
 
 % Result
 \begin{figure}[!ht]
@@ -296,37 +293,41 @@ This combination of long context processing, high-resolution accuracy, and compu
 To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2021systematic}.
 We curated a training set of 540,000 long reads initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
-DeepChopper achieved recall, precision, and F1 scores above 0.99 (\edfigref{fig:sf1}{}), demonstrating its high accuracy in detecting adapter sequences.
-\hl{The benchmarking results clearly demonstrate that existing adapter trimming tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} fail to identify adapter sequences in \mbox{\gls{drs}} data.}
 
+\subsection{\hl{DeepChopper Benchmarking and Model Optimization}}
 
-\hl{Our model demonstrated exceptional binary classification performance in differentiating adapter from non-adapter sequences at single base pair resolution when evaluated on the independent test set.
-	\mbox{\edfigref{fig:adaprob}{}}  illustrates the probability distributions of model predictions on this held-out data, stratified by ground truth labels.
-	For true adapter base pairs (\mbox{\edfigref{fig:adaprob}{a}}), the model assigned high probabilities ($>0.8$) to the adapter class, while confidently predicting low probabilities ($<0.2$) for the non-adapter class.
-	Conversely, for true non-adapter base pairs (\mbox{\edfigref{fig:adaprob}{b}}), the model correctly assigned high probabilities ($>0.8$) to the non-adapter class and low probabilities ($<0.2$) to the adapter class.
-	The strongly bimodal nature of these distributions on unseen test data, with minimal intermediate probability values, indicates the model's decisive classification capabilities at single-nucleotide resolution with little uncertainty between classes, suggesting robust feature extraction, decision boundary formation during training, and excellent generalization to independent samples.}
+\hl{We conducted comprehensive benchmarking of DeepChopper against existing \mbox{\gls{ont}} adapter trimming tools including Pychopper\mbox{~\cite{pychopper}}, Porechop\mbox{~\cite{Wick2017}}, and Porechop\_ABI\mbox{~\cite{bonenfant2023porechop}}, though it should be noted that none of these existing tools were specifically designed for \mbox{\gls{drs}} data analysis.
+Performance evaluation was carried out using the synthetic testing dataset (n = 60,000 reads), enabling rigorous assessment of precision, recall, and F1-score metrics.
+As shown in \mbox{\edfigref{fig:sf1}{}}, all existing tools demonstrated negligible performance metrics when processing \mbox{\gls{drs}} adapter sequences, indicating fundamental incompatibility with the \mbox{\gls{drs}} protocol.
+In contrast, DeepChopper achieved exceptional accuracy in identifying both terminal and internal adapters, with recall, precision, and F1 scores consistently exceeding 0.99.
+These results highlight DeepChopper's unique capability to address the specific complexities inherent to \mbox{\gls{drs}} reads and underscore the critical need for purpose-built solutions in this domain.}
 
-To further assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
-This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data.
+\hl{To further evaluate DeepChopper’s classification accuracy, we assessed its performance at single-nucleotide resolution. As shown in \mbox{\edtableref{tab:st2}{}}, the model exhibited sharply bimodal probability distributions for base-level classification, stratified by ground truth labels. For true adapter bases (\mbox{\edfigref{fig:adaprob}{a}}), the model consistently assigned high probabilities ($>0.8$) to the adapter class while suppressing probabilities for the non-adapter class ($<0.2$).
+Conversely, for true non-adapter bases (\mbox{\edfigref{fig:adaprob}{b}}), the model reliably predicted high probabilities for the non-adapter class and low probabilities for the adapter class.
+The minimal presence of intermediate probability values suggests that DeepChopper makes highly confident predictions with low ambiguity between classes.
+This decisive classification behavior reflects the model’s robust feature representation, well-calibrated decision boundaries, and strong generalization to previously unseen data.}
 
+\hl{We further conducted an ablation experiment to assess the contribution of the quality block component in the model architecture.
+As shown in \mbox{\edtableref{tab:st2}{}}, inclusion of the quality block led to a marked improvement in performance, with the F1 score increasing from 0.97 to 0.99.
+This module leverages per-base quality scores to better distinguish genuine adapter sequences from similar motifs that may occur naturally within reads.
+The enhanced performance suggests that incorporating sequencing quality information enables the model to more effectively filter out spurious signal and improve classification robustness.
+This experiment was performed using the same training methodology as previous evaluations but with a newly generated, focused dataset of 100,000 reads (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
-% For the specific subsection you want to highlight:
-%{
-%    \titleformat{\subsection}
-%    {\normalfont\large\bfseries}
-%    {\thesubsection}
-%    {1em}
-%    {\colorbox{yellow}}  % This highlights the subsection title
+\subsection{Chimeric Read Artifact Detection in Cancer \gls{drs} Data}
 
-%\subsection{Runtime Performance and Resource Utilization}
-%\subsection{DeepChopper Pipeline and Computational Performance}
-%}
+To assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
+This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data. We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with the \gls{sgnex} project. Using a MinION sequencer with four R9.4 flow cells, we generated 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}. DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
 
-\subsection{Chimeric Read Artifact Detection}
+\hl{DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. To enhance computational efficiency, key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
 
-We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with the \gls{sgnex} project. Using a MinION sequencer with four R9.4 flow cells, we generated 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}.
-
-\hl{DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts. To enhance computational efficiency, DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. Key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
+\hl{We first evaluated the computational performance of our pipeline when analyzing the VCaP \mbox{\gls{drs}} data. We examined the runtime and memory requirements across varied subsampled reads (0.1M, 0.5M, 1M, and the full dataset (9M)).
+	As shown in \mbox{\edfigref{fig:sf2a}{a}}, the total processing time increased non-linearly with data size, from approximately 0.1 hours for the smallest sample (0.1M) to 5 hours for the full dataset. The prediction stage emerged as the primary computational bottleneck, accounting for over 70\% of the total runtime in the full dataset. FASTQ conversion and post-processing times also increased with data size but remained relatively modest compared to the prediction stage.
+	Memory utilization (\mbox{\edfigref{fig:sf2a}{b}}) demonstrated similar scaling patterns with increasing data size.
+	The prediction stage on CPU required the highest memory resources, approaching 70GB for the 1M and full datasets.
+	Notably, GPU-based prediction consistently required less memory than its CPU counterpart across all data sizes, though the difference narrowed as data size increased.
+	FASTQ conversion memory requirements remained minimal for smaller datasets but increased substantially for the full dataset, reaching approximately 40GB.
+	Post-processing showed a gradual increase in memory usage, with requirements of approximately 40GB for the full dataset.
+	These performance metrics highlight the computational demands of processing VCaP cell line data at scale and identify the prediction stage as the critical factor affecting overall pipeline efficiency (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
 \hl{To determine the optimal sliding window size in the post-processing, we conducted a comprehensive evaluation across different window configurations (\mbox{\edfigref{fig:slidewindow}{}}).
 	As shown in \mbox{\edfigref{fig:slidewindow}{a}}, we observed a clear trend in support distribution as window size varies.
@@ -336,17 +337,7 @@ We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, con
 	This balance between support percentage and fragmentation efficiency led us to select 21 as our optimal sliding window size, providing sufficient contextual information for accurate classification while minimizing unnecessary segmentation of reads.
 	Additionaly, we recognize that optimal parameters may vary depending on specific dataset characteristics. For this reason, we have implemented a flexible approach by providing the parameter \emph{--smooth-window} in our software, which allows users to adjust the window size according to their specific data requirements.}
 
-\hl{We evaluated the computational performance of our pipeline using sequencing data from the VCaP cell line at various sampling depths.
-	\mbox{\edfigref{fig:sf2a}{}} illustrates the runtime and memory requirements across different data sizes (0.1M, 0.5M, 1M reads, and the full dataset (9M)).
-	As shown in \mbox{\edfigref{fig:sf2a}{a}}, the total processing time increased non-linearly with data size, from approximately 0.1 hours for the smallest sample (0.1M) to 5 hours for the full dataset.
-	The prediction stage emerged as the primary computational bottleneck, accounting for over 70\% of the total runtime in the full dataset.
-	FASTQ conversion and post-processing times also increased with data size but remained relatively modest compared to the prediction stage.
-	Memory utilization (\mbox{\edfigref{fig:sf2a}{b}}) demonstrated similar scaling patterns with increasing data size.
-	The prediction stage on CPU required the highest memory resources, approaching 70GB for the 1M and full datasets.
-	Notably, GPU-based prediction consistently required less memory than its CPU counterpart across all data sizes, though the difference narrowed as data size increased.
-	FASTQ conversion memory requirements remained minimal for smaller datasets but increased substantially for the full dataset, reaching approximately 40GB.
-	Post-processing showed a gradual increase in memory usage, with requirements of approximately 40GB for the full dataset.
-	These performance metrics highlight the computational demands of processing VCaP cell line data at scale and identify the prediction stage as the critical factor affecting overall pipeline efficiency} (See \hyperref[sec:methods]{Methods} for details).
+
 
 By improving processing speed while maintaining reasonable computational requirements, DeepChopper effectively increases the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
 Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
@@ -617,17 +608,7 @@ In this context, match length refers to the number of bases in the query sequenc
 This score provides a quantitative measure of how closely each identified sequence aligns with the reference genome, serving as an indicator of detection accuracy.
 The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
 
-
-% For the specific subsection you want to highlight:
-{
-	\titleformat{\subsection}
-	{\normalfont\large\bfseries}
-	{\thesubsection}
-	{1em}
-	{\colorbox{yellow}}  % This highlights the subsection title
-
-	\subsection{Computational benchmarks}
-}
+\subsection{\hl{Computational benchmarks}}
 
 \hl{All benchmarks were conducted in triplicate using btop (\mbox{\url{https://github.com/aristocratos/btop}}, v1.4.0) and nvtop (\mbox{\url{https://github.com/Syllo/nvtop}}, v3.1.0) to monitor CPU and GPU memory usage, respectively. Evaluations were performed on high-performance computing infrastructure with 16 CPU cores, 60 GB RAM, and dual NVIDIA A100 GPUs (80 GB memory each). Adapter prediction stage used a batch size of 64.}
 
@@ -811,6 +792,11 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 	\caption{{\bf \hl{Prediction probability distributions of DeepChopper for the held-out test dataset  ($N=60,000$).}} \hl{(a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.}}\label{fig:adaprob}
 \end{figure}
 
+\begin{figure}[!ht]
+	\includegraphics[height=0.4\columnwidth]{finals/sf2a}
+	\caption{ {\bf \hl{Computational performance metrics across different data sizes from the VCaP cell line \mbox{\gls{drs}}.}} \hl{(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes : subsampled (0.1M, 0.5M, 1M) and full (9M) reads derived from the VCaP \mbox{\gls{drs}}. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}}\label{fig:sf2a}
+\end{figure}
+
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=0.95\textwidth]{finals/slidewindow}
@@ -819,30 +805,21 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 		\hl{(a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
 			nucleotides) showing the percentage of cDNA-supported chimeric alignments (red bars) in VCaP.
 			Higher percentages indicate better support.
-			(b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents sampling of 1M reads from VCaP dataset. Window size 21
+			(b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents subsampling of 1M reads from the VCaP dataset. Window size 21
 			maintains similar detection sensitivity to window size 11 while producing
 			significantly fewer fragmented reads.}}
 	\label{fig:slidewindow}
 \end{figure}
 
 \begin{figure}[!ht]
-	\includegraphics[height=0.4\columnwidth]{finals/sf2a}
-	\caption{ {\bf \hl{Computational performance metrics across different data sizes from VCaP cell line sequencing.}} \hl{(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across four data sizes (0.1M, 0.5M, 1M, and Full dataset (9M)) sampled from the VCaP cell line. As data size increases, prediction time becomes the dominant component, with the full dataset requiring approximately 5 hours of total processing time. (b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements, with CPU memory usage for prediction reaching approximately 70 GB for the larger datasets. All measurements include error bars representing standard deviation from three runs.}}\label{fig:sf2a}
-\end{figure}
-
-
-\begin{figure}[!ht]
 	\includegraphics[height=0.2\columnwidth]{finals/sf2}
 	\caption{ {\bf Chimeric alignments from \gls{drs} of the F121-9 cell line (mouse), evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimeric alignments across all methods compared to Dorado with adapter trimming. The bar colors indicate chimeric alignments supported by additional sequencing data (red) and those lacking support (grey).}}\label{fig:sf2}
 \end{figure}
-
-
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.41\columnwidth]{finals/sf3}
 	\caption{ {\bf Evaluation of DeepChopper's predictions on chimeric read artifacts in \gls{drs} data generated using the SQK-RNA004 kit from the VCaP cell line.} (a) Number of chimeric alignments (in thousands) identified in VCaP RNA004 \gls{drs} reads processed by Dorado with and without adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. The bar colors indicate chimeric alignments supported by cDNA sequencing (red) and those lacking support (grey). (b) Base quality scores (left) and \gls{blat} alignment identity scores (right) for internal adapter sequences identified by DeepChopper in RNA004 \gls{drs} reads.}\label{fig:sf3}
 \end{figure}
-
 
 
 \begin{figure}[!ht]
