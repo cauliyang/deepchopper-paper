@@ -253,7 +253,7 @@ These artifacts may result from ligation during library preparation or chimeric 
 Detecting these chimera artifacts is challenging because long-read aligners often produce chimeric alignments from such artifacts that are indistinguishable from those derived from true gene fusion events.
 Importantly, chimeric read artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, which could theoretically serve as a distinguishing feature to differentiate them from true gene fusion-derived reads.
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
-\hl{As a result, current adapter detection tools\protect{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved} (\edtableref{tab:st1}{}).
+\hl{As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved (\mbox{\edtableref{tab:st1}{}})}.
 
 To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
 Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
@@ -381,7 +381,7 @@ This pattern persisted in RNA004 \gls{drs} data (\edfigref{fig:sf4}{c}), indicat
 
 We next assessed how DeepChopper correction influences downstream transcriptome analyses.
 Using IsoQuant~\cite{prjibelski2023accurate} to annotate transcripts from VCaP \gls{drs} data, we found that DeepChopper nearly doubled the number of identified transcripts compared to uncorrected data (\figref{fig:f3}{b}).
-Similar results were observed with RNA004 data (\edfigref{fig:sf4}{d}) and \hl{when DeepChopper was applied after Dorado’s adapter trimming}.
+\hl{Similar results were observed with RNA004 data (\mbox{\edfigref{fig:sf4}{d}}) and when DeepChopper was applied after Dorado’s adapter trimming}.
 The largest gains were observed in full-length transcripts (\gls{fsm} category), with additional increases in alternatively spliced isoforms (\gls{ism}, \gls{nic}, and \gls{nnc} categories).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
