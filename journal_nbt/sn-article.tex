@@ -84,14 +84,6 @@
 \pretocmd{\table}{\phantomsection}{}{}
 \makeatother
 
-% for collabration and will remove before submit
-\newcommand{\yy}[1]{\textcolor{cyan}{\textbf{[Yangyang: #1]}}}
-\newcommand{\rd}[1]{\textcolor{green}{\textbf{[Dr.Yang: #1]}}}
-\newcommand{\ty}[1]{\textcolor{orange}{\textbf{[Tingyou: #1]}}}
-\newcommand{\qx}[1]{\textcolor{purple}{\textbf{[Qingxiang: #1]}}}
-
-% for collabration and will remove before submit
-
 % \usepackage{caption}
 % \usepackage{subfig}
 \usepackage{enumitem}
@@ -235,9 +227,6 @@
 
 \abstract{
 	Chimera artifacts in nanopore \gls{drs} introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection. Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of \gls{drs} for transcriptomics research. To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called \gls{drs} long reads with single-base precision. Operating independently of raw signal or alignment information, DeepChopper effectively eliminates chimeric read artifacts, significantly enhancing the accuracy of crucial downstream analyses. This improvement in reliability unlocks the full potential of nanopore \gls{drs}, establishing it as a more robust tool for diverse transcriptomics applications.
-	%Chimera artifacts in nanopore \gls{drs} can significantly distort transcriptome analyses, yet their detection and removal remain challenging due to limitations in existing basecalling models. We present DeepChopper, a genomic language model that precisely identifies and removes adapter sequences from base-called \gls{drs} long reads at single-base resolution, operating independently of raw signal or alignment information to effectively eliminate chimeric read artifacts. By removing these artifacts, DeepChopper substantially improves the accuracy of critical downstream analyses, such as transcript annotation and gene fusion detection, thereby enhancing the reliability and utility of nanopore \gls{drs} for transcriptomics research.
-
-	%	Nanopore \gls{drs} has transformed transcriptomics by enabling full-length RNA analysis in a single read, but its utility is hindered by chimera artifacts that compromise data quality. We introduce DeepChopper, a genomic large language model designed to process long-read nanopore \gls{drs} data by efficiently identifying and removing adapter sequences directly from base-called reads, without the need for raw signal or alignment data. DeepChopper leverages long-range dependency modeling and quality-aware processing, enabling it to achieve broad contextual understanding while maintaining single-nucleotide resolution. Applied across multiple cell lines and sequencing platforms, DeepChopper reduced chimeric read artifacts by up to 91\% and decreased false-positive gene fusion calls by 89\%. This enhanced accuracy significantly improved downstream analyses, including transcript annotation and gene fusion detection in cancer transcriptomes. Our findings demonstrate the potential of large language models to tackle complex biological data, offering a robust tool for advancing genomics and biotechnology applications.
 }
 \maketitle
 
@@ -264,7 +253,7 @@ These artifacts may result from ligation during library preparation or chimeric 
 Detecting these chimera artifacts is challenging because long-read aligners often produce chimeric alignments from such artifacts that are indistinguishable from those derived from true gene fusion events.
 Importantly, chimeric read artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, which could theoretically serve as a distinguishing feature to differentiate them from true gene fusion-derived reads.
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
-\hl{As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved} (\edtableref{tab:st1}{}).
+\hl{As a result, current adapter detection tools\protect{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved} (\edtableref{tab:st1}{}).
 
 To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
 Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
@@ -294,11 +283,11 @@ This refinement process ensures that the predicted adapter sequences are contigu
 By applying this iterative refinement strategy, DeepChopper is able to optimize the final predictions and improve the overall accuracy of the adapter detection.
 
 \hl{Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis at single-nucleotide resolution.
-	This fine-grained resolution provides a critical advantage for genomic analysis tasks requiring precise base-level predictions.
-	While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to input sequences of approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper supports input lengths up to 32 kilobases—sufficient to encompass most complete mRNA transcripts.
-	This 32K nucleotide input limit was selected based on both technical and biological considerations. Technically, the constraint reflects the architectural design and context window limitations of the underlying HyenaDNA model.
-	Biologically, the vast majority of human mRNA transcripts fall well within this range, with a median length of approximately 1.5–2 kb, and the majority well below the maximum input threshold\mbox{~\cite{lopes2021gene}}.
-	Moreover, Nanopore sequencing studies report that the typical maximum aligned length of native RNA reads is around 21 kb\mbox{~\cite{workman2019nanopore}}, further supporting the adequacy of this design.}
+This fine-grained resolution provides a critical advantage for genomic analysis tasks requiring precise base-level predictions.
+While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to input sequences of approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper supports input lengths up to 32 kilobases—sufficient to encompass most complete mRNA transcripts.
+This 32K nucleotide input limit was selected based on both technical and biological considerations. Technically, the constraint reflects the architectural design and context window limitations of the underlying HyenaDNA model.
+Biologically, the vast majority of human mRNA transcripts fall well within this range, with a median length of approximately 1.5–2 kb, and the majority well below the maximum input threshold\mbox{~\cite{lopes2021gene}}.
+Moreover, Nanopore sequencing studies report that the typical maximum aligned length of native RNA reads is around 21 kb\mbox{~\cite{workman2019nanopore}}, further supporting the adequacy of this design.}
 
 The combination of extended input capacity and single-nucleotide tokenization enables DeepChopper to accurately identify non-reference elements, such as \gls{ont} adapter sequences, with base-pair precision—an essential capability for detecting chimera artifacts in \gls{drs} data.
 In addition, DeepChopper’s lightweight architecture, consisting of only 4.6 million parameters, makes it computationally efficient and scalable for large-scale \gls{drs} analysis.
@@ -312,136 +301,93 @@ This is in contrast to models like Evo\mbox{~\cite{nguyen2024sequence}}, which r
 
 
 To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2021systematic}.
-We curated a training set of 540,000 long reads initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
+We curated a training set of 480,000 long reads and a validation set of 60,000 ones initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
 
 \subsection{\hl{DeepChopper Benchmarking and Model Optimization}}
 
 \hl{We conducted comprehensive benchmarking of DeepChopper against existing \mbox{\gls{ont}} adapter trimming tools including Pychopper\mbox{~\cite{pychopper}}, Porechop\mbox{~\cite{Wick2017}}, and Porechop\_ABI\mbox{~\cite{bonenfant2023porechop}}, though it should be noted that none of these existing tools were specifically designed for \mbox{\gls{drs}} data analysis.
-	Performance evaluation was carried out using the synthetic testing dataset (n = 60,000 reads), enabling rigorous assessment of precision, recall, and F1-score metrics.
-	As shown in \mbox{\edfigref{fig:sf1}{}}, all existing tools demonstrated negligible performance metrics when processing \mbox{\gls{drs}} adapter sequences, indicating fundamental incompatibility with the \mbox{\gls{drs}} protocol.
-	In contrast, DeepChopper achieved exceptional accuracy in identifying both terminal and internal adapters, with recall, precision, and F1 scores consistently exceeding 0.99.
-	These results highlight DeepChopper's unique capability to address the specific complexities inherent to \mbox{\gls{drs}} reads and underscore the critical need for purpose-built solutions in this domain.}
+Performance evaluation was carried out using the synthetic testing dataset (n = 60,000 reads), enabling rigorous assessment of precision, recall, and F1-score metrics.
+As shown in \mbox{\edfigref{fig:sf1}{}}, all existing tools demonstrated negligible performance metrics when processing \mbox{\gls{drs}} adapter sequences, indicating fundamental incompatibility with the \mbox{\gls{drs}} protocol.
+In contrast, DeepChopper achieved exceptional accuracy in identifying both terminal and internal adapters, with recall, precision, and F1 scores consistently exceeding 0.99.
+These results highlight DeepChopper's unique capability to address the specific complexities inherent to \mbox{\gls{drs}} reads and underscore the critical need for purpose-built solutions in this domain.}
 
 \hl{To further evaluate DeepChopper’s classification accuracy, we assessed its performance at single-nucleotide resolution. As shown in \mbox{\edtableref{tab:st2}{}}, the model exhibited sharply bimodal probability distributions for base-level classification, stratified by ground truth labels. For true adapter bases (\mbox{\edfigref{fig:adaprob}{a}}), the model consistently assigned high probabilities ($>0.8$) to the adapter class while suppressing probabilities for the non-adapter class ($<0.2$).
-	Conversely, for true non-adapter bases (\mbox{\edfigref{fig:adaprob}{b}}), the model reliably predicted high probabilities for the non-adapter class and low probabilities for the adapter class.
-	The minimal presence of intermediate probability values suggests that DeepChopper makes highly confident predictions with low ambiguity between classes.
-	This decisive classification behavior reflects the model’s robust feature representation, well-calibrated decision boundaries, and strong generalization to previously unseen data.}
+Conversely, for true non-adapter bases (\mbox{\edfigref{fig:adaprob}{b}}), the model reliably predicted high probabilities for the non-adapter class and low probabilities for the adapter class.
+The minimal presence of intermediate probability values suggests that DeepChopper makes highly confident predictions with low ambiguity between classes.
+This decisive classification behavior reflects the model’s robust feature representation, well-calibrated decision boundaries, and strong generalization to previously unseen data.}
 
 \hl{We further conducted an ablation experiment to assess the contribution of the quality block component in the model architecture.
-	As shown in \mbox{\edtableref{tab:st2}{}}, inclusion of the quality block led to a marked improvement in performance, with the F1 score increasing from 0.97 to 0.99.
-	This module leverages per-base quality scores to better distinguish genuine adapter sequences from similar motifs that may occur naturally within reads.
-	The enhanced performance suggests that incorporating sequencing quality information enables the model to more effectively filter out spurious signal and improve classification robustness.
-	This experiment was performed using the same training methodology as previous evaluations but with a newly generated, focused dataset of 100,000 reads (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
+As shown in \mbox{\edtableref{tab:st2}{}}, inclusion of the quality block led to a marked improvement in performance, with the F1 score increasing from 0.97 to 0.99.
+This module leverages per-base quality scores to better distinguish genuine adapter sequences from similar motifs that may occur naturally within reads.
+The enhanced performance suggests that incorporating sequencing quality information enables the model to more effectively filter out spurious signal and improve classification robustness.
+This experiment was performed using the same training methodology as previous evaluations but with a newly generated, focused dataset of 100,000 reads (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
 \subsection{Chimeric Read Artifact Detection in Cancer dRNA-seq Data}
 
-To assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an additional \gls{drs} dataset using the prostate cancer VCaP cell line, which was not included in the training data.
-This independent dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data. We conducted \gls{drs} of VCaP cells using \gls{ont}'s SQK-RNA002 chemistry, consistent with the \gls{sgnex} project. Using a MinION sequencer with four R9.4 flow cells, we generated 9,177,639 long reads in FASTQ format, with base-calling performed by \gls{ont}'s Dorado software~\cite{dorado2023}. DeepChopper was then applied for adapter trimming and correction of chimeric read artifacts.
+To assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an independent \gls{drs} dataset using the prostate cancer VCaP cell line, which was excluded from model training.
+This dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data. Using \gls{ont}’s SQK-RNA002 chemistry and a MinION device with four R9.4 flow cells, we obtained 9,177,639 long reads. Base-calling was performed using \gls{ont}'s Dorado software~\cite{dorado2023}, consistent with the \gls{sgnex} protocol.
 
-\hl{DeepChopper employs a three-stage pipeline: (1) FASTQ inputs are converted to the Parquet format for optimized data access, (2) a neural network model predicts adapter sequences, and (3) post-processing refines these predictions. To enhance computational efficiency, key optimizations include implementing computationally intensive components in Rust, leveraging GPU acceleration for neural network inference, and parallelizing pre- and post-processing operations.}
+\hl{DeepChopper processes input data through a three-stage pipeline: (1) FASTQ-to-Parquet conversion for efficient input/output, (2) adapter prediction using a neural network, and (3) post-processing to trim and segment reads based on predicted adapter positions. To improve runtime, we implemented core functions in Rust, enabled GPU-based inference, and parallelized key components across the pipeline.}
 
-\hl{We first evaluated the computational performance of our pipeline when analyzing the VCaP \mbox{\gls{drs}} data. We examined the runtime and memory requirements across varied subsampled reads (0.1M, 0.5M, 1M, and the full dataset (9M)).
-	As shown in \mbox{\edfigref{fig:sf2a}{a}}, the total processing time increased non-linearly with data size, from approximately 0.1 hours for the smallest sample (0.1M) to 5 hours for the full dataset. The prediction stage emerged as the primary computational bottleneck, accounting for over 70\% of the total runtime in the full dataset. FASTQ conversion and post-processing times also increased with data size but remained relatively modest compared to the prediction stage.
-	Memory utilization (\mbox{\edfigref{fig:sf2a}{b}}) demonstrated similar scaling patterns with increasing data size.
-	The prediction stage on CPU required the highest memory resources, approaching 70GB for the 1M and full datasets.
-	Notably, GPU-based prediction consistently required less memory than its CPU counterpart across all data sizes, though the difference narrowed as data size increased.
-	FASTQ conversion memory requirements remained minimal for smaller datasets but increased substantially for the full dataset, reaching approximately 40GB.
-	Post-processing showed a gradual increase in memory usage, with requirements of approximately 40GB for the full dataset.
-	These performance metrics highlight the computational demands of processing VCaP cell line data at scale and identify the prediction stage as the critical factor affecting overall pipeline efficiency (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
+\hl{We benchmarked DeepChopper’s computational performance using read subsamples ranging from 0.1M to 9M reads. As shown in \mbox{\edfigref{fig:sf2a}{a}}, total runtime scaled linearly with input size, with the full dataset requiring $~5$ hours to process. Adapter prediction was the most time-consuming step, especially at scale. Memory usage also increased with input size, peaking at $~70$ GB for CPU-based inference, while GPU-based execution maintained lower memory demands (\mbox{\edfigref{fig:sf2a}{b}}). FASTQ conversion and post-processing remained efficient and lightweight across all input sizes, demonstrating DeepChopper's scalability for high-throughput dRNA-seq analysis (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
-\hl{To determine the optimal sliding window size in the post-processing, we conducted a comprehensive evaluation across different window configurations (\mbox{\edfigref{fig:slidewindow}{}}).
-	As shown in \mbox{\edfigref{fig:slidewindow}{a}}, we observed a clear trend in support distribution as window size varies.
-	Window sizes of 11, 21, 31, 41, and 51 were systematically tested, with cDNA support percentages of 47.5\%, 47.4\%, 46.3\%, 44.9\%, and 43.3\% respectively in VCaP \mbox{\gls{drs}} data.
-	While smaller windows (11-21) demonstrated marginally higher cDNA support percentages, \mbox{\edfigref{fig:slidewindow}{b}} reveals that window size 21 offers superior segmentation efficiency.
-	Specifically, when examining the number of segments per read after trimming, window size 21 shows fewer instances of excessive fragmentation (4+ segments) compared to window size 11, while maintaining comparable performance for reads with 1-3 segments (\mbox{\edfigref{fig:slidewindow}{b}}).
-	This balance between support percentage and fragmentation efficiency led us to select 21 as our optimal sliding window size, providing sufficient contextual information for accurate classification while minimizing unnecessary segmentation of reads.
-	Additionaly, we recognize that optimal parameters may vary depending on specific dataset characteristics. For this reason, we have implemented a flexible approach by providing the parameter \emph{--smooth-window} in our software, which allows users to adjust the window size according to their specific data requirements.}
+Applying DeepChopper to the full VCaP dataset increased usable read yield by 3\%, resulting in 9,357,913 adapter-trimmed reads. It identified 8,218,172 adapter sequences across 7,990,102 reads (87\% of total), most measuring $~70$ bp—consistent with the expected length of the RMX adapter used in \gls{ont}'s SQK-RNA002 \gls{drs} kit (\figref{fig:f2}{a})~\cite{nano2017tech}. Analysis of adapter locations revealed that 7,777,624 reads had adapters at the $3'$ end, while 212,478 contained internal adapters (\figref{fig:f2}{b}), indicating that chimeric artifacts are common in VCaP \gls{drs} data.
 
+Further examination showed that chimera artifacts could arise from the joining of multiple long reads, with the most frequent pattern involving two reads joined by a single internal adapter (\figref{fig:f2}{c}). To validate these findings, we analyzed minimap2~\cite{li2018minimap2} chimeric alignments and compared them to a matched VCaP direct cDNA-seq dataset, which we generated as part of this study. Chimeric reads fully supported by cDNA sequencing were considered bona fide events (See \hyperref[sec:methods]{Methods} for details). Notably, we also evaluated whether \gls{ont}'s Dorado basecaller trimming feature could mitigate these artifacts.
+However, we found that Dorado alone—regardless of trimming—was insufficient to eliminate spurious chimeric alignments.
+In contrast, \hl{DeepChopper reduced unsupported chimeric alignments by 91\% and increased the fraction of cDNA-supported chimeric events from 5\% to 47\% (\mbox{\figref{fig:f2}{d}}), whether applied before or after Dorado trimming.} 
+These results underscore DeepChopper’s ability to distinguish true biological chimeras from technical artifacts.
 
+To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using \gls{blat}~\cite{kent2002blat}. Adapter regions identified within chimera artifacts exhibited significantly lower base quality (\figref{fig:f2}{e}) and poor sequence identity to the reference genome (\figref{fig:f2}{f}), supporting their non-human and non-biological origin.
 
-By improving processing speed while maintaining reasonable computational requirements, DeepChopper effectively increases the yield of long-read sequences by 3\%, resulting in a final output of 9,357,913 long reads.DeepChopper identified 8,218,172 adapter sequences within 7,990,102 long reads, accounting for 87\% of the raw reads.
-Most of these adapter sequences were approximately 70 bp in length (\figref{fig:f2}{a}), aligning with the expected length of the RMX adapter used in \gls{ont} SQK-RNA002 \gls{drs} kit, as specified in the kit's technical documentation~\cite{nano2017tech}.
-
-We then analyzed the positions of DeepChopper identified adapter sequences within each long read.
-Among these, 212,478 reads contained internal adapters, while 7,777,624 reads had adapters at their $3'$ ends (\figref{fig:f2}{b}).
-This reveals that chimeric read artifacts, evidenced by internal adapters, are present in VCaP \gls{drs} data and may reflect a common problem inherent to \gls{drs} long reads.
-Further examination of adapter-trimmed reads showed that chimera artifacts could arise from the joining of multiple long reads, with the most prevalent type involving two reads connected by an internal adapter to form a single chimeric read (\figref{fig:f2}{c}).
-
-To validate the chimeric read artifacts identified by DeepChopper in the VCaP \gls{drs} data, we analyzed the chimeric alignments generated by minimap2~\cite{li2018minimap2}, as chimeric reads typically produce such alignments.
-To distinguish genuine chimeric reads from artifacts, we generated nanopore direct cDNA sequencing data for VCaP cells and considered chimeric reads with alignments fully supported by cDNA sequencing as bona fide (See \hyperref[sec:methods]{Methods} for details).
-Additionally, we assessed whether the adapter trimming function of \gls{ont}'s Dorado basecaller could mitigate chimeric read artifacts.
-While Dorado's adapter trimming had no effect on reducing chimeric alignments, DeepChopper achieved a 91\% reduction and increased the proportion of cDNA-supported chimeric alignments from 5\% to 47\% (\figref{fig:f2}{d}).
-\hl{To comprehensively evaluate the complementary nature of existing methods with our approach, we conducted additional analyses using Dorado with adapter trimming followed by DeepChopper processing. This combined approach achieved results comparable to using DeepChopper alone, demonstrating a 91\% reduction in chimeric alignments (\mbox{\figref{fig:f2}{d}}).}
-To further confirm the nature of the identified chimeric read artifacts, we examined the base quality scores of the internal adapter sequences identified by DeepChopper and aligned them with the human reference genome using \gls{blat}~\cite{kent2002blat}, a tool known for its high alignment accuracy.
-Our analysis revealed that the adapter sequences from the chimeric read artifacts exhibited low base quality scores (\figref{fig:f2}{e}) and poor alignment identity with the human reference genome (\figref{fig:f2}{f}), confirming their artifactual nature and non-human origin.
+\hl{Finally, we evaluated post-processing performance as a function of the sliding window size used for segmentation. Using a 1M-read subsample, we tested window sizes of 11, 21, 31, 41, and 51 bp. Smaller windows yielded slightly higher cDNA support percentages (47.5\% for 11 bp vs. 43.3\% for 51 bp; \mbox{\edfigref{fig:slidewindow}{a}}), but increased fragmentation of reads into 4+ segments (\mbox{\edfigref{fig:slidewindow}{b}}). A 21 bp window provided the optimal balance, maintaining high support while minimizing over-segmentation. Based on these results, 21 bp was selected as the default setting, and DeepChopper allows users to adjust this parameter for dataset-specific optimization (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
 \subsection{Multi-sample Validation Across Platforms and Species}
 
-To comprehensively assess DeepChopper’s performance in reducing chimera artifacts in \gls{drs}, we first examined cDNA-supported chimeric alignments in the \gls{sgnex} samples.
-DeepChopper significantly reduced chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f2}{g}), indicating the prevalence of chimeric read artifacts in \gls{drs}.
-\hl{To further evaluate how DeepChopper performs in comparison with existing methods, we conducted additional analyses using Dorado with adapter trimming followed by DeepChopper processing. This combined approach achieved results comparable to using DeepChopper alone, demonstrating that our method effectively identifies and removes chimeric artifacts regardless of whether prior adapter trimming has been applied.}
+To further evaluate DeepChopper’s performance beyond the VCaP dataset, we performed multi-sample validation across diverse biological systems and sequencing platforms. We began by analyzing \gls{drs} data from the \gls{sgnex} project, comparing chimeric alignments before and after DeepChopper trimming. Across these samples, DeepChopper reduced unsupported chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f2}{g}). These results reinforce the widespread presence of chimera artifacts in \gls{drs} and the effectiveness of DeepChopper in selectively removing them without compromising true biological signals.
 
-We then applied DeepChopper to the human WTC11 induced pluripotent stem cell line, leveraging the \gls{lrgasp} project's comprehensive dataset~\cite{pardo2024systematic}.
-The project's cDNA-based long-read sequencing data, generated using diverse protocols (\gls{pcr}-cDNA, CapTrap, R2C2) across \gls{ont} and \gls{pb} platforms, provided a robust benchmarking resource. DeepChopper consistently eliminated only the chimeric alignments not supported by any cDNA-based sequencing method (\figref{fig:f2}{h}), demonstrating its precise ability to distinguish genuine chimeric reads from artifacts.
-\hl{To evaluate DeepChopper against standard processing pipelines, we performed comparative analysis using a sequential workflow of Dorado's default adapter trimming functionality followed by our algorithm. The integrated approach yielded outcomes equivalent to utilizing DeepChopper independently, validating that our tool successfully recognizes and removes chimeric artifacts regardless of whether preliminary adapter cleanup has been implemented.}
+We next applied DeepChopper to the human WTC11 induced pluripotent stem cell line using data from the \gls{lrgasp}~\cite{pardo2024systematic}. This dataset includes cDNA-based long-read sequencing generated with multiple protocols (\gls{pcr}-cDNA, CapTrap, R2C2) across \gls{ont} and \gls{pb} platforms, providing a robust benchmarking resource. DeepChopper selectively eliminated only those chimeric alignments not supported by any cDNA-based method (\figref{fig:f2}{h}), further demonstrating its precision in distinguishing genuine chimeras from technical artifacts.
 
-To further assess DeepChopper's generalizability, we extended our analysis to the F121-9 mouse embryonic stem cell line data, also provided by the \gls{lrgasp} project.
-Remarkably, DeepChopper robustly removed chimeric read artifacts not supported by cDNA-based long reads across multiple sequencing platforms (\edfigref{fig:sf2}{}), confirming its effectiveness in chimera artifact correction across different species.
+To assess cross-species generalizability, we extended the analysis to the F121-9 mouse embryonic stem cell line, also from the \gls{lrgasp} dataset. DeepChopper reliably removed artifactual chimeric reads not supported by any orthogonal cDNA-based sequencing platform (\edfigref{fig:sf2}{}), confirming its applicability to both human and non-human transcriptomes.
+
+\hl{Importantly, across all datasets, DeepChopper consistently outperformed \mbox{\gls{ont}}’s Dorado adapter trimming alone—even when applied as a post-processing step—underscoring its distinct and additive utility in chimera artifact correction.}
 
 \subsection{Chimera Artifact Analysis in RNA004 Chemistry}
 
 Recently, \gls{ont} released a new SQK-RNA004 chemistry for \gls{drs}, but it remains unclear whether chimera artifacts persist with this update.
-To investigate, we generated \gls{drs} data using the latest SQK-RNA004 kit for the VCaP cell line and performed zero-shot predictions of chimera artifacts using DeepChopper, despite the adapter sequence pattern of RNA004 not being included in its training.
-DeepChopper reduced chimeric alignments by 21\% compared to Dorado's base-called and adapter-trimmed long reads, increasing the proportion of cDNA-supported chimeric alignments from about 25\% to 30\% (\edfigref{fig:sf3}{a}).
-\hl{We also tested using Dorado's trimming followed by DeepChopper and got similar results, showing our method works well even after standard trimming.}
-Furthermore, the internal adapter sequences identified by DeepChopper within these RNA004 chimeric read artifacts exhibited low base quality scores (with a mean of 7.8) and low \gls{blat} identity (mean of 0.38) (\edfigref{fig:sf3}{b}).
-These findings strongly suggest that chimera artifacts continue to be an issue with the latest RNA004 \gls{drs} kit.
+To investigate, we generated new data from the VCaP cell line using this updated chemistry. Although DeepChopper was trained exclusively on RNA002 adapter patterns, we applied it in a zero-shot setting to assess its performance on RNA004 reads.
 
-\hl{While DeepChopper demonstrates effectiveness with RNA004 data despite being trained exclusively on RNA002 chemistry, the observed difference in chimeric alignment reduction (91\% for RNA002 vs. 21\% for RNA004) warrants further explanation.
-	This disparity reflects two key factors: DeepChopper's training optimization for RNA002 patterns and fundamental improvements in the RNA004 chemistry itself.
-	The RNA004 kit represents a significant advancement in \mbox{\gls{ont}}, designed specifically to produce cleaner reads with inherently fewer artifacts\mbox{~\cite{hewel2024direct}}.
-	Despite this, the model's ability to further reduce chimeric alignments in RNA004 data through zero-shot transfer learning highlights its robust generalization capabilities across different sequencing chemistries.}
+DeepChopper reduced chimeric alignments by 21\% compared to Dorado base-called and adapter-trimmed reads, increasing the proportion of cDNA-supported chimeric alignments from $~$25\% to 30\% (\edfigref{fig:sf3}{a}). 
+\hl{Similar results were observed when DeepChopper was applied after Dorado's adapter trimming, demonstrating compatibility with standard preprocessing pipelines}.
+Additionally, internal adapter-like sequences identified by DeepChopper exhibited low base quality scores (mean Q-score: 7.8) and poor alignment identity to the human genome (mean \gls{blat} identity: 0.38), supporting their classification as artifacts (\edfigref{fig:sf3}{b}).
+
+\hl{While DeepChopper’s reduction of chimeric alignments in RNA004 (21\%) is lower than in RNA002 (91\%), this difference is expected.
+It reflects both the model’s training on RNA002-specific patterns and inherent improvements in RNA004 chemistry, which was designed to reduce artifact formation\mbox{~\cite{hewel2024direct}}. Nonetheless, the model’s ability to generalize across sequencing chemistries without retraining highlights its robustness and practical utility for emerging platforms.}
 
 \begin{figure}[!ht]
 	\includegraphics[height=1\columnwidth]{finals/figure3}
 	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}\label{fig:f3}
 \end{figure}
 
-% % Continuation of the caption on next page
-% \begin{figure}[H]
-%     \ContinuedFloat
-%     \caption{(e) Analysis of a chimeric read artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}
-% \end{figure}
-
 \subsection{Impact on Downstream Transcriptome Analysis}
 
-To investigate potential factors contributing to the formation of chimera artifacts, we examined the expression levels and sizes of the genes involved in these artifacts, we found that genes affected by chimera artifacts exhibited significantly higher expression levels compared to all expressed genes (\(\textrm{p-value} < 2.2 \times 10^{-16}\)) (\edfigref{fig:sf4}{a}), while following a similar size distribution pattern (\edfigref{fig:sf4}{b}).
-We then analyzed the genomic patterns of improper connections generated by chimera artifacts across chromosomes in VCaP \gls{drs} data.
-These artifacts showed varying frequencies across chromosomes, with the mitochondrial chromosome (Chr M) exhibiting an especially high rate of connections per base pair, indicating it may be a hotspot for chimera artifact formation (\figref{fig:f3}{a}).
-A similar pattern of improper inter-chromosomal connections was also observed in VCaP RNA004 \gls{drs} data (\edfigref{fig:sf4}{c}), suggesting that chimera artifacts may be an inherent issue of \gls{drs} technology, rather than being fully resolved by improvements in sequencing chemistry.
+To investigate factors contributing to chimera artifact formation, we examined gene expression levels and transcript lengths associated with chimeric read artifacts.
+Genes involved in these artifacts showed significantly higher expression than the general transcriptome (\(\textrm{p-value} < 2.2 \times 10^{-16}\); \edfigref{fig:sf4}{a}), while exhibiting a similar gene length distribution (\edfigref{fig:sf4}{b}).
+Analysis of chimeric junctions across the genome revealed uneven distribution among chromosomes, with the mitochondrial chromosome (Chr M) showing the highest frequency of chimeric connections per base pair—suggesting a potential hotspot for artifact formation (\figref{fig:f3}{a}).
+This pattern persisted in RNA004 \gls{drs} data (\edfigref{fig:sf4}{c}), indicating that chimera artifacts remain a fundamental limitation of \gls{drs}, regardless of chemistry improvements.
 
-To evaluate the influence of chimera artifacts on downstream analyses, we investigated the impact of DeepChopper-mediated correction on transcript annotation.
-IsoQuant~\cite{prjibelski2023accurate} was employed to detect and annotate transcripts from VCaP \gls{drs} data, focusing on chimeric read artifacts identified by DeepChopper.
-\hl{We also tested Dorado with adapter trimming followed by DeepChopper and observed similar improvements, confirming that our method works effectively even after standard adapter trimming.}
-By comparing transcript identification with and without DeepChopper correction, we observed an approximately 2-fold increase in the number of identified transcripts (\figref{fig:f3}{b}).
-Similar results were also noted for VCaP RNA004 \gls{drs} data (\edfigref{fig:sf4}{d}).
-The most prominent increase occurred in the full-length transcripts (\gls{fsm} category), with additional improvements observed across alternatively spliced transcripts (\gls{ism}, \gls{nic}, and \gls{nnc} categories).
+We next assessed how DeepChopper correction influences downstream transcriptome analyses.
+Using IsoQuant~\cite{prjibelski2023accurate} to annotate transcripts from VCaP \gls{drs} data, we found that DeepChopper nearly doubled the number of identified transcripts compared to uncorrected data (\figref{fig:f3}{b}).
+Similar results were observed with RNA004 data (\edfigref{fig:sf4}{d}) and \hl{when DeepChopper was applied after Dorado’s adapter trimming}.
+The largest gains were observed in full-length transcripts (\gls{fsm} category), with additional increases in alternatively spliced isoforms (\gls{ism}, \gls{nic}, and \gls{nnc} categories).
 These findings underscore the effectiveness of DeepChopper in mitigating the detrimental effects of chimera artifacts on transcript annotation.
 
-Next, we assessed whether DeepChopper could improve gene fusion detection by correcting chimera artifacts. Gene fusion calls identified by FusionSeeker~\cite{chen2023gene} from DeepChopper-processed \gls{drs} reads exhibited an 89\% reduction compared to those detected from Dorado's adapter-trimmed reads.
-To further evaluate this reduction, we applied Arriba~\cite{uhrig2021accurate} to detect gene fusions using short-read RNA-seq of VCaP cells and found that none of the gene fusion calls reduced by DeepChopper were supported by those detected in RNA-seq data (\figref{fig:f3}{c}).
-\hl{We also tested Dorado with adapter trimming followed by DeepChopper, which showed similar results, demonstrating that our method correctly identifies and removes false gene fusion artifacts regardless of prior adapter trimming.}
-This demonstrates that DeepChopper effectively reduces false positive gene fusion calls caused by chimera artifacts in \gls{drs}, an essential improvement for accurately identifying gene fusion drivers in cancer transcriptomes.
+To further assess the implications of artifact removal, we examined gene fusion detection. DeepChopper-corrected reads yielded an 89\% reduction in gene fusion calls by FusionSeeker~\cite{chen2023gene} compared to Dorado-trimmed data. Importantly, these reduced fusion calls were not supported by fusions detected in matched short-read RNA-seq data using Arriba~\cite{uhrig2021accurate} (\figref{fig:f3}{c}), suggesting they were false positives. \hl{Applying DeepChopper after Dorado trimming yielded consistent results, reinforcing its utility regardless of prior processing steps.}
 
-Upon closer examination of the chimera artifact-derived gene fusion calls, we found a notable enrichment of ribosomal protein genes (\edfigref{fig:sf5}{a}).
-\gls{go} enrichment analysis in VCaP (\figref{fig:f3}{d}) and \gls{sgnex} cell lines (\edfigref{fig:sf5}{b}) confirmed that housekeeping ribosomal protein genes are frequently involved in these artifacts.
-Additionally, ribosomal protein genes were also enriched in the chimera artifacts associated with RNA004 chemistry (\edfigref{fig:sf5}{b}).
-A manual inspection of a chimeric read identified as an RPS29-COX8A fusion, involving the 40S ribosomal protein S29 in VCaP \gls{drs} data, revealed that the DeepChopper-processed region aligned with raw current signals showing low intensity, indicative of \gls{ont} adapters (\figref{fig:f3}{e}).
-The presence of polyA and open pore signals at the boundary of this region further suggested that this chimeric read resulted from improperly joined mRNA transcripts, rather than representing a genuine gene fusion event.
+Closer inspection of the filtered gene fusion calls revealed a strong enrichment for ribosomal protein genes (\edfigref{fig:sf5}{a}). \gls{go} enrichment analyses in VCaP (\figref{fig:f3}{d}) and \gls{sgnex} cell lines (\edfigref{fig:sf5}{b}) confirmed this trend, with ribosomal genes frequently appearing in artifact-associated fusions. This enrichment extended to chimera artifacts in RNA004 data as well (\edfigref{fig:sf5}{b}). A manual review of a chimeric read identified as an \textit{RPS29–COX8A} fusion revealed that the DeepChopper-processed region—interpreted as an internal adapter sequence—aligned with low-intensity raw current signals, consistent with \gls{ont} adapter characteristics (\figref{fig:f3}{e}). The presence of polyA and open pore signals at the boundary of this region further supported an artifact origin rather than a bona fide fusion event.
 
-In conclusion, DeepChopper demonstrates the effective application of language models in long-read sequence analysis by addressing the previously unrecognized issue of chimera artifacts in nanopore \gls{drs}. By precisely identifying and removing \gls{ont} adapters from base-called long-read sequences, DeepChopper substantially improves \gls{drs} data quality, allowing for more accurate transcript and gene fusion analyses. Beyond its immediate application in enhancing \gls{drs} data integrity, this work establishes a practical framework for applying language models to resolve complex challenges in long-read sequencing technologies. Looking forward, DeepChopper could be adapted to detect additional artifact types or expanded to support other aspects of long-read analysis, ultimately advancing capabilities across diverse research domains.
-
+In conclusion, DeepChopper significantly enhances the integrity of nanopore \gls{drs} data by accurately identifying and removing chimera artifacts that undermine transcript annotation and gene fusion detection. These improvements are robust across different sequencing chemistries and preprocessing pipelines. By addressing a previously underrecognized source of error, DeepChopper exemplifies the power of language model-based approaches in long-read sequencing analysis. Looking ahead, this framework could be extended to detect additional artifact types or applied to new challenges in long-read data interpretation, further advancing the utility of long-read technologies across diverse research domains.
 
 \section{Methods}\label{sec:methods}
 
@@ -490,10 +436,10 @@ Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023}
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
 
 \hl{For adapter sequence extraction, we selected primary alignments without supplementary alignments and implemented a refined identification protocol. While $3'$ end soft-clipped regions were candidates for adapter sequences, we did not assume all such regions corresponded to adapters.
-	Instead, we incorporated a critical biological refinement step: we first identified polyA tails at the beginning of soft-clipped regions, as these represent reliable biological indicators of transcript termination.
-	Only sequences following these polyA tails were designated as potential adapter sequences, while aligned regions were classified as non-adapter sequences.
-	This approach significantly improved the precision of our training data by distinguishing true adapter sequences from other non-adapter soft-clipped regions that might result from alignment artifacts or sequencing errors.
-	By anchoring our adapter identification to known biological features, we reduced the risk of misclassification and ensured the training data more accurately reflected the natural transcript-adapter boundaries encountered in direct RNA sequencing.}
+Instead, we incorporated a critical biological refinement step: we first identified polyA tails at the beginning of soft-clipped regions, as these represent reliable biological indicators of transcript termination.
+Only sequences following these polyA tails were designated as potential adapter sequences, while aligned regions were classified as non-adapter sequences.
+This approach significantly improved the precision of our training data by distinguishing true adapter sequences from other non-adapter soft-clipped regions that might result from alignment artifacts or sequencing errors.
+By anchoring our adapter identification to known biological features, we reduced the risk of misclassification and ensured the training data more accurately reflected the natural transcript-adapter boundaries encountered in \mbox{\gls{drs}}.}
 
 To create artificial chimeric reads, we randomly combined two non-adapter sequences with one adapter sequence to create FASTQ records.
 The dataset consists of positive examples containing adapter sequences (with a 1:1 ratio of $3'$ end and internal adapters) and negative examples without any adapter sequences, in a 9:1 ratio.
@@ -523,7 +469,7 @@ Each \gls{mlp} layer is followed by ReLU activation, enhancing the model's abili
 	The final classification decision is based on the class with the higher probability score.
 	In other words, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > P(y_i = \textrm{non-adapter})$.}
 
-\hl{This position-wise classification approach enables precise identification of adapter sequences at both terminal and internal positions within reads. By performing fine-grained nucleotide-level classification, DeepChopper accurately defines adapter boundaries, facilitating effective trimming across diverse \mbox{\gls{drs}} datasets.}
+\hl{This nucleotide-level classification strategy allows DeepChopper to identify adapter boundaries with high precision, including both terminal and internal adapter sequences.}
 
 \subsection{Model training}\label{ssec:training}
 
@@ -561,29 +507,18 @@ The final selection of the model was based on the optimal performance in the val
 The model is implemented by PyTorch (v2.5.0)~\cite{paszke2019pytorch}.
 To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yadan2019Hydra} framework was used.
 
-	% For the specific subsection you want to highlight:
-	{
-		\titleformat{\subsection}
-		{\normalfont\large\bfseries}
-		{\thesubsection}
-		{1em}
-		{\colorbox{yellow}}  % This highlights the subsection title
-
-		\subsection{Ablation Study of Quality Block Component}
-	}
-
-\hl{To evaluate the contribution of the quality block to our model's performance, we conducted an ablation study comparing two model configurations: one with the quality block and one without.
-	Both model variants were trained using the same training strategy as described previously in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model training}}, but with a dataset consisting of 100,000 samples in total.
-	The training procedure maintained consistent hyperparameters across both configurations, including learning rate, batch size, and optimization algorithm as previously.
-	The only difference between the two models was the presence or absence of the quality block component.
-	Performance was evaluated using the F1 score metric on a held-out test set.}
-
+\subsection{\hl{Ablation Study of Quality Block Component}}
+    
+\hl{An ablation study was conducted to compare two model variants: one with the quality block component and one without. Both models were trained using the same dataset of 100,000 samples, following the training procedures described in \mbox{\hyperref[ssec:data]{Training data preparation}} and \mbox{\hyperref[ssec:training]{Model training}}. 
+All hyperparameters, including learning rate, batch size, and optimization algorithm, were kept constant across both configurations. The only architectural difference was the inclusion or exclusion of the quality block.
+Evaluation was performed on a held-out test set using the F1 score as the primary metric.}
 
 \subsection{Sliding window approach for prediction refinement}
 
-To improve the accuracy and smoothness of the predictions, a sliding window approach was implemented.
-This method extends the predicted regions and minimizes noisy predictions, aligning with the typical length of adapter sequences observed in the \gls{ont} \gls{drs} data.
-The sliding window strategy effectively maintains continuity in regions predicted to contain adapter sequences, preventing fragmented and unrealistic results.
+To improve prediction consistency and reduce local noise, a sliding window approach was implemented for post-processing of nucleotide-level classification outputs.
+This method extends predicted adapter regions and smooths isolated predictions, better reflecting the typical length distribution of adapter sequences in \gls{ont} \gls{drs} data.
+The approach enhances continuity in adapter-labeled regions and mitigates the occurrence of fragmented or spurious classifications.
+
 Within each window, a voting mechanism was applied to refine the predictions.
 \hl{The majority voting approach uses a straightforward plurality system.
 	For each nucleotide position, predictions from a window contribute ``votes'' for whether that position belongs to an adapter region or not.}
@@ -596,14 +531,7 @@ The final classification $y_i$ for each nucleotide \( x_i \) was determined by t
 \]
 where \(y_i\) is the final prediction for the $i$-th nucleotide, \( W \) is the sliding window size, \( k \) is half the window size (\( k = \frac{W-1}{2}\)), and  \(p_j\) represents the initial predicted label for the \(j\)-th nucleotide within the window, where a value of 1 indicates that the nucleotide is part of an adapter sequence, and a value of 0 indicates that it is part of a non-adapter sequence.
 
-
-
-\hl{Multiple window sizes were evaluated to determine optimal parameters for the algorithm.
-	The selection process involved testing window sizes of 11, 21, 31, 41, and 51 nucleotides across the VCaP dataset.
-	For each window size configuration, we applied DeepChopper and quantified two key metrics: (1) the proportion of chimeric alignments classified with cDNA support versus no support, and (2) the distribution of resulting segments per read after trimming, conducted on a sampling of 1M reads from VCaP.
-	The window size selection aimed to balance the algorithm's ability to identify genuine adapter regions while minimizing excessive fragmentation of reads.}
-
-The combination of the sliding window technique and voting-based refinement significantly improved prediction accuracy by smoothing the outputs and reducing false positives, resulting in more reliable data essential for downstream analysis.
+\hl{The default window size is set to 21 nucleotides, and can be customized using the \emph{--smooth-window} parameter in the DeepChopper implementation to accommodate dataset-specific characteristics.}
 
 \subsection{Post-processing and filtering}
 
@@ -616,9 +544,11 @@ After refining the adapter predictions, four filtering steps were applied to enh
 	\item Any segments resulting from this process that are less than 20 nucleotides long are discarded.
 \end{enumerate}
 \vspace{.5em}
+
 Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
 This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
-\hl{We acknowledge that optimal parameters may vary depending on specific dataset characteristics and experimental conditions. To facilitate adaptation to diverse research contexts, we have implemented configurable command-line parameters that allow users to customize these settings for their specific applications.}
+
+\hl{All filtering thresholds, including minimum segment length, and maximum adapter count per read, are configurable via command-line parameters in the DeepChopper implementation, allowing users to tailor these settings to dataset-specific requirements or experimental conditions.}
 
 \subsection{BLAT identity calculation}
 
@@ -659,16 +589,9 @@ Chimeric alignments, defined by a primary alignment and one or more supplementar
 The genomic interval lists were then compared between platforms, and overlapping intervals were considered concordant if the distance difference between them was less than 1000 bp.
 Supporting rates were calculated as the proportion of \gls{drs} chimeric alignments corroborated by cDNA-based platforms, thereby providing cross-validation of chimera artifacts identified by DeepChopper.
 
-% Sequences longer than 20 bp were aligned to the reference genome using \gls{blat}.
-% The resulting identity scores were used to distinguish between true biological sequences and potential chimeric reads, with lower scores indicating likely artificial sequences.
-% To evaluate terminal artificial sequences, we employed the \gls{blat} identity threshold of 0.9 to classify hits and non-hits.
-% To assess DeepChopper's accuracy in detecting terminal artificial sequences, we compared its predictions to the soft-clipped regions in untrimmed Dorado-processed data.
-% An overlap threshold of 0.4 was used to determine the concordance between the two methods.
-
 \subsection{Gene expression analysis and transcript classification}
 
 Gene expression levels from \gls{drs} were quantified using IsoQuant (v3.1.2)~\cite{prjibelski2023accurate}, with the parameters (\texttt{--}data\_type nanopore \texttt{--}stranded forward \texttt{--}model\_construction\_strategy default\_ont \texttt{--}sqanti\_output). The ``\texttt{--}sqanti\_output'' option enables IsoQuant to generate files containing transcript classification information, analogous to the output provided by SQANTI~\cite{tardaguila2018sqanti}.
-
 
 \subsection{Gene fusion identification and visualization}
 
@@ -686,49 +609,6 @@ The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)
 \subsection{Computing resource}
 
 All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM. The server was also configured with two NVIDIA A100 \glspl{gpu}, each with 80 GB of memory, enabling efficient processing of both CPU-intensive tasks and \gls{gpu}-accelerated deep learning workloads.
-
-% \section{Tables}\label{sec5}
-
-% Tables can be inserted via the normal table and tabular environment. To put
-% footnotes inside tables you should use \verb+\footnotetext[]{...}+ tag.
-% The footnote appears just below the table itself (refer Tables~\ref{tab1} and \ref{tab2}).
-% For the corresponding footnotemark use \verb+\footnotemark[...]+
-
-% \begin{table}[h]
-% \caption{Caption text}\label{tab1}%
-% \begin{tabular}{@{}llll@{}}
-% \toprule
-% Column 1 & Column 2  & Column 3 & Column 4\\
-% \midrule
-% row 1    & data 1   & data 2  & data 3  \\
-% row 2    & data 4   & data 5\footnotemark[1]  & data 6  \\
-% row 3    & data 7   & data 8  & data 9\footnotemark[2]  \\
-% \botrule
-% \end{tabular}
-
-% \footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
-% \footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
-% \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
-% \end{table}
-
-% \begin{table}[h]
-% 	\caption{Benchmarking for different models}
-% 	\label{tab:bechmark}
-% 	\begin{tabular}{@{}
-% 			l
-% 			S[table-format=1.4e-2] % Formats the F1 column in scientific notation
-% 			S[table-format=1.4e-2] % Formats the Loss column in scientific notation
-% 			@{}}
-% 		\toprule
-% 		{Model}             & {F1}                         & {Loss}                         \\ \midrule
-% 		CNN                 & 0.9909037351608276           & 0.00302332011051476            \\
-% 		Model with Hyena    & 0.9925663471221924           & 0.002182388212531805           \\
-% 		Model with Caduceus & \bfseries 0.9977396130561829 & \bfseries 0.000541145505849272 \\ \bottomrule
-% 	\end{tabular}
-% 	% \footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
-% 	% \footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
-% 	% \footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
-% \end{table}
 
 \bmhead{Data Availability}
 
