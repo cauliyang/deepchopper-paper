@@ -323,10 +323,12 @@ This module leverages per-base quality scores to better distinguish genuine adap
 The enhanced performance suggests that incorporating sequencing quality information enables the model to more effectively filter out spurious signal and improve classification robustness.
 This experiment was performed using the same training methodology as previous evaluations but with a newly generated, focused dataset of 100,000 reads (See \mbox{\hyperref[sec:methods]{Methods}} for details).}
 
-\subsection{Chimeric Read Artifact Detection in Cancer dRNA-seq Data}
+\subsection{Chimeric Read Artifact Detection in Cancer \mbox{\gls{drs}} Data}
 
 To assess DeepChopper’s ability to detect chimera artifacts in real data, we generated an independent \gls{drs} dataset using the prostate cancer VCaP cell line, which was excluded from model training.
-This dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper's performance generalizes beyond the training data. Using \gls{ont}’s SQK-RNA002 chemistry and a MinION device with four R9.4 flow cells, we obtained 9,177,639 long reads. Base-calling was performed using \gls{ont}'s Dorado software~\cite{dorado2023}, consistent with the \gls{sgnex} protocol.
+This dataset provides a robust framework for evaluating chimera artifacts in genuine \gls{drs} samples, ensuring that DeepChopper’s performance generalizes beyond the training data.
+We conducted \gls{drs} of VCaP cells using \gls{ont}’s SQK-RNA002 chemistry, consistent with that used in the \gls{sgnex} project.
+Using a MinION sequencer with four R9.4 flow cells, we generated 9,177,639 long reads in FASTQ format, with base-calling performed using \gls{sgnex}’s Dorado software~\cite{dorado2023}.
 
 \hl{DeepChopper processes input data through a three-stage pipeline: (1) FASTQ-to-Parquet conversion for efficient input/output, (2) adapter prediction using a neural network, and (3) post-processing to trim and segment reads based on predicted adapter positions. To improve runtime, we implemented core functions in Rust, enabled GPU-based inference, and parallelized key components across the pipeline.}
 
@@ -336,7 +338,7 @@ Applying DeepChopper to the full VCaP dataset increased usable read yield by 3\%
 
 Further examination showed that chimera artifacts could arise from the joining of multiple long reads, with the most frequent pattern involving two reads joined by a single internal adapter (\figref{fig:f2}{c}). To validate these findings, we analyzed minimap2~\cite{li2018minimap2} chimeric alignments and compared them to a matched VCaP direct cDNA-seq dataset, which we generated as part of this study. Chimeric reads fully supported by cDNA sequencing were considered bona fide events (See \hyperref[sec:methods]{Methods} for details). Notably, we also evaluated whether \gls{ont}'s Dorado basecaller trimming feature could mitigate these artifacts.
 However, we found that Dorado alone—regardless of trimming—was insufficient to eliminate spurious chimeric alignments.
-In contrast, \hl{DeepChopper reduced unsupported chimeric alignments by 91\% and increased the fraction of cDNA-supported chimeric events from 5\% to 47\% (\mbox{\figref{fig:f2}{d}}), whether applied before or after Dorado trimming.} 
+In contrast, \hl{DeepChopper reduced unsupported chimeric alignments by 91\% and increased the fraction of cDNA-supported chimeric events from 5\% to 47\%, whether applied before or after Dorado trimming (\mbox{\figref{fig:f2}{d}}).} 
 These results underscore DeepChopper’s ability to distinguish true biological chimeras from technical artifacts.
 
 To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using \gls{blat}~\cite{kent2002blat}. Adapter regions identified within chimera artifacts exhibited significantly lower base quality (\figref{fig:f2}{e}) and poor sequence identity to the reference genome (\figref{fig:f2}{f}), supporting their non-human and non-biological origin.
