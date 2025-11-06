@@ -21,7 +21,7 @@ def _plot_track_style(
 ):
     """Track style with sequence above and quality track below."""
     seq_y = -y_offset
-    qual_y = -y_offset - 0.9
+    qual_y = -y_offset - 0.85
 
     # Quality track as continuous area
     for j, (base, q) in enumerate(zip(line_seq, line_qual)):
@@ -38,7 +38,7 @@ def _plot_track_style(
             height=bar_height,
             facecolor=rect_color,
             edgecolor="#D62728" if in_adapter else "none",
-            linewidth=0.5 if in_adapter else 0,
+            linewidth=0 if in_adapter else 0,
             alpha=0.85,
             zorder=1,
         )
@@ -51,7 +51,7 @@ def _plot_track_style(
             height=base_height,
             facecolor=rect_color,
             edgecolor="#D62728" if in_adapter else "#CCCCCC",
-            linewidth=0.5 if in_adapter else 0.3,
+            linewidth=0 if in_adapter else 0.3,
             alpha=0.25,
             zorder=1,
         )
@@ -62,8 +62,9 @@ def _plot_track_style(
             seq_y,
             base,
             fontsize=font_size,
-            fontweight="bold" if in_adapter else "normal",
-            color="black",
+            # fontweight="bold" if in_adapter else "normal",
+            # color="black",
+            color="red" if in_adapter else "black",
             ha="center",
             va="center",
             family="monospace",
@@ -80,6 +81,9 @@ def plot_sequence_with_quality(
     cmap="cividis",
     letter_spacing=1.0,
     dpi=300,
+    BASE_FONT_SIZE = 8,
+    BASE_WIDTH_RATIO = 0.90,
+    BASE_HEIGHT_RATIO = 0.60,
 ):
     """
     Publication-quality visualization of nucleotide sequences with per-base quality scores.
@@ -119,10 +123,6 @@ def plot_sequence_with_quality(
     )
 
     # Constants for clean layout
-    BASE_FONT_SIZE = 8
-    BASE_WIDTH_RATIO = 0.90
-    BASE_HEIGHT_RATIO = 0.60
-
     def is_in_adapter(idx):
         return any(start <= idx < end for start, end in adapter_regions)
 
