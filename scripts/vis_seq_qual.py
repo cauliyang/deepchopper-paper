@@ -25,6 +25,25 @@ def _plot_track_style(
 
     # Quality track as continuous area
     for j, (base, q) in enumerate(zip(line_seq, line_qual)):
+
+        if j == 0:
+            n_bases = len(line_seq)
+            gradient_y = qual_y - 0.12  # place below the first quality bar
+            for i in range(n_bases):
+                x_center = i * letter_spacing
+                bar = Rectangle(
+                    (x_center - base_width / 2, gradient_y),
+                    width=base_width,
+                    height=0.08,  # thin horizontal bar
+                    facecolor="lightgray",
+                    edgecolor="none",
+                    alpha=0.9,
+                    zorder=2,
+                )
+                ax.add_patch(bar)
+
+
+
         idx = line_start + j
         x_center = j * letter_spacing
         in_adapter = is_in_adapter(idx)
