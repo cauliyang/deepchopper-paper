@@ -193,7 +193,7 @@ def plot_sequence_with_quality(
                 -pos_label_width,
                 seq_y - base_height / 16,
                 f"{line_start + 1}",
-                fontsize=BASE_FONT_SIZE - 1,
+                fontsize=BASE_FONT_SIZE - 2,
                 color="gray",
                 ha="right",
                 va="center",
@@ -206,7 +206,7 @@ def plot_sequence_with_quality(
                 end_x + 0.6,  # Small gap after last base
                 seq_y - base_height / 16,
                 f"{line_end}",
-                fontsize=BASE_FONT_SIZE - 1,
+                fontsize=BASE_FONT_SIZE - 2,
                 color="gray",
                 ha="left",
                 va="center",
@@ -265,7 +265,7 @@ def determine_wrap_len(sequence):
 if __name__ == "__main__":
     # Example usage
     sequence = "ATGCGATACGTTACGATCGATCGATAGCTGACGATGGGGGGGAATCGAAAAAATCGGGGG" * 2
-    quality = np.random.randint(10, 40, size=len(sequence))
+    quality = np.random.randint(0, 60, size=len(sequence))
     adapter_regions = [(40, 60)]
 
     fig, ax = plot_sequence_with_quality(
