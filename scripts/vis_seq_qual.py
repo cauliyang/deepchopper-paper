@@ -57,14 +57,15 @@ def _plot_track_style(
         )
         ax.add_patch(bg)
 
+        # Place the text in the exact center of the background rectangle,
+        # corrected for text vertical alignment issues
+        # For Nature Methods, consider using a distinct blue for adapters (works well with scientific and Nature color palettes)
         ax.text(
             x_center,
-            seq_y,
+            seq_y - base_height / 16,  # shift text downward to center more precisely
             base,
             fontsize=font_size,
-            # fontweight="bold" if in_adapter else "normal",
-            # color="black",
-            color="red" if in_adapter else "black",
+            color="#D62728" if in_adapter else "black",  # blue for adapter regions, black otherwise
             ha="center",
             va="center",
             family="monospace",
@@ -218,4 +219,4 @@ if __name__ == "__main__":
         cmap="cividis",
         dpi=300,
     )
-    plt.savefig("vis_seq_qual.png", dpi=300)
+    plt.savefig("vis_seq_qual.pdf", dpi=300)
