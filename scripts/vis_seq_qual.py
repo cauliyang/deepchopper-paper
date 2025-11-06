@@ -166,17 +166,17 @@ def plot_sequence_with_quality(
 
     # Calculate space needed for position labels (range style: start and end positions)
     pos_label_width = 0
-    pos_label_width_right = 0
     if show_position:
         max_pos = n - 1
-        # Need space for start and end positions on both sides
-        pos_label_width = len(str(max_pos)) * 0.15 + 0.4  # Left side
-        pos_label_width_right = len(str(max_pos)) * 0.15 + 0.5  # Right side
+        # Need symmetric space for start and end positions on both sides
+        pos_label_width = len(str(max_pos)) * 0.15 + 0.4  # Same spacing on both sides
 
     # Figure sizing for Nature Methods (mm to inches)
     if ax is None:
         # Single column: 89mm ≈ 3.5", double column: 183mm ≈ 7.2"
-        fig_width = min(7.2, wrap * 0.12 * letter_spacing + pos_label_width + pos_label_width_right)
+        # Use symmetric spacing (2 * pos_label_width)
+        extra_width = 2 * pos_label_width if show_position else 0
+        fig_width = min(7.2, wrap * 0.12 * letter_spacing + extra_width)
         fig_height = n_lines * line_height * 0.28
         fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=dpi)
     else:
@@ -203,29 +203,39 @@ def plot_sequence_with_quality(
         line_end = min((i + 1) * wrap, n)
         line_seq = sequence[line_start:line_end]
         line_qual = quality[line_start:line_end]
-        seq_y = -y_offset
 
         # Draw position indicators (range style: start and end positions)
+        # Position labels aligned with the position bar (gradient bar)
         if show_position:
-            # Start position on left
+            # Calculate position bar y-coordinate (same as in _plot_track_style)
+            qual_y = -y_offset - 0.85
+            gradient_y = qual_y - 0.12  # Position bar y-coordinate
+            pos_label_y = gradient_y + 0.04  # Slightly above the position bar center
+            
+            # Calculate symmetric spacing
+            # Position bar starts at x=0, ends at end_x
+            # Left label is at -pos_label_width, so distance to bar start is pos_label_width
+            # Right label should be at end_x + pos_label_width for symmetric spacing
+            end_x = (len(line_seq) - 1) * letter_spacing
+            
+            # Start position on left, aligned with position bar
             ax.text(
-                -pos_label_width,
-                seq_y - base_height / 16,
+                -pos_label_width + 0.3,
+                pos_label_y,
                 f"{line_start + 1}",
-                fontsize=BASE_FONT_SIZE - 2,
+                fontsize=BASE_FONT_SIZE - 3,
                 color="gray",
                 ha="right",
                 va="center",
                 family="monospace",
                 zorder=10,
             )
-            # End position on right - positioned at the end of the sequence
-            end_x = (len(line_seq) - 1) * letter_spacing
+            # End position on right, with symmetric spacing from position bar
             ax.text(
-                end_x + 0.6,  # Small gap after last base
-                seq_y - base_height / 16,
+                end_x + pos_label_width - 0.3,  # Same distance as left label from bar
+                pos_label_y,
                 f"{line_end}",
-                fontsize=BASE_FONT_SIZE - 2,
+                fontsize=BASE_FONT_SIZE - 3,
                 color="gray",
                 ha="left",
                 va="center",
@@ -252,13 +262,13 @@ def plot_sequence_with_quality(
 
         y_offset += line_height * 1.05  # Tight row spacing
 
-    # Set limits with proper padding
+    # Set limits with proper padding (symmetric spacing)
     max_line_length = min(wrap, n)
     x_min = -pos_label_width - 0.2 if show_position and pos_label_width > 0 else -0.5
-    # Add space on right for end position
+    # Add symmetric space on right for end position (same as left)
     x_max = max_line_length * letter_spacing - 0.5
     if show_position:
-        x_max = max_line_length * letter_spacing + pos_label_width_right
+        x_max = max_line_length * letter_spacing + pos_label_width  # Use same spacing as left
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(-y_offset + 0.3, 0.8)  # Compact layout
 
