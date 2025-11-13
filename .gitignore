@@ -243,7 +243,7 @@ TSWLatexianTemp*
 # generated if using elsarticle.cls
 *.spl
 
-*.pdf
+# *.pdf
 !submit/*pdf
 *zip
 .virtual_documents
