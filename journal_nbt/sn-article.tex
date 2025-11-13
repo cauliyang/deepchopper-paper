@@ -245,20 +245,20 @@
 
 Long-read RNA sequencing technologies are revolutionizing transcriptomic research by providing unparalleled resolution for detecting complex splicing and gene fusion events often missed by conventional short-read RNA-seq methods.
 Among these technologies, \gls{ont} \gls{drs} stands out by sequencing full-length RNA molecules directly, preserving native RNA modifications and allowing a more accurate and comprehensive analysis of RNA biology.
-This approach bypasses the inherent limitations of cDNA-based sequencing methods, such as artifacts arising from reverse transcription, template switching, and \gls{pcr} amplification~\cite{garalde2018highly, jain2022advances}.
+This approach bypasses the inherent limitations of cDNA-based sequencing methods, such as artifacts arising from reverse transcription, template switching, and \gls{pcr} amplification~\cite{garalde2018highly, jain2022advances,zou2025comparative}.
 
 Despite these advantages, a critical question remains: Does \gls{ont} \gls{drs} introduce technical artifacts?
-A previous study has suggested that \gls{drs} might generate chimera artifacts, leading to multi-mapped reads~\cite{smith2020molecular}.
+\hl{A previous study has suggested that \mbox{\gls{drs}} might generate chimera artifacts, leading to multi-mapped reads\mbox{~\cite{smith2020molecular}}, but systematic characterization of these artifacts---their prevalence, formation mechanisms, and persistence with modern sequencing chemistries such as RNA004 and current Dorado basecalling\mbox{~\cite{dorado2023}}---remains limited in peer-reviewed literature.}
 These artifacts may result from ligation during library preparation or chimeric reads produced by software missing the open pore signal, potentially confounding downstream analyses such as transcriptome assembly, quantification, and detection of alternative splicing and gene fusion events.
 Detecting these chimera artifacts is challenging because long-read aligners often produce chimeric alignments from such artifacts that are indistinguishable from those derived from true gene fusion events.
-Importantly, chimeric read artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, which could theoretically serve as a distinguishing feature to differentiate them from true gene fusion-derived reads.
+\hl{Importantly, chimeric read artifacts frequently contain internal adapter sequences\mbox{~\cite{smith2020molecular}}, suggesting that these adapter-mediated chimeras could theoretically be distinguished from biological chimeras by detecting the presence of internal adapters.}
 However, \gls{ont} \gls{drs} basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
-As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate chimeric read artifacts, leaving the issue unresolved (\mbox{\edtableref{tab:st1}{}}).
+As a result, current adapter detection tools\mbox{~\cite{pychopper, Wick2017, bonenfant2023porechop}} cannot exploit this feature to eliminate these adapter-mediated chimeras, leaving the issue unresolved (\mbox{\edtableref{tab:st1}{}}).
 
-To address these challenges, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
+To address this unmet need, we developed DeepChopper, a \gls{glm} for long-read sequence analysis.
 Leveraging recent advances in \gls{llm} that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
 This capability enables precise identification of \gls{ont} adapter sequences within base-called long reads, facilitating the detection and removal of chimeric read artifacts in \gls{drs} data.
-Through analysis of both existing and newly generated \gls{drs} data, including those using the most recent RNA004 chemistry, we uncovered the prevalence of chimera artifacts—a critical issue previously overlooked in the long-read sequencing field.
+Through analysis of both existing and newly generated \gls{drs} data, including those using the most recent RNA004 chemistry, we uncovered the prevalence of chimera artifacts---a critical issue previously overlooked in the long-read sequencing field.
 We demonstrated that these artifacts significantly impact transcriptomic analysis by complicating gene fusion detection, transcript annotation, and alternative splicing studies.
 By both identifying and addressing this problem, our work enhances the reliability and precision of \gls{drs} data, substantially improving its utility in transcriptomic research.
 
@@ -272,22 +272,24 @@ By both identifying and addressing this problem, our work enhances the reliabili
 \end{figure}
 
 DeepChopper leverages the \gls{lcglm} HyenaDNA~\cite{nguyen2024hyenadna}, which excels at capturing long-range dependencies (\figref{fig:f1}{a}).
-process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
-This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy.
+To process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple \glspl{mlp} with residual connections~\cite{he2015deep} (\figref{fig:f1}{b}, See \hyperref[sec:methods]{Methods} for details).
+\hl{This addition enables the effective utilization of sequencing base quality, a crucial feature for improving prediction accuracy, particularly for distinguishing genuine adapter sequences from similar motifs that may occur naturally within reads or from low-quality regions.}
 By combining broad contextual understanding with nucleotide-level precision, this hybrid architecture allows DeepChopper to accurately identify and process adapters sequences.
 Reads containing internal adapters are split into multiple records, with $3'$ end adapters simultaneously trimmed (\figref{fig:f1}{a}), thereby preserving authentic biological sequences and eliminating chimera artifacts.
 
 To further refine the prediction accuracy, DeepChopper implements a post-processing stage using a sliding window and majority vote approach, as illustrated in~\figref{fig:f1}{c}.
-The model applies sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
-This refinement process ensures that the predicted adapter sequences are contiguous and biologically plausible by smoothing irregularities and eliminating isolated false positives, while preserving genuine adapter signals that demonstrate consistent patterns across adjacent windows.
-By applying this iterative refinement strategy, DeepChopper is able to optimize the final predictions and improve the overall accuracy of the adapter detection.
+The model applies a sliding window with a stride of 1 across the read, analyzing the distribution of predicted adapter positions within each window (See \hyperref[sec:methods]{Methods} for details).
+\hl{This refinement process operates on the initial predictions independently for each position, ensuring that each base's final classification reflects an aggregation of local context without error propagation.
+By maintaining precise boundary detection at single-nucleotide resolution, this strategy ensures that predicted adapter sequences correspond to biologically plausible boundaries, enabling accurate splitting of chimeric reads into their component sub-reads while minimizing spurious fragmentation.}
 
-Comparing to existing general-purpose GLM, DeepChopper is specifically optimized for long-read sequence analysis at single-nucleotide resolution.
+Comparing to existing general-purpose \gls{glm}, DeepChopper is specifically optimized for long-read sequence analysis at single-nucleotide resolution.
 This fine-grained resolution provides a critical advantage for genomic analysis tasks requiring precise base-level predictions.
 While DNABERT\mbox{~\cite{ji2021dnabert}} is limited to input sequences of approximately 512 bp, DNABERT2\mbox{~\cite{zhou2023dnabert2}} to 10,000 bp, and Nucleotide Transformer\mbox{~\cite{dalla2024nucleotide}} to 6,000 bp, DeepChopper supports input lengths up to 32 kilobases—sufficient to encompass most complete mRNA transcripts.
-This 32K nucleotide input limit was selected based on both technical and biological considerations. Technically, the constraint reflects the architectural design and context window limitations of the underlying HyenaDNA model.
-Biologically, the vast majority of human mRNA transcripts fall well within this range, with a median length of approximately 1.5–2 kb, and the majority well below the maximum input threshold\mbox{~\cite{lopes2021gene}}.
-Moreover, Nanopore sequencing studies report that the typical maximum aligned length of native RNA reads is around 21 kb\mbox{~\cite{workman2019nanopore}}, further supporting the adequacy of this design.
+This 32K nucleotide input limit was selected based on both technical and biological considerations.
+Technically, the constraint reflects the architectural design and context window limitations of the underlying HyenaDNA model.
+Biologically, human protein-coding transcripts have a median length of approximately 1.9 kb (95th percentile: $\sim5.8$ kb, 99th percentile: $\sim8.7$ kb), with over 99.99\% of transcripts falling below 32 kb based on current annotations (\edfigref{}{}).
+Empirical analysis of our dRNA-seq datasets confirmed that only 0-0.0032\% of reads exceeded this threshold across multiple cell lines and chemistries, with mean read lengths ranging from 683 to 1,148 bp (\edtableref{tab:read_stats}{}).
+This extended input capacity, combined with single-nucleotide tokenization, enables DeepChopper to accurately identify non-reference elements such as \gls{ont} adapter sequences with base-pair precision---an essential capability for detecting and recovering adapter-mediated chimeras in \gls{drs} data.
 
 The combination of extended input capacity and single-nucleotide tokenization enables DeepChopper to accurately identify non-reference elements, such as \gls{ont} adapter sequences, with base-pair precision—an essential capability for detecting chimera artifacts in \gls{drs} data.
 In addition, DeepChopper’s lightweight architecture, consisting of only 4.6 million parameters, makes it computationally efficient and scalable for large-scale \gls{drs} analysis.
@@ -397,29 +399,6 @@ By addressing a previously underrecognized source of error, DeepChopper exemplif
 Looking ahead, this framework could be extended to detect additional artifact types or applied to new challenges in long-read data interpretation, further advancing the utility of long-read technologies across diverse research domains.
 
 \section{\hl{Discussion}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -701,6 +680,41 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 \setcounter{figure}{0}
 \setcounter{table}{0}
 
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{figures2/transcript_length_distribution}
+    \end{center}
+    \caption{(Manuscript Extended Data Fig. X) {\bf Distribution of transcript length for protein-coding genes.} 
+    Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of $\sim$1.9 kb.}
+    \label{fig:transcript_len}
+\end{figure}
+
+\begin{table}[!h]
+\centering
+\begin{threeparttable}
+\caption{Read Length Statistics by Sample}
+\label{tab:read_stats}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lccccccccccccc@{}}
+\toprule
+\textbf{Sample} & \textbf{Reads} & \textbf{Min} & \textbf{Max} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Q1} & \textbf{Q2} & \textbf{Q3} & \textbf{P90} & \textbf{P95} & \textbf{P99} & \textbf{Reads} & \textbf{\%}\\
+ & (M) & (bp) & (bp) & (bp) & (bp) & (bp) & (bp) & (bp) & (bp) & (bp) & (bp) & $\geq$32kb & $\geq$32kb\\
+\midrule
+A549 & 1.70 & 5 & 16,246 & 907 & 805 & 383 & 700 & 1,223 & 1,904 & 2,440 & 3,829 & 0 & 0\\
+MCF7 & 3.04 & 5 & 28,802 & 715 & 623 & 316 & 546 & 911 & 1,475 & 1,863 & 3,052 & 0 & 0 \\
+HCT116 & 4.70 & 5 & 21,656 & 889 & 795 & 374 & 669 & 1,193 & 1,871 & 2,431 & 3,793 & 0 & 0\\
+K562 & 3.06 & 2 & 58,395 & 683 & 555 & 319 & 556 & 892 & 1,393 & 1,736 & 2,619 & 2 & 0\\
+HepG2 & 1.80 & 2 & 46,077 & 1,148 & 974 & 497 & 864 & 1,544 & 2,317 & 3,025 & 4,665 & 1 & 0\\
+VCaP RNA002 & 9.18 & 5 & 77,474 & 994 & 901 & 462 & 697 & 1,279 & 2,092 & 2,826 & 4,399 & 1 & 0\\
+VCaP RNA004 & 11.72 & 5 & 225,798 & 995 & 971 & 483 & 695 & 1,224 & 2,025 & 2,784 & 4,474 & 379 & 0.0032\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Note: Q1, Q2, Q3 represent 25th, 50th, and 75th percentiles. P90, P95, P99 represent 90th, 95th, and 99th percentiles. All reads were basecalled using Dorado (v0.5.2) with trim option. VCaP RNA002 and RNA004 represent matched chemistry comparison.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \begin{table}[htbp]
 	\centering
