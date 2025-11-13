@@ -579,23 +579,13 @@ The final selection of the model was based on the optimal performance in the val
 The model is implemented by PyTorch (v2.5.0)~\cite{paszke2019pytorch}.
 To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yadan2019Hydra} framework was used.
 
-\subsection{Ablation Study of Quality Block Component}
+\subsection{Ablation study of quality block component}
 
 An ablation study was conducted to compare two model variants: one with the quality block component and one without. Both models were trained using the same dataset of 100,000 samples, following the training procedures described in \mbox{\hyperref[ssec:data]{Training data preparation}} and \hyperref[ssec:training]{Model training}.
 All hyperparameters, including learning rate, batch size, and optimization algorithm, were kept constant across both configurations. The only architectural difference was the inclusion or exclusion of the quality block.
 Evaluation was performed on a held-out test set using the F1 score as the primary metric.
 
-\subsection{RNA004 Chemistry Fine-Tuning}
-To optimize DeepChopper's performance for the current RNA004 sequencing chemistry, we fine-tuned the model using VCaP RNA004 data. 
-The fine-tuning dataset consisted of 300,000 reads generated from VCaP RNA004, split into training (70\%, 210,000 reads), validation (20\%, 60,000 reads), and test (10\%, 30,000 reads) sets.
-In each dataset, it consists of positive examples containing adapter sequences (with a 1:1 ratio of $3'$ end and internal adapters) and negative examples without any adapter sequences, in a 9:1 ratio.
-
-The fine-tuning process maintained the same model architecture and hyperparameters as the original RNA002 training but allowed the model to adapt to RNA004-specific error profiles and signal characteristics. 
-Training was performed on two NVIDIA A100 GPUs using the same optimization settings described in \hyperref[ssec:training]{Model training}. 
-Performance evaluation compared three conditions: (1) Dorado basecalling with adapter trimming, (2) Dorado followed by the original RNA002-trained DeepChopper, and (3) Dorado followed by the RNA004-fine-tuned DeepChopper. 
-Chimeric alignments were evaluated against matched cDNA sequencing data to distinguish biological events from artifacts.
-
-\subsection{\hl{RNA004 Chemistry Fine-Tuning}}
+\subsection{\hl{RNA004 chemistry fine-tuning}}
 \hl{To optimize DeepChopper's performance for the current RNA004 sequencing chemistry, we fine-tuned the model using VCaP RNA004 data. 
 Following the same data preparation methodology described in \mbox{\hyperref[ssec:data]{Training data preparation}}, we generated synthetic training data from VCaP RNA004 base-called reads. 
 The fine-tuning dataset consisted of 300,000 reads, split into training (70\%, 210,000 reads), validation (20\%, 60,000 reads), and test (10\%, 30,000 reads) sets, with positive examples containing adapter sequences (1:1 ratio of $3'$ end and internal adapters) and negative examples without adapters in a 9:1 ratio.}
@@ -657,7 +647,7 @@ The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
 
 All benchmarks were conducted in triplicate using btop (\mbox{\url{https://github.com/aristocratos/btop}}, v1.4.0) and nvtop (\mbox{\url{https://github.com/Syllo/nvtop}}, v3.1.0) to monitor CPU and GPU memory usage, respectively. Evaluations were performed on high-performance computing infrastructure with 16 CPU cores, 60 GB RAM, and dual NVIDIA A100 GPUs (80 GB memory each). Adapter prediction stage used a batch size of 64.
 
-\subsection{Transcript Length Distribution Analysis}
+\subsection{Transcript length distribution analysis}
 \hl{To assess the biological appropriateness of DeepChopper's 32 kb input limit, we analyzed transcript length distributions from two sources: theoretical annotations and empirical sequencing data.
 For theoretical analysis, all protein-coding transcripts were extracted from Ensembl human genome annotations (GRCh38.115, released July 11, 2025). 
 We calculated median length, 95th percentile, 99th percentile, and the fraction of transcripts exceeding 32 kb using Python.
@@ -919,14 +909,14 @@ VCaP RNA002 and RNA004 demonstrate that adapter-mediated chimeras persist across
 	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:sf5}
 \end{figure}
 
-
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=\textwidth]{finals/cd57397b-5cb3-49bb-aa54-b672ead44527_seq_qual}
+        \includegraphics[width=\textwidth]{finals/cd57397b-5cb3-49bb-aa54-b672ead44527_seq_qual_dorado_with_trim}
     \end{center}
     \caption{{\bf Internal adapter detection with base quality visualization.} 
-    \hl{Representative dRNA-seq read from VCaP RNA002 containing an internal adapter sequence (highlighted in red, positions 364-438). Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream and lower base quality compared to flanking biological sequences. Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: cd57397b-5cb3-49bb-aa54-b672ead44527.}}
-    \label{fig:adapter_example}
+   Representative read from VCaP RNA002, processed with Dorado trim option followed by DeepChopper, containing an internal adapter sequence (highlighted in red, positions 367-443). 
+   Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream and lower base quality compared to flanking biological sequences. Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: cd57397b-5cb3-49bb-aa54-b672ead44527.}
+    \label{fig:show_case_cd57397b}
 \end{figure}
 
 
@@ -953,39 +943,10 @@ VCaP RNA002 and RNA004 demonstrate that adapter-mediated chimeras persist across
 \end{figure}
 
 
-
-% \newpage
-
-% \section{Supplementary information}
-
-% \renewcommand{\figurename}{Supplementary Fig.}
-% \renewcommand{\tablename}{Supplementary Table}
-
-
 % If your article has accompanying supplementary file/s please state so here.
 % Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
 % Please refer to Journal-level guidance for any specific requirements.
 
-
-% \begin{table}
-% 	\centering
-% 	\caption{Hyperparameter ranges used}\label{tab:hyperparameter}
-% 	\begin{tabular}{lc}
-% 		\toprule
-% 		                     & {$\sf DeepChopper$}               \\
-% 		\midrule
-% 		Parameters           & 1.6M                              \\
-% 		Optimizer            & Adam                             \\
-% 		Optimizer momentum   & $\beta_1$, $\beta_2$ = 0.9, 0.999 \\
-% 		Training epoch       & 60                                \\
-% 		Batch size           & 64                                \\
-% 		Learning rate        & 2e-5                     \\
-% 		LR scheduler         & ReduceLROnPlateau                 \\
-% 		Weight decay (model) & 0                         \\
-% 		Sequence lengths     & 32769                             \\
-% 		\midrule
-% 	\end{tabular}
-% \end{table}
 
 % \section*{Declarations}
 
