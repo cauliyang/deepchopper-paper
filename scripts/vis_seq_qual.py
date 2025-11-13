@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import matplotlib
 
+
 def _plot_track_style(
     ax,
     line_seq,
@@ -18,6 +19,8 @@ def _plot_track_style(
     qmax,
     is_in_adapter,
     font_size,
+    base_color_by_quality,
+    BASE_COLORS,
 ):
     """Track style with sequence above and quality track below."""
     seq_y = -y_offset
@@ -41,8 +44,6 @@ def _plot_track_style(
                     zorder=2,
                 )
                 ax.add_patch(bar)
-
-
 
         idx = line_start + j
         x_center = j * letter_spacing
@@ -68,10 +69,10 @@ def _plot_track_style(
             (x_center - base_width / 2, seq_y - base_height / 2),
             width=base_width,
             height=base_height,
-            facecolor=rect_color,
+            facecolor=rect_color if base_color_by_quality else BASE_COLORS[base],
             edgecolor="#CCCCCC",
-            linewidth=0.3,
-            alpha=0.25,
+            linewidth=0.2,
+            alpha= 0.35 if base_color_by_quality else 0.9,
             zorder=1,
         )
         ax.add_patch(bg)
@@ -84,7 +85,7 @@ def _plot_track_style(
             seq_y - base_height / 16,  # shift text downward to center more precisely
             base,
             fontsize=font_size,
-            color="#D62728" if in_adapter else "black",  # blue for adapter regions, black otherwise
+            color="#D62728" if in_adapter else ("black" if base_color_by_quality else "white"),  # blue for adapter regions, black otherwise
             ha="center",
             va="center",
             family="monospace",
@@ -98,13 +99,21 @@ def plot_sequence_with_quality(
     adapter_regions,
     wrap=None,
     ax=None,
+    base_color_by_quality=True,
     cmap="cividis",
     letter_spacing=0.8,
     dpi=300,
-    BASE_FONT_SIZE = 8,
-    BASE_WIDTH_RATIO = 1,
-    BASE_HEIGHT_RATIO = 0.60,
+    BASE_FONT_SIZE=8,
+    BASE_WIDTH_RATIO=1,
+    BASE_HEIGHT_RATIO=0.60,
     show_position=True,
+    BASE_COLORS={
+        "A": "#7C3AED",  # Dark purple/violet - distinct and colorblind-friendly
+        "T": "#1E3A8A",  # Dark blue - good contrast
+        "C": "#059669",  # Dark green/emerald - distinct from others
+        "G": "#D97706",  # Dark orange/amber - warm and distinct
+        "N": "#6B7280",  # Medium gray - neutral for ambiguous bases
+    },
 ):
     """
     Publication-quality visualization of nucleotide sequences with per-base quality scores.
@@ -144,6 +153,7 @@ def plot_sequence_with_quality(
             "ps.fonttype": 42,
         }
     )
+    print(f"base_color_by_quality: {base_color_by_quality}")
 
     if wrap is None:
         wrap = determine_wrap_len(sequence)
@@ -258,6 +268,8 @@ def plot_sequence_with_quality(
             qmax,
             is_in_adapter,
             BASE_FONT_SIZE,
+            base_color_by_quality,
+            BASE_COLORS,
         )
 
         y_offset += line_height * 1.05  # Tight row spacing
@@ -302,6 +314,7 @@ if __name__ == "__main__":
         quality,
         adapter_regions,
         # wrap=50,
+        base_color_by_quality=True,
         cmap="cividis",
         dpi=300,
     )
