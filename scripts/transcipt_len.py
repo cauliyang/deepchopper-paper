@@ -5,6 +5,7 @@
 #     "numpy<2",
 #     "polars",
 #     "typer",
+#     "pandas",
 # ]
 # ///
 
@@ -16,107 +17,99 @@ import polars as pl
 app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
 
 
-def get_transcript_lengths(
+def get_all_transcript_lengths(
     gtf_file: Path,
     output_file: Path | None = None,
-    gene_biotype: str | None = None,
-    show_stats: bool = False,
-    max_only: bool = False,
+    gene_biotype: str = "protein_coding",
 ):
     """
-    Calculate transcript lengths and genomic spans from a GTF file.
-
-    For each transcript, calculates:
-    - transcript_length: sum of all exon lengths (spliced/mature transcript)
-    - genomic_span: total span in genome including introns (end - start + 1)
+    Extract all transcripts with their lengths (sum of exon and UTRs) for each gene.
+    Outputs one row per transcript: gene_id, transcript_id, transcript_length, gene_length, gene_name, chromosome, strand
     """
+    # Read GTF
+    df = read_gtf(str(gtf_file))
 
-    # Read GTF file and filter for exons
-    df = read_gtf(gtf_file)
-    exons = df.filter(pl.col("feature") == "exon")
-
-    # Show gene biotype statistics if requested
-    if show_stats:
-        gene_info = df.filter(pl.col("feature") == "gene")
-        if "gene_biotype" in gene_info.columns:
-            biotype_counts = (
-                gene_info.group_by("gene_biotype")
-                .agg(pl.count().alias("count"))
-                .sort("count", descending=True)
-            )
-            typer.echo("\n=== Gene Biotype Statistics ===")
-            for row in biotype_counts.iter_rows(named=True):
-                typer.echo(f"{row['gene_biotype']}: {row['count']}")
-            typer.echo(f"\nTotal genes: {gene_info.height}")
-            typer.echo("================================\n")
-
-    # Filter by gene biotype if specified
-    if gene_biotype:
-        if "gene_biotype" in exons.columns:
-            exons = exons.filter(pl.col("gene_biotype") == gene_biotype)
-            typer.echo(f"Filtering for gene_biotype: {gene_biotype}")
-        else:
-            typer.echo("Warning: 'gene_biotype' column not found in GTF file", err=True)
-
-    # Calculate exon lengths and genomic span by transcript
-    agg_cols = [
-        pl.col("exon_length").sum().alias("transcript_length"),
-        pl.col("gene_id").first(),
-        pl.col("gene_name").first(),
-        pl.col("seqname").first().alias("chromosome"),
-        pl.col("strand").first(),
-        pl.col("start").min().alias("genomic_start"),
-        pl.col("end").max().alias("genomic_end"),
-    ]
-
-    # Include gene_biotype if available
-    if "gene_biotype" in exons.columns:
-        agg_cols.append(pl.col("gene_biotype").first())
-
-    transcript_lengths = (
-        exons.with_columns((pl.col("end") - pl.col("start") + 1).alias("exon_length"))
-        .group_by("transcript_id")
-        .agg(agg_cols)
-        .with_columns(
-            (pl.col("genomic_end") - pl.col("genomic_start") + 1).alias("genomic_span")
-        )
-        .sort(["gene_id", "transcript_id"])
+    # Calculate gene length (span from min start to max end for each gene)
+    gene_lengths = (
+        df.filter(pl.col("gene_id").is_not_null())
+        .group_by("gene_id")
+        .agg([(pl.col("end").max() - pl.col("start").min() + 1).alias("gene_length")])
     )
 
-    if max_only:
-        # Find maximum transcript length per gene
-        gene_agg = [
-            pl.col("transcript_length").max().alias("max_transcript_length"),
-            pl.col("genomic_span").max().alias("max_genomic_span"),
-            pl.col("gene_name").first().alias("gene_name"),
-            pl.col("chromosome").first(),
-            pl.col("strand").first(),
-        ]
+    # Features to include for transcript length
+    exonic_features = set(
+        f.lower() for f in ["exon", "five_prime_utr", "three_prime_utr", "3utr", "5utr"]
+    )
 
-        # Include gene_biotype if available
-        if "gene_biotype" in transcript_lengths.columns:
-            gene_agg.append(pl.col("gene_biotype").first().alias("gene_biotype"))
+    # Lowercase for filtering
+    df = df.with_columns(
+        pl.col("feature").cast(str).str.to_lowercase().alias("_feature_lc")
+    )
+    exons_utrs = df.filter(pl.col("_feature_lc").is_in(exonic_features))
 
-        result = transcript_lengths.group_by("gene_id").agg(gene_agg).sort("gene_id")
-        typer.echo(f"Total genes processed: {result.height}")
+    # Filter by gene_biotype if specified
+    if gene_biotype is not None:
+        if "gene_biotype" in exons_utrs.columns:
+            exons_utrs = exons_utrs.filter(pl.col("gene_biotype") == gene_biotype)
+
+    # Filter out rows with missing transcript_id or gene_id
+    exons_utrs = exons_utrs.filter(
+        pl.col("transcript_id").is_not_null() & pl.col("gene_id").is_not_null()
+    )
+
+    if len(exons_utrs) == 0:
+        raise ValueError(
+            f"No exonic features found matching the criteria in {gtf_file}"
+        )
+
+    # Calculate region length and remove bad
+    exons_utrs = exons_utrs.with_columns(
+        (pl.col("end") - pl.col("start") + 1).alias("region_length")
+    ).filter(pl.col("region_length") > 0)
+
+    # Sum region_length per transcript
+    agg_exprs = [
+        pl.col("region_length").sum().alias("transcript_length"),
+        pl.col("seqname").first().alias("chromosome"),
+        pl.col("strand").first().alias("strand"),
+    ]
+
+    # Add gene_name if it exists
+    if "gene_name" in exons_utrs.columns:
+        agg_exprs.append(pl.col("gene_name").first().alias("gene_name"))
     else:
-        # Return all transcripts
-        result = transcript_lengths
-        num_genes = result.select("gene_id").n_unique()
-        typer.echo(f"Total transcripts: {result.height}, across {num_genes} genes")
+        agg_exprs.append(pl.lit("").alias("gene_name"))
 
-    # Save to file or print to stdout
+    trans_lengths = exons_utrs.group_by("transcript_id", "gene_id").agg(agg_exprs)
+
+    # Join gene lengths to transcript data
+    trans_lengths = trans_lengths.join(gene_lengths, on="gene_id", how="left")
+
+    # Sort by gene_id and transcript_length (descending)
+    result = trans_lengths.sort(
+        ["gene_id", "transcript_length", "transcript_id"],
+        descending=[False, True, False],
+    )
+
+    # Select and order columns
+    outcols = [
+        "gene_id",
+        "transcript_id",
+        "transcript_length",
+        "gene_length",
+        "gene_name",
+        "chromosome",
+        "strand",
+    ]
+    result = result.select([c for c in outcols if c in result.columns])
+
+    # Output to file or stdout
     if output_file:
-        result.write_csv(output_file, separator="\t")
-        typer.echo(f"Results saved to {output_file}")
+        result.write_csv(str(output_file), separator="\t")
     else:
+        print("\t".join(result.columns))
         for row in result.iter_rows(named=True):
-            if max_only:
-                print(f"{row['gene_id']}\t{row['max_transcript_length']}")
-            else:
-                print(
-                    f"{row['transcript_id']}\t{row['gene_id']}\t{row['transcript_length']}"
-                )
+            print("\t".join(str(row.get(col, "")) for col in result.columns))
 
 
 @app.command()
@@ -129,48 +122,14 @@ def main(
         "protein_coding",
         "--biotype",
         "-b",
-        help="Filter by gene biotype (e.g., 'protein_coding')",
-    ),
-    show_stats: bool = typer.Option(
-        False, "--stats", "-s", help="Show gene biotype statistics"
-    ),
-    max_only: bool = typer.Option(
-        False,
-        "--max-only",
-        "-m",
-        help="Output only maximum transcript length per gene (default: all transcripts)",
+        help="Filter by gene biotype (default: protein_coding)",
     ),
 ):
     """
-    Calculate transcript lengths and genomic spans from a GTF file.
-
-    By default, outputs all transcripts with their lengths grouped by gene.
-    Use --max-only to get only the maximum transcript length per gene.
-
-    Output columns:
-    - transcript_id: Ensembl transcript ID
-    - gene_id: Ensembl gene ID
-    - gene_name: Gene symbol
-    - chromosome: Chromosome/contig name
-    - strand: + or -
-    - transcript_length: Sum of all exon lengths (spliced length)
-    - genomic_span: Genomic span from first to last position (includes introns)
-    - genomic_start: Start position in genome
-    - genomic_end: End position in genome
-    - gene_biotype: Gene biotype (if available)
-
-    Examples:
-
-    # Show statistics about gene types
-    uv run script.py input.gtf --stats
-
-    # Get all transcript lengths for protein-coding genes
-    uv run script.py input.gtf -o transcripts.tsv --biotype protein_coding
-
-    # Get maximum transcript length per gene only
-    uv run script.py input.gtf -o max_lengths.tsv --biotype protein_coding --max-only
+    Extract all transcripts with their lengths (sum of exonic and UTR parts) for all genes.
+    Output includes: gene_id, transcript_id, transcript_length, gene_length, gene_name, chromosome, strand
     """
-    get_transcript_lengths(gtf_file, output, gene_biotype, show_stats, max_only)
+    get_all_transcript_lengths(gtf_file, output, gene_biotype)
 
 
 if __name__ == "__main__":
