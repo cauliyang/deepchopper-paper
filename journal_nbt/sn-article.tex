@@ -361,6 +361,7 @@ Finally, we evaluated post-processing performance as a function of the sliding w
 To further evaluate DeepChopper’s performance beyond the VCaP dataset, we performed multi-sample validation across diverse biological systems and sequencing platforms. 
 We began by analyzing \gls{drs} data from the \gls{sgnex} project, comparing chimeric alignments before and after DeepChopper trimming. 
 \hl{DeepChopper detected internal adapters in 0.67-1.25\% of reads across these datasets (A549: 0.92\%, MCF7: 0.67\%, HCT116: 1.22\%, K562: 0.96\%, HepG2: 1.25\%), representing 15,690-57,122 affected reads per sample (\mbox{\edtableref{tab:prevalence}{}}).
+Critically, internal adapters accounted for 63--85\% of all chimeric reads across cell lines, identifying adapter-bridged artifacts as the predominant source of false RNA rearrangement\mbox{\cite{ma2018squid}}. 
 This systematic occurrence of internal adapters across all tested cell lines indicates that adapter-bridged chimeras are not specific to VCaP but represent a general characteristic of dRNA-seq data.}
 Across these samples, DeepChopper reduced unsupported chimeric alignments by 62\% to 84\%, while preserving cDNA-supported chimeric alignments without noticeable reduction (\figref{fig:f2}{g}).
 These results reinforce the widespread presence of chimera artifacts in \gls{drs} and the effectiveness of DeepChopper in selectively removing them without compromising true biological signals.
@@ -420,11 +421,13 @@ In summary, DeepChopper significantly improves the quality of nanopore \gls{drs}
 These improvements are robust across different sequencing chemistries and preprocessing pipelines.
 
 \section{\hl{Discussion}}
-\hl{DeepChopper addresses a critical gap in \mbox{\gls{ont}} \mbox{\gls{drs}}: detecting and recovering adapter-bridged chimeric artifacts through internal adapter identification. Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads---tens to hundreds of thousands per experiment---with each propagating errors to transcript annotation, gene fusion detection, and expression quantification\mbox{~\cite{ma2018squid}}. No prior literature has systematically characterized adapter-bridged chimera formation mechanisms in \mbox{\gls{drs}}; our work addresses this gap while providing the first computational solution.}
+\hl{DeepChopper addresses a critical gap in \mbox{\gls{ont}} \mbox{\gls{drs}}: detecting and recovering adapter-bridged chimeric artifacts through internal adapter identification.
+Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads---tens to hundreds of thousands per experiment---with each propagating errors to transcript annotation, gene fusion detection, and expression quantification\mbox{~\cite{ma2018squid}}.
+No prior literature has systematically characterized adapter-bridged chimera formation mechanisms in \mbox{\gls{drs}}; our work addresses this gap while providing the first computational solution.}
 \hl{DeepChopper identifies internal adapter sequences marking artificial junctions, then splits chimeras at these boundaries with single-nucleotide precision to recover component sub-reads. This adapter-based approach differs fundamentally from filtering methods that discard problematic reads.
 The recovery capability depends on detectable internal adapters, distinguishing adapter-bridged artifacts from \mbox{\gls{rt}}-mediated template-switching in cDNA-seq, which creates chimeras without internal adapters\mbox{~\cite{schulz2021direct,balazs2019templateswitching}}.}
 
-\hl{DeepChopper leverages \mbox{\gls{glm}} capabilities unavailable to conventional approaches: (1) Long-range context\mbox{~\cite{nguyen2024hyenadna}} enabling full-transcript scanning (median $\sim$1.9 kb, 99th percentile $\sim$8.7 kb); (2) Transfer learning enabling robust detection despite sequencing errors; (3) Quality-aware predictions integrating per-base confidence (F1: $0.97\rightarrow0.99$, \mbox{\edtableref{tab:ablation}{}}); (4) Alignment-free operation eliminating mapping biases.}
+\hl{DeepChopper leverages \mbox{\gls{glm}} capabilities unavailable to conventional approaches: (1) Long-range context\mbox{~\cite{nguyen2024hyenadna}} enabling full-transcript scanning (median $\sim$2.7 kb, 99th percentile $\sim$14 kb); (2) Transfer learning enabling robust detection despite sequencing errors; (3) Quality-aware predictions integrating per-base confidence (F1: $0.97\rightarrow0.99$, \mbox{\edtableref{tab:ablation}{}}); (4) Alignment-free operation eliminating mapping biases.}
 
 \hl{Performance differences between DeepChopper and existing tools (\mbox{\edtableref{tab:tools}{}}, \mbox{\edfigref{fig:benchwithtools}{}}) reflect capability gaps, not quality. Each tool excels at its intended application: Pychopper for cDNA primer detection\mbox{~\cite{pychopper,sessegolo2019transcriptome}} and Dorado for $3'$ adapter trimming\mbox{~\cite{dorado2023}}.
 However, none detect internal adapters in \mbox{\gls{drs}}.}
@@ -761,7 +764,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
         \includegraphics[width=0.9\textwidth]{finals/transcript_length_distribution}
     \end{center}
     \caption{{\hl{\bf Distribution of transcript length for protein-coding genes.}} 
-    \hl{Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of $\sim$1.9 kb.}}
+    \hl{Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of $\sim$2.7 kb.}}
     \label{fig:transcript_len}
 \end{figure}
 
