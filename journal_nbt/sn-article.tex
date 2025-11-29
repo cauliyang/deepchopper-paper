@@ -902,11 +902,17 @@ VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across 
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=\textwidth]{finals/cd57397b-5cb3-49bb-aa54-b672ead44527_seq_qual_dorado_with_trim}
+        \includegraphics[width=\textwidth]{figures/finals/adapter.pdf}
     \end{center}
     \caption{{\hl{\bf Representative internal adapter detection with base quality visualization.}} 
-   \hl{Representative read from VCaP RNA002, processed with Dorado trim option followed by DeepChopper, containing an internal adapter sequence (highlighted in red, positions 367-443). 
-   Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream and lower base quality compared to flanking biological sequences. Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: cd57397b-5cb3-49bb-aa54-b672ead44527.}}
+   \hl{Representative read from VCaP RNA002 processed with Dorado trim followed by DeepChopper, demonstrating internal adapter detection (highlighted in red, positions 367-443) and sub-reads recovery (blue box and purple box).
+   (a)  BLAT alignment of upstream sequence (blue box, positions 1--366) to chr1 (RPS27 gene) with 0.95 identity, confirming genuine biological RNA.
+   (b) Full read visualization showing internal adapter and sub-reads.
+   Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream and lower base quality compared to flanking biological sequences. 
+   The adapter region only shows 0.28 BLAT identity to the reference genome.
+   Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: cd57397b-5cb3-49bb-aa54-b672ead44527.
+   (c) BLAT alignment of downstream sequence (purple box, positions 444--807) to chr2 (RPL37A gene) with 0.98 identity, confirming genuine biological RNA from a different transcript.}
+   }
     \label{fig:adapter_example}
 \end{figure}
 
