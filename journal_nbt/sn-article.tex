@@ -420,6 +420,8 @@ The presence of polyA and open pore signals at the boundary of this region furth
 In summary, DeepChopper significantly improves the quality of nanopore \gls{drs} data by accurately identifying and splitting adapter-bridged chimera that otherwise confound transcript annotation and gene fusion detection.
 These improvements are robust across different sequencing chemistries and preprocessing pipelines.
 
+
+
 \section{\hl{Discussion}}
 \hl{DeepChopper addresses a critical gap in \mbox{\gls{ont}} \mbox{\gls{drs}}: detecting and recovering adapter-bridged chimeric artifacts through internal adapter identification.
 Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads---tens to hundreds of thousands per experiment---with each propagating errors to transcript annotation, gene fusion detection, and expression quantification\mbox{~\cite{ma2018squid}}.
@@ -527,6 +529,7 @@ For a given nucleotide position with output logits $z_1$ and $z_2$ (correspondin
 where $P(y_i=c)$ represents the probability that nucleotide position $i$ belongs to class $c$.
 The final classification decision is based on the class with the higher probability score.
 In other words, a nucleotide is classified as an adapter if $P(y_i = \textrm{adapter}) > P(y_i = \textrm{non-adapter})$.
+\hl{Hence, a threshold of 0.5 is applied implicitly.}
 
 This nucleotide-level classification strategy allows DeepChopper to identify adapter boundaries with high precision, including both terminal and internal adapter sequences.
 
@@ -892,6 +895,8 @@ VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across 
 
 
 
+
+
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.7\textwidth]{finals/vcap002_com_with_breakinator}
@@ -920,7 +925,7 @@ VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across 
     \begin{center}
         \includegraphics[width=\textwidth]{finals/c16c6ade-135b-4073-a1d6-5a9c6900bfb2_seq_qual.pdf}
     \end{center}
-    \caption{{\hl{\bf Challenge Case 1: Incomplete 3' terminal adapter detection in multi-adapter read.}}
+    \caption{{\hl{\bf Challenge Scenario 1: Incomplete 3' terminal adapter detection in multi-adapter read.}}
     \hl{Representative read from VCaP RNA002 processed with Dorado without trim followed by DeepChopper (with refinement applied). The read contains both an internal adapter (positions 1026-1105, highlighted in red, correctly detected) and a 3' end adapter that DeepChopper failed to completely detect. Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$).
     The internal adapter shows characteristic low quality compared to flanking biological sequences.
     This scenario demonstrates that when multiple adapters are present, DeepChopper reliably detects internal adapters (its primary function) but may incompletely detect terminal adapters. Read ID: c16c6ade-135b-4073-a1d6-5a9c6900bfb2.}}
@@ -931,7 +936,7 @@ VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across 
     \begin{center}
         \includegraphics[width=\textwidth]{finals/0955d980-9c79-48c2-a474-08c8c39cb00f_seq_qual_dorado_with_trim.pdf}
     \end{center}
-    \caption{{\hl{\bf Challenge Case 2: Partial internal adapter detection.}} 
+    \caption{{\hl{\bf Challenge Scenario 2: Partial internal adapter detection.}} 
     \hl{Representative read from VCaP RNA002 processed with Dorado trim option followed by DeepChopper (with refinement applied).
     The read shows partial adapter detection (highlighted in red), demonstrating challenges with degraded or error-rich adapter sequences where DeepChopper may detect only portions of the complete adapter sequence.
     The sequences ``GTG'' (positions 519-521) and ``CTATAAAATC'' (positions 526-535) may be part of internal adapter.
@@ -943,12 +948,12 @@ VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across 
     \begin{center}
         \includegraphics[width=\textwidth]{finals/c16c6ade-135b-4073-a1d6-5a9c6900bfb2_seq_qual_dorado_with_trim}
     \end{center}
-    \caption{{\hl{\bf Solution for Challenge Case 1: Combined Dorado-DeepChopper workflow.}}
+    \caption{{\hl{\bf Solution for Challenge Scenario 1: Combined Dorado-DeepChopper workflow.}}
     \hl{The same representative read (ID: c16c6ade-135b-4073-a1d6-5a9c6900bfb2) processed with Dorado with trim followed by DeepChopper.
     Dorado successfully removed the 3' end adapter, while DeepChopper detected the internal adapter (highlighted in red, positions adjusted after Dorado trimming).
     Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$).
     The internal adapter shows characteristic low quality.
-    This demonstrates that combining Dorado (3' end adapters) with DeepChopper (internal adapters) addresses complementary problems and resolves the incomplete detection issue shown in Challenge Case 1. (\mbox{\edfigref{fig:challenge1}{})}}}
+    This demonstrates that combining Dorado (3' end adapters) with DeepChopper (internal adapters) addresses complementary problems and resolves the incomplete detection issue shown in Challenge Scenario 1. (\mbox{\edfigref{fig:challenge1}{})}}}
     \label{fig:challenge1solution}
 \end{figure}
 
