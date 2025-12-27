@@ -315,6 +315,12 @@ As shown in \mbox{\edfigref{fig:benchwithtools}{}}, all existing tools demonstra
 In contrast, DeepChopper achieved exceptional accuracy in identifying both terminal and internal adapters, with recall, precision, and F1 scores consistently exceeding 0.99.
 These results highlight DeepChopper's unique capability to address the specific complexities inherent to \mbox{\gls{drs}} reads and underscore the critical need for purpose-built solutions in this domain.
 
+\hl{In addition to adapter-trimming tools, we also evaluated Breakinator\mbox{~\cite{heinz2025detecting}}, which is designed to detect chimeric artifacts rather than adapter boundaries.
+Breakinator was benchmarked separately using real VCaP RNA002 \mbox{\gls{drs}} data.
+As shown in \mbox{\edfigref{fig:comp_with_breakinator}{}}, Breakinator reduced detected artifacts by 62\% but simultaneously decreased cDNA support to 4.8\% (baseline 5.8\%), reflecting substantial loss of biologically supported signal.
+In contrast, DeepChopper reduced artifacts by 91\% while increasing cDNA support to 49\%, demonstrating selective removal of true artifacts while preserving biological transcript complexity.
+A substantial fraction of \mbox{\gls{drs}} artifacts do not appear as chimeric alignments or fail to map (\mbox{\edfigref{fig:non-chimeric-ratio}{}}), making them inherently undetectable by alignment-rule–based chimera callers.}
+
 To further evaluate DeepChopper’s classification accuracy, we assessed its performance at single-nucleotide resolution. As shown in \mbox{\edtableref{tab:ablation}{}}, the model exhibited sharply bimodal probability distributions for base-level classification, stratified by ground truth labels. For true adapter bases (\mbox{\edfigref{fig:adaprob}{a}}), the model consistently assigned high probabilities ($>0.8$) to the adapter class while suppressing probabilities for the non-adapter class ($<0.2$).
 Conversely, for true non-adapter bases (\mbox{\edfigref{fig:adaprob}{b}}), the model reliably predicted high probabilities for the non-adapter class and low probabilities for the adapter class.
 The minimal presence of intermediate probability values suggests that DeepChopper makes highly confident predictions with low ambiguity between classes.
@@ -416,6 +422,8 @@ Closer inspection of the filtered gene fusion calls revealed a strong enrichment
 This enrichment extended to chimera artifacts in RNA004 data as well (\edfigref{fig:artificial_gene_fusion}{b}).
 A manual review of a chimeric read identified as an \textit{RPS29–COX8A} fusion revealed that the DeepChopper-processed region—interpreted as an internal adapter sequence—aligned with low-intensity raw current signals, consistent with \gls{ont} adapter characteristics (\figref{fig:f3}{e}).
 The presence of polyA and open pore signals at the boundary of this region further supported an artifact origin rather than a bona fide fusion event.
+\hl{\mbox{\edfigref{fig:adapter_example}{}} illustrates the corresponding sequence and base qualities, including the alignment of upstream and downstream segments around the detected adapter, confirming that the apparent \textit{RPS29–COX8A} fusion arises from an adapter-bridged chimera.}
+
 
 In summary, DeepChopper significantly improves the quality of nanopore \gls{drs} data by accurately identifying and splitting adapter-bridged chimera that otherwise confound transcript annotation and gene fusion detection.
 These improvements are robust across different sequencing chemistries and preprocessing pipelines.
@@ -424,35 +432,34 @@ These improvements are robust across different sequencing chemistries and prepro
 
 \section{\hl{Discussion}}
 \hl{DeepChopper addresses a critical gap in \mbox{\gls{ont}} \mbox{\gls{drs}}: detecting and recovering adapter-bridged chimeric artifacts through internal adapter identification.
-	Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads---tens to hundreds of thousands per experiment---with each propagating errors to transcript annotation, gene fusion detection, and expression quantification\mbox{~\cite{ma2018squid}}.
-	No prior literature has systematically characterized adapter-bridged chimera formation mechanisms in \mbox{\gls{drs}}; our work addresses this gap while providing the first computational solution.}
+Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads---tens to hundreds of thousands per experiment---with each propagating errors to transcript annotation, gene fusion detection, and expression quantification\mbox{~\cite{ma2018squid}}.
+No prior literature has systematically characterized adapter-bridged chimera formation mechanisms in \mbox{\gls{drs}}; our work addresses this gap while providing the first computational solution.}
 \hl{DeepChopper identifies internal adapter sequences marking artificial junctions, then splits chimeras at these boundaries with single-nucleotide precision to recover component sub-reads. This adapter-based approach differs fundamentally from filtering methods that discard problematic reads.
-	The recovery capability depends on detectable internal adapters, distinguishing adapter-bridged artifacts from \mbox{\gls{rt}}-mediated template-switching in cDNA-seq, which creates chimeras without internal adapters\mbox{~\cite{schulz2021direct,balazs2019templateswitching}}.}
+The recovery capability depends on detectable internal adapters, distinguishing adapter-bridged artifacts from \mbox{\gls{rt}}-mediated template-switching in cDNA-seq, which creates chimeras without internal adapters\mbox{~\cite{schulz2021direct,balazs2019templateswitching}}.}
 
-\hl{DeepChopper leverages \mbox{\gls{glm}} capabilities unavailable to conventional approaches: (1) Long-range context\mbox{~\cite{nguyen2024hyenadna}} enabling full-transcript scanning (median $\sim$2.7 kb, 99th percentile $\sim$14 kb); (2) Transfer learning enabling robust detection despite sequencing errors; (3) Quality-aware predictions integrating per-base confidence (F1: $0.97\rightarrow0.99$, \mbox{\edtableref{tab:ablation}{}}); (4) Alignment-free operation eliminating mapping biases.}
+\hl{DeepChopper leverages \mbox{\gls{glm}} capabilities unavailable to conventional approaches: (1) Long-range context\mbox{~\cite{nguyen2024hyenadna}} enabling full-transcript scanning (median $\sim$2.7 kb, 99th percentile $\sim$14 kb); (2) Transfer learning enabling robust detection despite sequencing errors; (3) Quality-aware predictions integrating per-base confidence (F1: $0.97\rightarrow0.99$); (4) Alignment-free operation eliminating mapping biases.}
 
-\hl{Performance differences between DeepChopper and existing tools (\mbox{\edtableref{tab:tools}{}}, \mbox{\edfigref{fig:benchwithtools}{}}) reflect capability gaps, not quality. Each tool excels at its intended application: Pychopper for cDNA primer detection\mbox{~\cite{pychopper,sessegolo2019transcriptome}} and Dorado for $3'$ adapter trimming\mbox{~\cite{dorado2023}}.
-	However, none detect internal adapters in \mbox{\gls{drs}}.}
-\hl{Pychopper targets cDNA-specific primers absent in \mbox{\gls{drs}}. Porechop/Porechop\_ABI require exact matching or stable k-mer patterns\mbox{~\cite{Wick2017,bonenfant2023porechop}}---incompatible with unknown, corrupted adapters mis-called by RNA basecallers.
-	Negligible performance on internal detection confirms this is a genuinely unsolved problem.}
+\hl{Performance differences between DeepChopper and existing tools reflect capability gaps, not quality.
+Each tool excels at its intended application: Pychopper for cDNA primer detection\mbox{~\cite{pychopper,sessegolo2019transcriptome}} and Dorado for $3'$ adapter trimming\mbox{~\cite{dorado2023}}.
+However, none detect internal adapters in \mbox{\gls{drs}}.}
+\hl{Pychopper targets cDNA-specific primers absent in \mbox{\gls{drs}}.
+Porechop/Porechop\_ABI require exact matching or stable k-mer patterns\mbox{~\cite{Wick2017,bonenfant2023porechop}}---incompatible with unknown, corrupted adapters mis-called by RNA basecallers.
+Negligible performance on internal detection confirms this is a genuinely unsolved problem.}
 
 \hl{Alignment-based methods employ ruled-based filtering---flagging aberrant alignment patterns---rather than detecting root causes.
-	Breakinator\mbox{~\cite{heinz2025detecting}} detects \mbox{\gls{rt}}-mediated foldbacks in cDNA-seq using distance rules; its validation confirms failure in \mbox{\gls{drs}} where \mbox{\gls{rt}} artifacts don't occur.
-	FLAIR-fusion\mbox{~\cite{felton2023detection}} is a specialized fusion caller, not general quality control.}
-\hl{Empirical comparison on VCaP RNA002: Breakinator reduced artifacts 62\% but decreased cDNA support to 4.8\% (below baseline 5.8\%), indicating indiscriminate removal (\mbox{\edfigref{fig:comp_with_breakinator}{}}). DeepChopper reduced artifacts 91\% while increasing cDNA support to 49\%.
-	Distance rules cannot distinguish adapter-bridged artifacts from biological RNA rearrangements\mbox{~\cite{ma2018squid}} and they cannot handle artifacts that do not map as chimeric reads or that fail to map at all\mbox{(\edfigref{fig:non-chimeric-ratio}{})}.
-	Internal adapter presence definitively indicates artifacts, enabling selective correction while preserving biological complexity.}
+Breakinator\mbox{~\cite{heinz2025detecting}} detects \mbox{\gls{rt}}-mediated foldbacks in cDNA-seq using distance rules; its validation confirms failure in \mbox{\gls{drs}} where \mbox{\gls{rt}} artifacts don't occur.
+FLAIR-fusion\mbox{~\cite{felton2023detection}} is a specialized fusion caller, not general quality control.
+Distance rules cannot distinguish adapter-bridged artifacts from biological RNA rearrangements\mbox{~\cite{ma2018squid}} and they cannot handle artifacts that do not map as chimeric reads or that fail to map at all.
+In contrast, internal adapter presence definitively indicates artifacts, enabling selective correction while preserving biological complexity.}
 
 \hl{Validation across RNA002 and RNA004 with Dorado basecalling shows adapter-bridged chimeras persist systematically despite chemistry improvements \mbox{~\cite{hewel2024direct,zou2025comparative}}.
-	RNA004 fine-tuning achieved 3-4\% additional improvement beyond zero-shot RNA002 model performance (\mbox{\edfigref{fig:finetune}{}}), with both models preserving cDNA-supported events.
-	This demonstrates learned probabilistic patterns enable robust generalization without protocol-specific recalibration---critical as technologies evolve.}
-
-\hl{Representative cases illustrate capabilities and limitations. \mbox{\edfigref{fig:adapter_example}{}} shows successful detection with characteristic poly-A patterns in the upstream and low base quality.
-	Challenging scenarios (\mbox{\edfigref{fig:challenge1}{}}, \mbox{\edfigref{fig:challenge2}{}}) include incomplete $3'$ end detection in multi-adapter reads and partial detection of degraded sequences. Solutions include combining Dorado ($3'$ end adapters) with DeepChopper (internal adapters) (\mbox{\edfigref{fig:challenge1solution}{}}) and post-processing length filtering (default 20 bp minimum).
-	Despite edge cases, DeepChopper achieves 62-91\% artifact reduction while preserving cDNA-supported biological events.}
+RNA004 fine-tuning achieved 3-4\% additional improvement beyond zero-shot RNA002 model performance, with both models preserving cDNA-supported events.
+This demonstrates learned probabilistic patterns enable robust generalization without protocol-specific recalibration---critical as technologies evolve.}
+\hl{Challenging scenarios (\mbox{\edfigref{fig:challenge1}{}}, \mbox{\edfigref{fig:challenge2}{}}) include incomplete $3'$ end detection in multi-adapter reads and partial detection of degraded sequences. Solutions include combining Dorado ($3'$ end adapters) with DeepChopper (internal adapters) (\mbox{\edfigref{fig:challenge1solution}{}}) and post-processing length filtering (default 20 bp minimum).
+Despite edge cases, DeepChopper achieves 62-91\% artifact reduction while preserving cDNA-supported biological events.}
 
 \hl{DeepChopper demonstrates how \mbox{\gls{glm}} address long-read sequencing challenges resisting conventional approaches. Long-range context, error-tolerant learning, single-nucleotide precision, and quality-aware predictions enable detecting corrupted internal adapters that elude exact-matching, k-mer, or alignment methods. Recovery rather than removal represents a paradigm shift from filtering to correction, preserving valuable data while enhancing accuracy.
-	Future directions include extended context for ultra-long transcripts, alternative approaches for \mbox{\gls{rt}}-mediated cDNA-seq chimeras lacking internal adapters, and expansion to additional platforms. This advance enables confident biological interpretation of \mbox{\gls{drs}} data---from isoform discovery to gene fusion detection---strengthening transcriptomic research in complex biological systems where accurate transcript characterization is essential for understanding gene regulation and cellular function.}
+Future directions include extended context for ultra-long transcripts, alternative approaches for \mbox{\gls{rt}}-mediated cDNA-seq chimeras lacking internal adapters, and expansion to additional platforms. This advance enables confident biological interpretation of \mbox{\gls{drs}} data---from isoform discovery to gene fusion detection---strengthening transcriptomic research in complex biological systems where accurate transcript characterization is essential for understanding gene regulation and cellular function.}
 
 \section{Methods}\label{sec:methods}
 
@@ -766,16 +773,6 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 
 
-\begin{figure}[!ht]
-	\begin{center}
-		\includegraphics[width=0.9\textwidth]{finals/transcript_length_distribution}
-	\end{center}
-	\caption{{\hl{\bf Distribution of transcript length for protein-coding genes.}}
-		\hl{Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of $\sim$2.7 kb.}}
-	\label{fig:transcript_len}
-\end{figure}
-
-
 \begin{table}[!h]
 	\centering
 	\caption{\hl{Read Length Statistics by Sample}}
@@ -836,9 +833,40 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 		VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across chemistries.}
 \end{table}
 
+
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{finals/transcript_length_distribution}
+	\end{center}
+	\caption{{\hl{\bf Distribution of transcript length for protein-coding genes.}}
+		\hl{Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of $\sim$2.7 kb.}}
+	\label{fig:transcript_len}
+\end{figure}
+
+
+
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/sf1}
 	\caption{{\bf Performance evaluation in a held-out test dataset ($N=60,000$) showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}\label{fig:benchwithtools}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{finals/vcap002_com_with_breakinator}
+	\end{center}
+	\caption{{\hl{\bf Comparison of chimeric alignment reduction strategies in VCaP RNA002 dRNA-seq data.}} \hl{Stacked bar plot showing chimeric alignments (in thousands) for three processing pipelines: Dorado with adapter trimming (baseline), Dorado with adapter trimming followed by DeepChopper, and Dorado with adapter trimming followed by Breakinator. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events).}}
+	\label{fig:comp_with_breakinator}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{finals/internal_adapter_ratio_by_sample.pdf}
+	\end{center}
+	\caption{{\hl{\bf Percent of internal adapter-containing reads that are non-chimeric}}
+		\hl{Percentage of internal adapter-containing reads that do not produce chimeric alignments across five human cell lines (RNA002) processed by Dorado with trim followed by DeepChopper.
+			Between 33--45\% of adapter-containing reads map as single alignments or fail to map, making them invisible to chimeric alignment-based artifact detection.}}
+	\label{fig:non-chimeric-ratio}
 \end{figure}
 
 \begin{figure}[!ht]
@@ -903,34 +931,16 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{finals/vcap002_com_with_breakinator}
-	\end{center}
-	\caption{{\hl{\bf Comparison of chimeric alignment reduction strategies in VCaP RNA002 dRNA-seq data.}} \hl{Stacked bar plot showing chimeric alignments (in thousands) for three processing pipelines: Dorado with adapter trimming (baseline), Dorado with adapter trimming followed by DeepChopper, and Dorado with adapter trimming followed by Breakinator. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events).}}
-	\label{fig:comp_with_breakinator}
-\end{figure}
-
-\begin{figure}[!ht]
-	\begin{center}
-		\includegraphics[width=0.7\textwidth]{finals/internal_adapter_ratio_by_sample.pdf}
-	\end{center}
-	\caption{{\hl{\bf Percent of internal adapter-containing reads that are non-chimeric}}
-		\hl{Percentage of internal adapter-containing reads that do not produce chimeric alignments across five human cell lines (RNA002).
-			Between 33--45\% of adapter-containing reads map as single alignments or fail to map, making them invisible to chimeric alignment-based artifact detection.}}
-	\label{fig:non-chimeric-ratio}
-\end{figure}
-
-\begin{figure}[!ht]
-	\begin{center}
-		\includegraphics[width=\textwidth]{figures/finals/figure5e_adapter.pdf}
+		\includegraphics[width=\textwidth]{figures/finals/figure3e_adapter.pdf}
 	\end{center}
 	\caption{{\hl{\bf Representative internal adapter detection with base quality visualization.}}
 		\hl{Representative read (\mbox{\figref{fig:f3}{e}}) from VCaP RNA002 processed with Dorado trim followed by DeepChopper, demonstrating internal adapter detection (highlighted in red, positions 155-229) and sub-reads recovery (blue box and purple box).
-			(a)  BLAT alignment of upstream sequence (blue box, positions 1--154) to chr14 (RPS29 gene) with 0.98 identity, confirming genuine biological RNA.
-			(b) Full read visualization showing internal adapter and sub-reads.
-			Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream and lower base quality compared to flanking biological sequences.
+			(upper panel)  BLAT alignment of upstream sequence (blue box, positions 1--154) to chr14 (RPS29 gene) with 0.98 identity, confirming genuine biological RNA.
+			(middle panel) Full read visualization showing internal adapter and sub-reads.
+			Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream (highlighted in green) and lower base quality compared to flanking biological sequences.
 			The adapter region (75 bp) shows no matches found to the reference genome.
 			Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c.
-			(c) BLAT alignment of downstream sequence (purple box, positions 230--722) to chr11 (COX8A gene) with 0.96 identity, confirming genuine biological RNA from a different transcript.}
+			(bottom panel) BLAT alignment of downstream sequence (purple box, positions 230--722) to chr11 (COX8A gene) with 0.96 identity, confirming genuine biological RNA from a different transcript.}
 	}
 	\label{fig:adapter_example}
 \end{figure}
