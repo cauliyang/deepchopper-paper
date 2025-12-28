@@ -1,0 +1,339 @@
+\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+\usepackage{makecell} 
+\usepackage{xspace}
+\usepackage{standalone}
+
+\usepackage{titlesec}
+
+\usepackage{enumitem}
+\usepackage[detect-all=true]{siunitx}
+\sisetup{
+    scientific-notation=false,
+    round-mode = places,
+    round-precision = 0
+}
+
+\usepackage[acronym, automake, style=index, shortcuts]{glossaries-extra}
+\setabbreviationstyle[acronym]{long-short}
+% define glossaries
+\makeglossaries
+
+\newacronym{blat}{BLAT}{BLAST-like alignment tool}
+\newacronym{llm}{LLM}{Large Language Model}
+\newacronym{hmm}{HMM}{Hidden Markov Model}
+\newacronym{gpu}{GPU}{Graphics Processing Unit}
+\newacronym{hpc}{HPC}{High Performance Computing}
+\newacronym{bert}{BERT}{Bidirectional Encoder Representations from Transformers}
+\newacronym{gpt}{GPT}{Generative Pre-trained Transformer}
+
+\newacronym{ide}{IDE}{Integrated Development Environment}
+\newacronym{cd}{CD}{Continuous Development}
+\newacronym{ucsc}{UCSC}{UCSC Genome Browser}
+\newacronym{glm}{GLM}{Genomic Language Model}
+\newacronym{lcglm}{LCGLM}{long-context genomic language model}
+\newacronym{snp}{SNP}{Single Nucleotide Polymorphism}
+\newacronym{fm}{FM}{Foundational Model}
+\newacronym{nlp}{NLP}{Natural Language Processing}
+
+\newacronym{mlp}{MLP}{multilayer perceptron}
+\newacronym{drs}{dRNA-seq}{direct RNA sequencing}
+\newacronym{ont}{ONT}{Oxford Nanopore Technologies}
+\newacronym{pb}{PacBio}{Pacific Biosciences}
+
+\newacronym{go}{GO}{Gene Ontology}
+\newacronym{pcr}{PCR}{Polymerase Chain Reaction}
+
+\newacronym{fsm}{FSM}{Full splice match}
+\newacronym{ism}{ISM}{Incomplete splice match}
+\newacronym{nic}{NIC}{Novel in catalog}
+\newacronym{nnc}{NNC}{Novel not in catalog}
+
+\newacronym{tp}{TP}{True Positive}
+\newacronym{fp}{FP}{False Positive}
+\newacronym{fn}{FN}{False Negative}
+
+\newacronym{mrna}{mRNA}{messenger RNA}
+\newacronym{rta}{RTA}{reverse transcriptase adapter}
+\newacronym{sgnex}{SG-NEx}{Singapore Nanopore Expression Project}
+\newacronym{lrgasp}{LRGASP}{Long-read RNA-Seq Genome Annotation Assessment Project}
+\newacronym{atcc}{ATCC}{American Type Culture Collection}
+\newacronym{ccle}{CCLE}{Cancer Cell Line Encyclopedia}
+\newacronym{david}{DAVID}{Database for Annotation, Visualization, and Integrated Discovery}
+\newacronym{geo}{GEO}{Gene Expression Omnibus}
+\newacronym{rt}{RT}{Reverse Transcription}
+
+\graphicspath{{../figures}}
+
+\renewcommand{\figurename}{Supplementary  Fig.}
+\renewcommand{\tablename}{Supplementary Table}
+
+
+\raggedbottom
+\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[Article Title]{Summlementary Information}
+
+\author[1]{\fnm{Yangyang} \sur{Li}}\email{yangyang.li@northwestern.edu}
+\equalcont{These authors contributed equally to this work.}
+
+% \author*[1,2]{\fnm{First} \sur{Author}}\email{iauthor@gmail.com}
+\author[1]{\fnm{Ting--You} \sur{Wang}}\email{tywang@northwestern.edu}
+\equalcont{These authors contributed equally to this work.}
+
+\author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
+
+\author[1]{\fnm{Yanan} \sur{Ren}}\email{ynren1020@gmail.com}
+\author[1]{\fnm{Xiaotong} \sur{Lu}}\email{xiaotong.lu@northwestern.edu}
+
+\author[1,2]{\fnm{Qi} \sur{Cao}}\email{qi.cao@northwestern.edu}
+\author*[1,2]{\fnm{Rendong} \sur{Yang}}\email{rendong.yang@northwestern.edu}
+
+\affil[1]{\orgdiv{Department of Urology}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{303 E Superior St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
+\affil[2]{\orgdiv{Robert H. Lurie Comprehensive Cancer Center}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{675 N St Clair St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
+
+
+\maketitle
+
+
+\begin{table}[htbp]
+	\centering
+	\caption{Summary of Adapter Trimming Tools for analyzing \mbox{\gls{drs}} data}\label{tab:tools}
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Adapter trimming tool} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\terminal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}dRNA-seq\\internal\\adapter\\trimming\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Trimming existing\\dRNA-seq datasets\\(post-basecalling)\end{tabular}} \\
+		\midrule
+		Porechop                       & \texttimes                                                                             & \texttimes                                                                             & \texttimes                                                                                                \\
+		Porechop\_ABI                  & \texttimes                                                                             & \texttimes                                                                             & \texttimes                                                                                                \\
+		Pychopper                      & \texttimes                                                                             & \texttimes                                                                             & \texttimes                                                                                                \\
+		Dorado                         & \checkmark                                                                             & \texttimes                                                                             & \texttimes                                                                                                \\
+		DeepChopper                    & \checkmark                                                                             & \checkmark                                                                             & \checkmark                                                                                                \\
+		\bottomrule
+	\end{tabular}
+	\footnotetext{\checkmark~indicates the tool supports this functionality; \texttimes~indicates the tool does not support this functionality.}
+\end{table}
+
+
+\begin{table}[!h]
+	\centering
+	\caption{Read Length Statistics by Sample}
+	\label{tab:read_stats}
+	\setlength{\tabcolsep}{1.3pt}
+	\begin{tabular}{@{}lccccccccccccc@{}}
+		\toprule
+		\textbf{Sample} & \textbf{Reads} & \textbf{Min} & \textbf{Max} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Q1} & \textbf{Q2} & \textbf{Q3} & \textbf{P90} & \textbf{P95} & \textbf{P99} & \textbf{Reads} & \textbf{\%} \\
+		                & (M)            & (bp)         & (bp)         & (bp)          & (bp)             & (bp)        & (bp)        & (bp)        & (bp)         & (bp)         & (bp)         & $\geq$32kb     & $\geq$32kb  \\
+		\midrule
+		A549            & 1.70           & 5            & 16,246       & 907           & 805              & 383         & 700         & 1,223       & 1,904        & 2,440        & 3,829        & 0              & 0           \\
+		MCF7            & 3.04           & 5            & 28,802       & 715           & 623              & 316         & 546         & 911         & 1,475        & 1,863        & 3,052        & 0              & 0           \\
+		HCT116          & 4.70           & 5            & 21,656       & 889           & 795              & 374         & 669         & 1,193       & 1,871        & 2,431        & 3,793        & 0              & 0           \\
+		K562            & 3.06           & 2            & 58,395       & 683           & 555              & 319         & 556         & 892         & 1,393        & 1,736        & 2,619        & 2              & 0           \\
+		HepG2           & 1.80           & 2            & 46,077       & 1,148         & 974              & 497         & 864         & 1,544       & 2,317        & 3,025        & 4,665        & 1              & 0           \\
+		VCaP RNA002     & 9.18           & 5            & 77,474       & 994           & 901              & 462         & 697         & 1,279       & 2,092        & 2,826        & 4,399        & 1              & 0           \\
+		VCaP RNA004     & 11.72          & 5            & 225,798      & 995           & 971              & 483         & 695         & 1,224       & 2,025        & 2,784        & 4,474        & 379            & 0.0032      \\
+		\bottomrule
+	\end{tabular}
+	\footnotetext{Q1, Q2, Q3 represent 25th, 50th, and 75th percentiles. P90, P95, P99 represent 90th, 95th, and 99th percentiles. All reads were basecalled using Dorado (v0.5.2) with trim option. VCaP RNA002 and RNA004 represent matched chemistry comparison.}
+\end{table}
+
+\begin{table}[ht]
+	\centering
+	\caption{Ablation Study Results for Quality Block}
+	\label{tab:ablation}
+	\begin{tabular}{lc}
+		\toprule
+		\textbf{Model Configuration} & \textbf{F1 Score} \\
+		\midrule
+		With Quality Block           & \textbf{0.99}     \\
+		Without Quality Block        & 0.97              \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+	\centering
+	\caption{Internal Adapter Prevalence Across Datasets}
+	\label{tab:prevalence}
+	\begin{tabular}{lcccccc}
+		\toprule
+		                & \multicolumn{3}{c}{\textbf{All Reads}} & \multicolumn{3}{c}{\textbf{Chimeric Reads Only}}                                              \\
+		\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+		\textbf{Sample} & \makecell{\textbf{With Internal}                                                                                                       \\\textbf{Adapters}} & \textbf{Total} & \makecell{\textbf{\%}\\\textbf{(A/B)}} & \makecell{\textbf{With Internal}\\\textbf{Adapters}} & \textbf{Total} & \makecell{\textbf{\%}\\\textbf{(C/D)}} \\
+		                & \textbf{(A)}                           & \textbf{(B)}                                     &      & \textbf{(C)} & \textbf{(D)} &       \\
+		\midrule
+		A549            & 15,690                                 & 1,703,697                                        & 0.92 & 10,553       & 12,803       & 82.43 \\
+		MCF7            & 20,340                                 & 3,039,468                                        & 0.67 & 11,115       & 17,646       & 63.00 \\
+		HCT116          & 57,122                                 & 4,697,299                                        & 1.22 & 37,823       & 46,800       & 80.81 \\
+		K562            & 29,436                                 & 3,061,722                                        & 0.96 & 19,289       & 23,214       & 83.09 \\
+		HepG2           & 22,530                                 & 1,797,922                                        & 1.25 & 14,331       & 16,921       & 84.69 \\
+		VCaP RNA002     & 148,452                                & 9,177,422                                        & 1.62 & 98,878       & 107,265      & 92.18 \\
+		VCaP RNA004     & 38,878                                 & 11,714,520                                       & 0.33 & 6,891        & 29,144       & 23.65 \\
+		\bottomrule
+	\end{tabular}
+	\footnotetext{Total reads from Dorado with trim. Internal adapters detected by DeepChopper after Dorado processing.
+		VCaP RNA002 and RNA004 demonstrate that adapter-bridged chimeras persist across chemistries.}
+\end{table}
+
+
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{finals/transcript_length_distribution}
+	\end{center}
+	\caption{{\bf Distribution of transcript length for protein-coding genes.}
+		Analysis of all protein-coding transcripts from Ensembl GRCh38.115 (released July 2025) shows that $>$99.99\% of transcripts are below the 32 kb threshold (marked with vertical dashed line). The distribution is highly skewed toward shorter transcripts, with median length of ${ \sim }$2.7 kb.}
+	\label{fig:transcript_len}
+\end{figure}
+
+
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.4\columnwidth]{finals/sf1}
+	\caption{{\bf Performance evaluation in a held-out test dataset ($N=60,000$) showing Recall, Precision, and F1 values for DeepChopper, Pychopper, Porechop, and Porechop\_ABI.}}\label{fig:benchwithtools}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{finals/vcap002_com_with_breakinator}
+	\end{center}
+	\caption{{\bf Comparison of chimeric alignment reduction strategies in VCaP RNA002 dRNA-seq data.} Stacked bar plot showing chimeric alignments (in thousands) for three processing pipelines: Dorado with adapter trimming (baseline), Dorado with adapter trimming followed by DeepChopper, and Dorado with adapter trimming followed by Breakinator. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events).}
+	\label{fig:comp_with_breakinator}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{finals/internal_adapter_ratio_by_sample.pdf}
+	\end{center}
+	\caption{{\bf Percent of internal adapter-containing reads that are non-chimeric}
+		Percentage of internal adapter-containing reads that do not produce chimeric alignments across five human cell lines (RNA002) processed by Dorado with trim followed by DeepChopper.
+		Between 33--45\% of adapter-containing reads map as single alignments or fail to map, making them invisible to chimeric alignment-based artifact detection.}
+	\label{fig:non-chimeric-ratio}
+\end{figure}
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.35\columnwidth]{finals/adaprob}
+	\caption{{\bf Prediction probability distributions of DeepChopper for the held-out test dataset  ($N=60,000$).} (a) Distribution of prediction probabilities for sequences with ground truth adapter classification. Red bars represent the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in millions of sequences ($10^6$ scale). (b) Distribution of prediction probabilities for sequences with ground truth non-adapter classification. Red bars indicate the probability of adapter prediction, while gray bars show the probability of non-adapter prediction. The count (y-axis) is shown in tens of millions of sequences ($10^7$ scale). Both distributions demonstrate strong polarization toward correct classification probabilities, indicating the model's high confidence in distinguishing between adapter and non-adapter sequences.}\label{fig:adaprob}
+\end{figure}
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.4\columnwidth]{finals/runtime_and_memory_usage_with_23M_optchop}
+	\caption{ {\bf Computational performance metrics across different data sizes.} (a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across five data sizes: subsampled VCaP datasets (0.1M, 0.5M, 1M reads), full VCaP \mbox{\gls{drs}} dataset (9M reads), and merged large-scale dataset (23M reads combining A549, HCT116, HepG2, K562, and MCF7). Runtime scales near-linearly with data size. As data size increases, prediction time becomes the dominant component, requiring approximately 5 hours for the 9M dataset and 10.6 hours for the 23M dataset. (b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements. CPU memory usage ranges from 70-93 GB and GPU memory from 34-56 GB across larger datasets, with stable memory footprint indicating no fundamental barriers to processing larger datasets. All measurements include error bars representing standard deviation from three technical replicates.}\label{fig:compute_benchmark}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{finals/slidewindow}
+	\end{center}
+	\caption{ {\bf Effect of window size on chimeric alignment detection and read fragmentation.}
+		(a) Analysis of different sliding window sizes (11, 21, 31, 41, and 51
+		nucleotides) showing the percentage of cDNA-supported chimeric alignments (red bars) in VCaP.
+		Higher percentages indicate better support.
+		(b) Distribution of the number of segments per read after trimming (x-axis) for window sizes 11 (gray) and 21 (pink), shown on a logarithmic scale (y-axis). Data represents subsampling of 1M reads from the VCaP dataset. Window size 21
+		maintains similar detection sensitivity to window size 11 while producing
+		fewer fragmented reads.}
+	\label{fig:slidewindow}
+\end{figure}
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.2\columnwidth]{finals/sf2}
+	\caption{ {\bf Chimeric alignments from \gls{drs} of the F121-9 cell line (mouse), evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimeric alignments across all methods compared to Dorado with adapter trimming. The bar colors indicate chimeric alignments supported by additional sequencing data (red) and those lacking support (grey).}}\label{fig:mouse_chimera}
+\end{figure}
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.41\columnwidth]{finals/sf3}
+	\caption{ {\bf Evaluation of DeepChopper's predictions on chimeric read artifacts in \gls{drs} data generated using the SQK-RNA004 kit from the VCaP cell line.} (a) Number of chimeric alignments (in thousands) identified in VCaP RNA004 \gls{drs} reads processed by Dorado with and without adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. The bar colors indicate chimeric alignments supported by cDNA sequencing (red) and those lacking support (grey). (b) Base quality scores (left) and \gls{blat} alignment identity scores (right) for internal adapter sequences identified by DeepChopper in RNA004 \gls{drs} reads.}\label{fig:vcap004_chimera}
+\end{figure}
+
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{finals/vcap004_fiunetune}
+	\end{center}
+	\caption{{\bf Performance comparison of original and fine-tuned DeepChopper on RNA004 data.}
+		Number of chimeric alignments (in thousands) identified in VCaP RNA004 \mbox{\gls{drs}} processed under six conditions: Dorado basecalling with and without adapter trimming, followed by original DeepChopper, and followed by fine-tuned DeepChopper.
+		The bar colors indicate chimeric alignments supported by cDNA sequencing (red) and those lacking support (grey).}
+	\label{fig:finetune}
+\end{figure}
+
+
+\begin{figure}[!ht]
+	\includegraphics[height=0.65\columnwidth]{finals/sf4}
+	\caption{ {\bf Analysis of \gls{drs} chimera artifacts and their genomic and transcriptomic characteristics in VCaP cells.} (a) Box plot comparing gene expression levels between all expressed genes (N=19,156) and genes affected by chimera artifacts (N=7,186) in the VCaP \gls{drs} dataset. Chimera artifacts-affected genes exhibit higher expression levels (\(\textrm{p-value} < 2.2 \times 10^{-16}\)). (b) Distribution of gene effective sizes for all expressed genes and genes affected by chimera artifacts, indicating that the size distributions of genes impacted by chimera artifacts are comparable to those of all expressed genes. (c) Chromosomal distribution and interchromosomal connections from chimeric read artifacts arising from VCaP RNA004 \gls{drs}. The top bar plot shows the number of connections per kilobase for each chromosome, with higher bars indicating more frequent connections. The bottom heatmap visualizes the number of chimeric connections between chromosome pairs, with color intensity representing the connection frequency. (d) Number of detected transcripts across different isoform categories (\gls{fsm}, \gls{ism},  \gls{nic}, \gls{nnc}, and Other) from DeepChopper-identified chimeric read artifacts in VCaP RNA004 \gls{drs} data. DeepChopper-corrected reads resulted in a greater number of transcripts compared to adapter-trimmed reads by Dorado across all categories.}\label{fig:sf4}
+\end{figure}
+
+\begin{figure}[!ht]
+	\includegraphics[height=1.45\columnwidth]{finals/sf5}
+	\caption{ {\bf Analysis of gene fusions derived from chimeric read artifacts in \gls{drs}.} (a) Circos plot depicting chromosomal connections of gene fusions resulting from chimeric read artifacts in VCaP cells. Blue lines represent inter-chromosomal fusion events, while red lines indicate intra-chromosomal fusions. The outer track displays chromosomal ideograms labeled with respective chromosome numbers. (b) \gls{go} enrichment analysis of fusion genes derived from chimeric read artifacts identified by DeepChopper in \gls{drs} data from A549, HepG2, and HCT116 cell lines, and VCaP RNA004 \gls{drs} data. The table lists enriched \gls{go} terms of biological processes, associated genes, and the statistical significance (p-values) for each enrichment.}\label{fig:artificial_gene_fusion}
+\end{figure}
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\textwidth]{finals/figure3e_adapter.pdf}
+	\end{center}
+	\caption{{\bf Representative internal adapter detection with base quality visualization.}
+		Representative read (Fig. 3e) from VCaP RNA002 processed with Dorado trim followed by DeepChopper, demonstrating internal adapter detection (highlighted in red, positions 155-229) and sub-reads recovery (blue box and purple box).
+		(upper panel)  BLAT alignment of upstream sequence (blue box, positions 1--154) to chr14 (RPS29 gene) with 0.98 identity, confirming genuine biological RNA.
+		(middle panel) Full read visualization showing internal adapter and sub-reads.
+		Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). The adapter region shows characteristic poly-A sequences upstream (highlighted in green) and lower base quality compared to flanking biological sequences.
+		The adapter region (75 bp) shows no matches found to the reference genome.
+		Sequences before and after the adapter represent genuine biological RNA from different transcripts artificially joined during library preparation or basecalling. Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c.
+		(bottom panel) BLAT alignment of downstream sequence (purple box, positions 230--722) to chr11 (COX8A gene) with 0.96 identity, confirming genuine biological RNA from a different transcript.
+	}
+	\label{fig:adapter_example}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=\textwidth]{finals/c16c6ade-135b-4073-a1d6-5a9c6900bfb2_seq_qual.pdf}
+	\end{center}
+	\caption{{\bf Challenge Scenario 1: Incomplete 3' terminal adapter detection in multi-adapter read.}
+		Representative read from VCaP RNA002 processed with Dorado without trim followed by DeepChopper (with refinement applied). The read contains both an internal adapter (positions 1026-1105, highlighted in red, correctly detected) and a 3' end adapter that DeepChopper failed to completely detect. Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$).
+		The internal adapter shows characteristic low quality compared to flanking biological sequences.
+		This scenario demonstrates that when multiple adapters are present, DeepChopper reliably detects internal adapters (its primary function) but may incompletely detect terminal adapters. Read ID: c16c6ade-135b-4073-a1d6-5a9c6900bfb2.}
+	\label{fig:challenge1}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=\textwidth]{finals/0955d980-9c79-48c2-a474-08c8c39cb00f_seq_qual_dorado_with_trim.pdf}
+	\end{center}
+	\caption{{\bf Challenge Scenario 2: Partial internal adapter detection.}
+		Representative read from VCaP RNA002 processed with Dorado trim option followed by DeepChopper (with refinement applied).
+		The read shows partial adapter detection (highlighted in red), demonstrating challenges with degraded or error-rich adapter sequences where DeepChopper may detect only portions of the complete adapter sequence.
+		The sequences GTG (positions 519-521) and CTATAAAATC (positions 526-535) may be part of internal adapter.
+		Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$). Such partial detections can lead to spurious short fragments, which are addressed through post-processing length filtering. Read ID: 0955d980-9c79-48c2-a474-08c8c39cb00f.}
+	\label{fig:challenge2}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=\textwidth]{finals/c16c6ade-135b-4073-a1d6-5a9c6900bfb2_seq_qual_dorado_with_trim}
+	\end{center}
+	\caption{{\bf Solution for Challenge Scenario 1: Combined Dorado-DeepChopper workflow.}
+		The same representative read (ID: c16c6ade-135b-4073-a1d6-5a9c6900bfb2) processed with Dorado with trim followed by DeepChopper.
+		Dorado successfully removed the 3' end adapter, while DeepChopper detected the internal adapter (highlighted in red, positions adjusted after Dorado trimming).
+		Base quality scores ($Q$ scores) shown as color-coded bars: yellow indicates high quality ($Q>40$), dark blue indicates low quality ($Q<10$).
+		The internal adapter shows characteristic low quality.
+		This demonstrates that combining Dorado (3' end adapters) with DeepChopper (internal adapters) addresses complementary problems and resolves the incomplete detection issue shown in Challenge Scenario 1. (Supplementary Fig.~\ref{fig:challenge1}{})}
+	\label{fig:challenge1solution}
+\end{figure}
+
+
+\end{document}

@@ -244,7 +244,6 @@ TSWLatexianTemp*
 *.spl
 
 # *.pdf
-!submit/*pdf
 *zip
 .virtual_documents
 .aider*
@@ -258,7 +257,6 @@ igv
 tmp
 .DS_Store
 !figures/finals/*pdf
-submit*
 rebutt
 Source Data.xlsx
 .claude
