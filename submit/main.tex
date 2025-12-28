@@ -51,7 +51,6 @@
 \usepackage{manyfoot}%
 \usepackage{booktabs}%
 \usepackage{xspace}
-
 \usepackage{enumitem}
 \usepackage[detect-all=true]{siunitx}
 \sisetup{
@@ -122,21 +121,6 @@
 %%%%  template package for technical guidance.
 %%%%%=============================================================================%%%%
 
-%% as per the requirement new theorem styles can be included as shown below
-%\theoremstyle{thmstyleone}%
-%\newtheorem{theorem}{Theorem}%  meant for continuous numbers
-%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
-%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
-%\newtheorem{proposition}[theorem]{Proposition}%
-%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
-
-%\theoremstyle{thmstyletwo}%
-%\newtheorem{example}{Example}%
-%\newtheorem{remark}{Remark}%
-
-%\theoremstyle{thmstylethree}%
-%\newtheorem{definition}{Definition}%
-
 \raggedbottom
 \unnumbered% uncomment this for unnumbered level heads
 
@@ -177,10 +161,6 @@
 % \affil*[1]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{100190}, \state{State}, \country{Country}}}
 % \affil[2]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{10587}, \state{State}, \country{Country}}}
 % \affil[3]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{610101}, \state{State}, \country{Country}}}
-
-%%==================================%%
-%% Sample for unstructured abstract %%
-%%==================================%%
 
 \abstract{
 	Chimera artifacts in nanopore \gls{drs} introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection. Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of \gls{drs} for transcriptomics research. To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called \gls{drs} long reads with single-base precision. Operating independently of raw signal or alignment information, DeepChopper effectively eliminates chimeric read artifacts, significantly enhancing the accuracy of crucial downstream analyses. This improvement in reliability unlocks the full potential of nanopore \gls{drs}, establishing it as a more robust tool for diverse transcriptomics applications.
@@ -375,7 +355,6 @@ This enrichment extended to chimera artifacts in RNA004 data as well (Supplement
 A manual review of a chimeric read identified as an RPS29–COX8A fusion revealed that the DeepChopper-processed region—interpreted as an internal adapter sequence—aligned with low-intensity raw current signals, consistent with \gls{ont} adapter characteristics (Fig.~\ref{fig:f3}e).
 The presence of polyA and open pore signals at the boundary of this region further supported an artifact origin rather than a bona fide fusion event.
 Supplementary Fig.~\ref{fig:adapter_example} illustrates the corresponding sequence and base qualities, including the alignment of upstream and downstream segments around the detected adapter, confirming that the apparent RPS29–COX8A fusion arises from an adapter-bridged chimera.
-
 
 In summary, DeepChopper improves the quality of nanopore \gls{drs} data by accurately identifying and splitting adapter-bridged chimera that otherwise confound transcript annotation and gene fusion detection.
 These improvements are robust across different sequencing chemistries and preprocessing pipelines.
