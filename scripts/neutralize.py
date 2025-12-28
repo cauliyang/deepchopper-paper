@@ -13,6 +13,7 @@ with their text equivalents based on the selected mode.
 """
 
 import re
+import sys
 from enum import Enum
 from pathlib import Path
 
@@ -23,6 +24,7 @@ from rich.table import Table
 app = typer.Typer(
     help="Replace LaTeX \\gls commands with plain text",
     add_completion=False,
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 console = Console()
 
@@ -39,6 +41,27 @@ class GlossaryReplacer:
     def __init__(self):
         self.acronyms: dict[str, tuple[str, str]] = {}  # {key: (short, long)}
         self.first_use: set[str] = set()  # Track first use of acronyms
+
+    def pluralize(self, text: str) -> str:
+        """Simple pluralization of English words."""
+        if not text:
+            return text
+
+        # Handle common cases
+        text = text.strip()
+        lower_text = text.lower()
+
+        # Special cases
+        if lower_text.endswith(("s", "x", "z", "ch", "sh")):
+            return f"{text}es"
+        elif lower_text.endswith("y") and len(text) > 1 and text[-2] not in "aeiou":
+            return f"{text[:-1]}ies"
+        elif lower_text.endswith("f"):
+            return f"{text[:-1]}ves"
+        elif lower_text.endswith("fe"):
+            return f"{text[:-2]}ves"
+        else:
+            return f"{text}s"
 
     def parse_acronyms(self, content: str) -> None:
         """Parse \newacronym definitions from LaTeX content."""
@@ -59,6 +82,15 @@ class GlossaryReplacer:
     ) -> str:
         r"""Replace \gls commands with plain text.
 
+        Supports:
+        - \gls{key} - basic reference
+        - \Gls{key} - capitalized
+        - \glspl{key} - plural
+        - \Glspl{key} - capitalized plural
+        - \acrshort{key} - short form
+        - \acrlong{key} - long form
+        - \acrfull{key} - full form (long (short))
+
         Args:
             content: LaTeX content
             mode: Replacement mode - 'short', 'long', or 'both'
@@ -70,7 +102,7 @@ class GlossaryReplacer:
 
         def replace_match(match):
             # Extract command and key
-            command = match.group(1)  # 'gls' or 'Gls' etc.
+            command = match.group(1)  # 'gls', 'Gls', 'glspl', etc.
             key = match.group(2)
 
             if key not in self.acronyms:
@@ -79,8 +111,14 @@ class GlossaryReplacer:
 
             short, long = self.acronyms[key]
 
-            # Determine replacement text
-            if first_use_expand and key not in self.first_use:
+            # Determine base replacement text based on command type
+            if command in ("acrshort",):
+                replacement = short
+            elif command in ("acrlong",):
+                replacement = long
+            elif command in ("acrfull",):
+                replacement = f"{long} ({short})"
+            elif first_use_expand and key not in self.first_use:
                 # First use: expand as "long (short)"
                 replacement = f"{long} ({short})"
                 self.first_use.add(key)
@@ -95,8 +133,22 @@ class GlossaryReplacer:
                 else:
                     replacement = short
 
+            # Handle pluralization for \glspl and \Glspl
+            if command.lower() in ("glspl",):
+                # For "both" mode with plural, pluralize the short form
+                if "(" in replacement and ")" in replacement:
+                    # Format: "long (short)" -> "longs (shorts)"
+                    parts = replacement.split("(")
+                    long_part = parts[0].strip()
+                    short_part = parts[1].rstrip(")")
+                    replacement = (
+                        f"{self.pluralize(long_part)} ({self.pluralize(short_part)})"
+                    )
+                else:
+                    replacement = self.pluralize(replacement)
+
             # Handle capitalization
-            if command == "Gls":
+            if command in ("Gls", "Glspl"):
                 replacement = (
                     replacement[0].upper() + replacement[1:]
                     if replacement
@@ -105,8 +157,9 @@ class GlossaryReplacer:
 
             return replacement
 
-        # Pattern: \gls{key} or \Gls{key}
-        pattern = r"\\(gls|Gls)\{([^}]+)\}"
+        # Pattern: match all gls variants
+        # Matches: \gls, \Gls, \glspl, \Glspl, \acrshort, \acrlong, \acrfull
+        pattern = r"\\(gls|Gls|glspl|Glspl|acrshort|acrlong|acrfull)\{([^}]+)\}"
 
         return re.sub(pattern, replace_match, content)
 
@@ -193,35 +246,37 @@ def main(
     """
     Replace LaTeX \\gls commands with plain text.
 
+    Supports: \\gls, \\Gls, \\glspl, \\Glspl, \\acrshort, \\acrlong, \\acrfull
+
     Examples:
 
     \b
     # Replace with short forms (default)
-    replace-gls main.tex
+    uv run neutralize.py main.tex
 
     \b
     # Replace with long forms
-    replace-gls main.tex --mode long
+    uv run neutralize.py main.tex --mode long
 
     \b
     # Replace with "long (short)" format
-    replace-gls main.tex --mode both
+    uv run neutralize.py main.tex --mode both
 
     \b
     # Expand on first use, short on subsequent uses
-    replace-gls main.tex --first-use
+    uv run neutralize.py main.tex --first-use
 
     \b
     # Save to output file
-    replace-gls main.tex -o output.tex
+    uv run neutralize.py main.tex -o output.tex
 
     \b
     # Modify file in place
-    replace-gls main.tex --in-place
+    uv run neutralize.py main.tex --in-place
 
     \b
     # List all acronyms defined in the file
-    replace-gls main.tex --list-acronyms
+    uv run neutralize.py main.tex --list-acronyms
     """
     # Create replacer
     replacer = GlossaryReplacer()
@@ -247,16 +302,20 @@ def main(
 
     # Print to stdout if no output file specified and not in-place
     if not output and not in_place:
-        console.print(result)
+        # Use print() instead of console.print() to avoid Rich markup interpretation
+        # which would strip LaTeX square brackets like \hyperref[sec:methods]{...}
+        print(result)
 
     # Print success message for file operations
     if in_place:
         console.print(
-            f"[green]✓[/green] Successfully modified '{input_file}' in place", err=True
+            f"[green]✓[/green] Successfully modified '{input_file}' in place",
+            file=sys.stderr
         )
     elif output:
         console.print(
-            f"[green]✓[/green] Successfully wrote output to '{output}'", err=True
+            f"[green]✓[/green] Successfully wrote output to '{output}'",
+            file=sys.stderr
         )
 
 
