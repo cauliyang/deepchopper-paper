@@ -6,10 +6,11 @@
 # ]
 # ///
 
-r"""CLI tool to replace LaTeX \gls commands with plain text.
+r"""CLI tool to neutralize LaTeX commands by replacing them with plain text.
 
-This tool parses \newacronym definitions and replaces \gls{} commands
-with their text equivalents based on the selected mode.
+Features:
+- Replace \gls commands with plain text
+- Resolve \ref commands to actual figure/table numbers
 """
 
 import re
@@ -22,7 +23,7 @@ from rich.console import Console
 from rich.table import Table
 
 app = typer.Typer(
-    help="Replace LaTeX \\gls commands with plain text",
+    help="Neutralize LaTeX commands by replacing with plain text",
     add_completion=False,
     context_settings={"help_option_names": ["-h", "--help"]},
 )
@@ -201,8 +202,95 @@ class GlossaryReplacer:
         return result
 
 
-@app.command()
-def main(
+class ReferenceResolver:
+    def __init__(self):
+        self.labels: dict[str, str] = {}  # {label: number}
+
+    def parse_aux_file(self, aux_file: Path) -> None:
+        """Parse a .aux file to extract label-to-number mappings.
+
+        Format: \\newlabel{label}{{number}{page}{caption}{internal}{}}
+        Example: \\newlabel{fig:f1}{{1}{23}{...}{figure.1}{}}
+        """
+        if not aux_file.exists():
+            print(f"Warning: .aux file not found: {aux_file}", file=sys.stderr)
+            return
+
+        content = aux_file.read_text(encoding='utf-8')
+
+        # Pattern to match \newlabel{label}{{number}{...}...}
+        pattern = r'\\newlabel\{([^}]+)\}\{\{([^}]+)\}'
+
+        for match in re.finditer(pattern, content):
+            label = match.group(1)
+            number = match.group(2)
+            self.labels[label] = number
+
+    def resolve_refs(self, content: str) -> str:
+        """Replace \\ref{label} commands with actual numbers.
+
+        Supports:
+        - \\ref{label}
+        - \\ref{label} (with external references from xr package)
+        """
+        def replace_match(match):
+            label = match.group(1)
+
+            if label not in self.labels:
+                # Unknown label (likely internal ref), keep original without warning
+                return match.group(0)
+
+            return self.labels[label]
+
+        # Pattern: \ref{label}
+        pattern = r'\\ref\{([^}]+)\}'
+
+        return re.sub(pattern, replace_match, content)
+
+    def process_file(
+        self,
+        input_file: Path,
+        output_file: Path | None = None,
+        aux_files: list[Path] | None = None,
+        in_place: bool = False,
+    ) -> str:
+        """Process a LaTeX file and replace \\ref commands with numbers.
+
+        Args:
+            input_file: Path to input LaTeX file
+            output_file: Path to output file (None for stdout)
+            aux_files: List of .aux files to parse (default: input file's .aux)
+            in_place: Modify file in place
+
+        Returns:
+            Processed content
+        """
+        # Read input file
+        content = input_file.read_text(encoding='utf-8')
+
+        # Determine which .aux files to parse
+        if aux_files is None:
+            # Default: use the input file's .aux file
+            aux_files = [input_file.with_suffix('.aux')]
+
+        # Parse all .aux files
+        for aux_file in aux_files:
+            self.parse_aux_file(aux_file)
+
+        # Replace \ref commands
+        result = self.resolve_refs(content)
+
+        # Output handling
+        if in_place:
+            input_file.write_text(result, encoding='utf-8')
+        elif output_file:
+            output_file.write_text(result, encoding='utf-8')
+
+        return result
+
+
+@app.command(name="replace-gls")
+def replace_gls_command(
     input_file: Path = typer.Argument(
         ...,
         help="Input LaTeX file",
@@ -304,6 +392,127 @@ def main(
     if not output and not in_place:
         # Use print() instead of console.print() to avoid Rich markup interpretation
         # which would strip LaTeX square brackets like \hyperref[sec:methods]{...}
+        print(result)
+
+    # Print success message for file operations
+    if in_place:
+        console.print(
+            f"[green]✓[/green] Successfully modified '{input_file}' in place",
+            file=sys.stderr
+        )
+    elif output:
+        console.print(
+            f"[green]✓[/green] Successfully wrote output to '{output}'",
+            file=sys.stderr
+        )
+
+
+@app.command(name="resolve-refs")
+def resolve_refs_command(
+    input_file: Path = typer.Argument(
+        ...,
+        help="Input LaTeX file",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    output: Path | None = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Output file (default: stdout)",
+    ),
+    in_place: bool = typer.Option(
+        False,
+        "--in-place",
+        "-i",
+        help="Modify file in place",
+    ),
+    aux_files: list[Path] = typer.Option(
+        None,
+        "--aux",
+        "-a",
+        help="External .aux files to parse (e.g., from xr package)",
+    ),
+    include_internal: bool = typer.Option(
+        False,
+        "--include-internal",
+        help="Also replace internal references (from input file's own .aux)",
+    ),
+    list_labels: bool = typer.Option(
+        False,
+        "--list-labels",
+        "-l",
+        help="List all labels and exit",
+    ),
+):
+    """
+    Resolve LaTeX \\ref commands to actual figure/table numbers.
+
+    By default, ONLY replaces external references (from xr package) and keeps
+    internal references unchanged. Use --include-internal to also replace
+    internal references.
+
+    Examples:
+
+    \b
+    # Replace ONLY external refs from supplement.aux (internal refs unchanged)
+    uv run neutralize.py resolve-refs main.tex --aux supplement.aux
+
+    \b
+    # Multiple external aux files
+    uv run neutralize.py resolve-refs main.tex -a supplement.aux -a appendix.aux
+
+    \b
+    # Also replace internal references
+    uv run neutralize.py resolve-refs main.tex --aux supplement.aux --include-internal
+
+    \b
+    # Save to output file
+    uv run neutralize.py resolve-refs main.tex --aux supplement.aux -o output.tex
+
+    \b
+    # List all external labels
+    uv run neutralize.py resolve-refs main.tex --aux supplement.aux --list-labels
+    """
+    # Create resolver
+    resolver = ReferenceResolver()
+
+    # Prepare aux file list - by default, ONLY external aux files
+    aux_file_list = []
+
+    # Add internal aux file only if requested
+    if include_internal:
+        aux_file_list.append(input_file.with_suffix('.aux'))
+
+    # Add external aux files
+    if aux_files:
+        aux_file_list.extend(aux_files)
+
+    # Parse aux files
+    for aux_file in aux_file_list:
+        resolver.parse_aux_file(aux_file)
+
+    # If list mode, display labels and exit
+    if list_labels:
+        table = Table(title=f"Found {len(resolver.labels)} labels")
+        table.add_column("Label", style="cyan", no_wrap=True)
+        table.add_column("Number", style="magenta")
+
+        for label, number in sorted(resolver.labels.items()):
+            table.add_row(label, number)
+
+        console.print(table)
+        return
+
+    # Process file
+    result = resolver.process_file(
+        input_file, output, aux_file_list, in_place
+    )
+
+    # Print to stdout if no output file specified and not in-place
+    if not output and not in_place:
         print(result)
 
     # Print success message for file operations
