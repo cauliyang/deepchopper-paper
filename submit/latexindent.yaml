@@ -1,0 +1,8 @@
+modifyLineBreaks:
+  textWrapOptions:
+    columns: 80 # default for .tex
+
+bibtex:
+  modifyLineBreaks:
+    textWrapOptions:
+      columns: 120 # ← line width ONLY for .bib

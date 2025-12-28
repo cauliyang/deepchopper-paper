@@ -1,6 +1,6 @@
 % Version 3 December 2023
 % See section 11 of the User Manual for version history
-%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                                                 %%
 %% Please do not use \input{...} to include other tex files.       %%
@@ -249,7 +249,7 @@ This extended input capacity, combined with single-nucleotide tokenization, enab
 In addition, DeepChopper's lightweight architecture, consisting of only 4.6 million parameters, makes it computationally efficient and scalable for large-scale \gls{drs} analysis.
 This is in contrast to models like Evo~\cite{nguyen2024sequence}, which require billions of parameters and more computational resources.
 
-To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2021systematic} (Supplementary Table~\ref{tab:read_stats}).
+To train DeepChopper for identifying adapter sequences within \gls{drs} long reads, we utilized data from six human cell lines: HEK293T, A549, HCT116, HepG2, K562 and MCF-7 provided by the \gls{sgnex}~\cite{chen2025systematic} (Supplementary Table~\ref{tab:read_stats}).
 We curated a training set of 480,000 long reads and a validation set of 60,000 ones initially deemed free of adapters and inserted putative adapter sequences, derived from the raw \gls{drs} data, into these reads to create instances containing internal and $3'$ end adapters (See \hyperref[sec:methods]{Methods} for details).
 An independent test set comprising 60,000 long reads was held out for performance evaluation.
 
@@ -456,7 +456,7 @@ The final library was loaded onto a MinION R9.4 flow cell and sequenced on the O
 
 \subsection{Training data preparation}\label{ssec:data}
 
-We acquired \gls{ont} \gls{drs} FAST5 data from the \gls{sgnex} project, which includes six human cell lines: HEK293T, A549, K562, HepG2, MCF7, and HCT116~\cite{chen2021systematic}.
+We acquired \gls{ont} \gls{drs} FAST5 data from the \gls{sgnex} project, which includes six human cell lines: HEK293T, A549, K562, HepG2, MCF7, and HCT116~\cite{chen2025systematic}.
 The FAST5 files were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
 Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming disabled (\texttt{--no-trim}) and the rna002\_70bps\_hac@v3 model.
 The reads were then aligned to the human reference genome (GRCh38) using minimap2 (v2.24)~\cite{li2018minimap2} with ONT direct RNA-specific parameters (-ax splice -uf -k14) for optimized alignment. The resulting SAM files were then converted to BAM format, indexed, and sorted using SAMtools (v1.19.2)~\cite{li2009sequence}.
@@ -580,32 +580,19 @@ The default window size is set to 21 nucleotides, and can be customized using th
 \subsection{Post-processing and filtering}
 
 After refining the adapter predictions, four filtering steps were applied to enhance the quality of the final results:
-\vspace{.5em}
-\begin{enumerate}[leftmargin=2em]
+
+\begin{enumerate}
 	\item A predicted adapter sequence must be at least 13 nucleotides long. Sequences shorter than this length threshold are not considered valid adapters.
 	\item If a read contains more than four adapter sequences, the entire read sequence is retained without any adapter removal.
 	\item For reads containing four or fewer adapter sequences, the identified adapters are removed and the read is divided into smaller segments.
 	\item Any segments resulting from this process that are less than 20 nucleotides long are discarded.
 \end{enumerate}
-\vspace{.5em}
 
 Each remaining segment and its corresponding base quality scores are stored as a single read record in the final FASTQ file.
 This filtering process separates chimeric read artifacts containing internal adapters into multiple segments, while retaining reads with $3'$ end adapters as single shortened segments.
 
 All filtering thresholds, including minimum segment length, and maximum adapter count per read, are configurable via command-line parameters in the DeepChopper implementation, allowing users to tailor these settings to dataset-specific requirements or experimental conditions.
 
-\subsection{BLAT identity calculation}
-
-The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
-A \gls{blat} identity score was defined as the ratio of matched bases to the total sequence length:
-
-\begin{equation}
-	\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
-\end{equation}
-
-In this context, match length refers to the number of bases in the query sequence that align with the reference genome, while sequence length denotes the total length of the query sequence.
-This score provides a quantitative measure of how closely each identified sequence aligns with the reference genome, serving as an indicator of detection accuracy.
-The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
 
 \subsection{Computational benchmarks}
 
@@ -627,7 +614,7 @@ All read length statistics were computed from Dorado (v0.5.2) base-called reads 
 \subsection{Validation of chimera artifact reduction}
 
 Cross-platform validation of \gls{drs} chimera artifacts identified by DeepChopper was conducted leveraging \gls{ont} direct cDNA sequencing and additional cDNA-based sequencing platforms.
-Direct cDNA sequencing validation was performed using six cancer cell lines, including the VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from the \gls{sgnex} project~\cite{chen2021systematic}.
+Direct cDNA sequencing validation was performed using six cancer cell lines, including the VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from the \gls{sgnex} project~\cite{chen2025systematic}.
 The direct cDNA data in FAST5 format were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
 Subsequently, FASTQ files were generated using Dorado (v0.5.2)~\cite{dorado2023} with adapter trimming enabled (\texttt{--}trim adapters) and the dna\_r9.4.1\_e8\_hac@v3.3 model.
 The reads were then processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, v2.7.9) and Cutadapt (v4.2)~\cite{martin2011cutadapt} according to a published protocol~\cite{grunberger2022nanopore}.
@@ -652,6 +639,28 @@ Breakinator was applied using default parameters as specified in its documentati
 Chimeric alignments from each pipeline were classified as cDNA-supported (validated by matched direct cDNA sequencing) or unsupported (likely artifacts) using the validation framework described above.
 Support rates were calculated as the proportion of chimeric alignments corroborated by cDNA-seq data.
 
+\subsection{Internal adapter sequence characterization}
+To assess the quality and genomic origin of internal adapter sequences, we randomly subsampled 1 million reads from the VCaP RNA002 and VCaP RNA004 datasets.
+DeepChopper was applied to identify internal adapter sequences within these reads.
+For base quality analysis, we extracted quality scores for all nucleotide positions identified as internal adapters, yielding 146,580 sequences from RNA002 and 11,143 from RNA004.
+Base quality scores (Phred Q-scores) were obtained directly from FASTQ files.
+For genome alignment analysis, internal adapter sequences were aligned to the human reference genome (GRCh38) with default parameters.
+Sequences that failed to align to the genome were excluded from the identity distribution analysis.
+This resulted in 98,807 sequences from RNA002 and 6,185 sequences from RNA004 being included in the genome identity analysis.
+Sequences that failed to align to the genome were excluded from the identity distribution analysis, as they would yield uninformative zero identity scores.
+
+\subsection{BLAT identity calculation}
+The accuracy of DeepChopper in detecting adapter sequences was evaluated by aligning the identified sequences to the human reference genome using \gls{blat}~\cite{kent2002blat}.
+A \gls{blat} identity score was defined as the ratio of matched bases to the total sequence length:
+
+\begin{equation}
+	\textrm{BLAT Identity} = \frac{\textrm{Match Length}}{\textrm{Sequence Length}}
+\end{equation}
+
+In this context, match length refers to the number of bases in the query sequence that align with the reference genome, while sequence length denotes the total length of the query sequence.
+This score provides a quantitative measure of how closely each identified sequence aligns with the reference genome, serving as an indicator of detection accuracy.
+The alignments were performed using the PxBLAT (v1.2.1)~\cite{li2024pxblat}
+
 \subsection{Gene expression analysis and transcript classification}
 
 Gene expression levels from \gls{drs} were quantified using IsoQuant (v3.1.2)~\cite{prjibelski2023accurate}, with the parameters (\texttt{--}data\_type nanopore \texttt{--}stranded forward \texttt{--}model\_construction\_strategy default\_ont \texttt{--}sqanti\_output). The \texttt{--}sqanti\_output option enables IsoQuant to generate files containing transcript classification information, analogous to the output provided by SQANTI~\cite{tardaguila2018sqanti}.
@@ -673,13 +682,13 @@ The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)
 
 All computations were performed on a \gls{hpc} server equipped with a 64-core Intel(R) Xeon(R) Gold 6338 CPU and 256 GB of RAM. The server was also configured with two NVIDIA A100 \glspl{gpu}, each with 80 GB of memory, enabling efficient processing of both CPU-intensive tasks and \gls{gpu}-accelerated deep learning workloads.
 
-\bmhead{Data Availability}
+\section{Data Availability}
 
-Raw and processed data generated in this study, including \gls{drs} using the SQK-RNA002 and SQK-RNA004 kits, as well as direct cDNA sequencing of VCaP cells, have been deposited in the \gls{geo} under the accession number GSE277934.
+Raw and processed data generated in this study, including \gls{drs} using the SQK-RNA002 and SQK-RNA004 kits, as well as direct cDNA sequencing of VCaP cells, have been deposited in the \gls{geo} under the accession number GSE277934 (\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE277934}).
 A secure token (sdwfckwmbzqdbyx) has been provided for reviewers to access the deposited data.
 Source data are provided with this paper.
 
-\bmhead{Code Availability}
+\section{Code Availability}
 
 DeepChopper, implemented in Rust and Python, is open source and available on GitHub (\url{https://github.com/ylab-hi/DeepChopper}) under the Apache License, Version 2.0.
 The package can be installed via PyPI (\url{https://pypi.org/project/deepchopper/}) using pip, with wheel distributions provided for Windows, Linux, and macOS to ensure easy cross-platform installation.
@@ -705,74 +714,21 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	% \includegraphics[height=0.63\columnwidth]{figure1}
-	\caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a \gls{mlp} (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
+	\caption{{\bf DeepChopper architecture and methodology.} (a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA, a long-context genomic language model (LCGLM), to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com. (b) Architecture of the quality block. The block combines a multi-layer perceptron (MLP)  (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence. (c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
 
 
 \begin{figure}[!ht]
 	% \includegraphics[height=0.6\columnwidth]{figure2}
-	\caption{{\bf Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms}  (a) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (b) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (c) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (d) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events). DeepChopper-involved methods reduce chimeric alignments not supported by direct cDNA sequencing. (e) Distribution of base qualities from identified internal adapters by DeepChopper. Background colors indicate quality levels: green (high), yellow (medium), and red (low). (f) \gls{blat} identity distribution of the internal adapter sequences mapping against human reference genome. (g) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events). DeepChopper-involved methods consistently reduce chimeric alignments not supported by cDNA sequencing across all cell lines. (h) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimseric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f2}
+	\caption{{\bf Detection of chimeric read artifacts in \gls{drs} data using DeepChopper and validation with orthogonal sequencing platforms}  (a) Length distribution of predicted adapters by DeepChopper in VCaP \gls{drs} data. (b) Distribution of relative adapter position along read length in VCaP \gls{drs} data. Grey rectangle represents a long read from $5'$ to $3'$. Relative position is calculated as the ratio of the length before DeepChopper predicted adapter start position to the total read length. (c) Distribution of segments per read after trimming: 1 segment indicates $3'$ end adapter trimmed, while 2 or more indicate internal adapters trimmed. (d) Chimeric alignments (in thousands) for VCaP \gls{drs} reads processed by Dorado with and without adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events). DeepChopper-involved methods reduce chimeric alignments not supported by direct cDNA sequencing.
+		(e) Base quality score distribution for internal adapter sequences identified by DeepChopper. Background colors indicate quality thresholds: green (Q $>$ 20), yellow (Q = 10--20), red (Q $<$ 10). Enhanced box plot shows median (center line, 9.80), interquartile range (innermost box, 7.97--11.74), and progressively more extreme percentiles (outer boxes). Adapter sequences exhibit low quality (mean Q-score = 9.96). $n = 146{,}580$ internal adapter sequences.
+		(f) \gls{blat} identity distribution for internal adapter sequences aligned to the human reference genome (GRCh38). Box plot elements as in (e). Adapter sequences show poor identity (median = 0.33, IQR = 0.28--0.39, mean = 0.36). $n = 98{,}807$ sequences.
+		(g) The number of chimeric alignments (in thousands) for A549, HCT116, HepG2, K562, and MCF7 cell lines processed by Dorado with adapter trimming, Dorado with adapter trimming followed by DeepChopper, and DeepChopper. Gray bars represent unsupported chimeric alignments (likely artifacts); pink bars represent cDNA-supported chimeric alignments (biological events). DeepChopper-involved methods consistently reduce chimeric alignments not supported by cDNA sequencing across all cell lines. (h) Chimeric alignments from \gls{drs} of the WTC11 cell line, evaluated for support using additional \gls{ont} and \gls{pb} sequencing data with different protocols. DeepChopper-involved methods reduce unsupported chimseric alignments across all methods compared to Dorado with adapter trimming.}\label{fig:f2}
 \end{figure}
 
 \begin{figure}[!ht]
 	% \includegraphics[height=1\columnwidth]{figure3}
 	\caption{{\bf Characterization of \gls{drs} chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from \gls{drs}. (d) \gls{go} enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read (Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c) artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an \gls{ont} adapter.}\label{fig:f3}
 \end{figure}
-
-% If your article has accompanying supplementary file/s please state so here.
-% Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
-% Please refer to Journal-level guidance for any specific requirements.
-
-
-% \section*{Declarations}
-
-% Some journals require declarations to be submitted in a standardised format. Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section. If yes, your manuscript must contain the following sections under the heading `Declarations':
-%
-%\begin{itemize}
-%	\item Funding
-%	\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
-%	\item Ethics approval and consent to participate
-%	\item Consent for publication
-%	\item Data availability
-%	\item Materials availability
-%	\item Code availability
-%	\item Author contribution
-%\end{itemize}
-
-%
-%\begin{appendices}
-%	\printglossary[type=\acronymtype, title=Abbreviations]
-%
-%	\section{Section title of first appendix}\label{secA1}
-%
-%	An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
-%
-%	%%=============================================%%
-%	%% For submissions to Nature Portfolio Journals%%
-%	%% please use the heading ``Extended Data''.   %%
-%	%%=============================================%%
-%
-%	%%=============================================================%%
-%	%% Sample for another appendix section			               %%
-%	%%=============================================================%%
-%
-%	%% \section{Example of another appendix section}\label{secA2}%
-%	%% Appendices may be used for helpful, supporting or essential material that would otherwise
-%	%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures,
-%	%% tables and equations etc.
-
-
-%\end{appendices}
-
-%%===========================================================================================%%
-%% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
-%% system, please include the references within the manuscript file itself. You may do this  %%
-%% by copying the reference list from your .bbl file, paste it into the main manuscript .tex %%
-%% file, and delete the associated \verb+\bibliography+ commands.                            %%
-%%===========================================================================================%%
-
-
-%% if required, the content of .bbl file can be included here once bbl is generated
-%%\input sn-article.bbl
 
 \end{document}
