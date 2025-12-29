@@ -452,7 +452,6 @@ All filtering thresholds, including minimum segment length, and maximum adapter 
 
 
 \subsection{Computational benchmarks}
-
 All benchmarks were conducted in triplicate using btop (\url{https://github.com/aristocratos/btop}, v1.4.0) and nvtop (\url{https://github.com/Syllo/nvtop}, v3.1.0) to monitor CPU and GPU memory usage, respectively. Evaluations were performed on high-performance computing infrastructure with 16 CPU cores, 60 GB RAM, and dual NVIDIA A100 GPUs (80 GB memory each). Adapter prediction stage used a batch size of 64.
 
 \subsection{Transcript length distribution analysis}
@@ -466,7 +465,6 @@ All read length statistics were computed from Dorado (v0.5.2) base-called reads 
 
 
 \subsection{Validation of chimera artifact reduction}
-
 Cross-platform validation of dRNA-seq chimera artifacts identified by DeepChopper was conducted leveraging ONT direct cDNA sequencing and additional cDNA-based sequencing platforms.
 Direct cDNA sequencing validation was performed using six cancer cell lines, including the VCaP dataset generated in this study and five published datasets (A549, K562, HepG2, MCF7, and HCT116) obtained from the SG-NEx project~\cite{chen2025systematic}.
 The direct cDNA data in FAST5 format were converted to POD5 format using the POD5 conversion tool (\url{https://pod5-file-format.readthedocs.io}).
@@ -531,6 +529,9 @@ The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)
 \subsection{GO enrichment analysis}
 
 GO enrichment analysis of biological processes for genes involved in chimera artifacts identified in dRNA-seq data was performed using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) webserver~\cite{sherman2022david}.
+Enrichment significance was assessed using a one-sided modified Fisher’s exact test (EASE score).
+P values were adjusted for multiple comparisons using the Benjamini–Hochberg false discovery rate (FDR) method.
+Terms with FDR < 0.05 were considered significant.
 
 \subsection{Computing resource}
 
@@ -805,7 +806,12 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 
 \begin{figure}[!ht]
 	% \includegraphics[height=1\columnwidth]{figure3}
-	\caption{{\bf Characterization of dRNA-seq chimera artifacts and their impact on downstream analysis in VCaP cells} (a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes. (b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme. (c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from dRNA-seq. (d) GO enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. (e) Analysis of a chimeric read (Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c) artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an ONT adapter.}\label{fig:f3}
+	\caption{{\bf Characterization of dRNA-seq chimera artifacts and their impact on downstream analysis in VCaP cells}
+		(a) The upper bar plot shows the number of chimeric connections per kilobase across chromosomes, highlighting higher chimeric activity in Chr 19 and Chr M. The lower heatmap visualizes interchromosomal connections, with intensity indicating the count of connections between different chromosomes.
+		(b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme.
+		(c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from dRNA-seq.
+		(d) GO enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. Statistical significance assessed by one-sided Fisher's exact test (EASE score) with Benjamini-Hochberg FDR correction ($\textrm{FDR} < 0.05$).
+		(e) Analysis of a chimeric read (Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c) artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an ONT adapter.}\label{fig:f3}
 \end{figure}
 
 \end{document}
