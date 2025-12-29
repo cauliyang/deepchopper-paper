@@ -11,15 +11,13 @@ LATEX_FLAGS = -interaction=nonstopmode -halt-on-error
 .PHONY: all main supplement clean cleanall view help
 
 # Default target
-all: main supplement
+all: main
 
 # Compile main document
 main: $(MAIN).pdf
 
-$(MAIN).pdf: $(MAIN).tex references.bib
+$(MAIN).pdf: $(MAIN).tex
 	@echo "Compiling $(MAIN).tex..."
-	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
-	$(BIBTEX) $(MAIN)
 	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
 	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
 	@echo "✓ $(MAIN).pdf compiled successfully"
@@ -27,8 +25,10 @@ $(MAIN).pdf: $(MAIN).tex references.bib
 # Compile supplement
 supplement: $(SUPPLEMENT).pdf
 
-$(SUPPLEMENT).pdf: $(SUPPLEMENT).tex
+$(SUPPLEMENT).pdf: $(SUPPLEMENT).tex references.bib
 	@echo "Compiling $(SUPPLEMENT).tex..."
+	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
+	$(BIBTEX) $(SUPPLEMENT)
 	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
 	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
 	@echo "✓ $(SUPPLEMENT).pdf compiled successfully"
