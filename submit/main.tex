@@ -185,7 +185,8 @@ In contrast, DeepChopper reduced artifacts by 91\% while increasing cDNA support
 A substantial fraction of dRNA-seq artifacts do not appear as chimeric alignments or fail to map (Supplementary Fig.~\ref{fig:non-chimeric-ratio}), making them inherently undetectable by alignment-rule–based chimera callers.
 
 To further evaluate DeepChopper’s classification accuracy, we assessed its performance at single-nucleotide resolution.
-As shown in Supplementary Table~\ref{tab:ablation}, the model exhibited sharply bimodal probability distributions for base-level classification, stratified by ground truth labels. For true adapter bases (Supplementary Fig.~\ref{fig:adaprob}a), the model consistently assigned high probabilities ($>0.8$) to the adapter class while suppressing probabilities for the non-adapter class ($<0.2$).
+As shown in Supplementary Fig.~\ref{fig:adaprob}, the model exhibited sharply bimodal probability distributions for base-level classification, stratified by ground truth labels.
+For true adapter bases (Supplementary Fig.~\ref{fig:adaprob}a), the model consistently assigned high probabilities ($>0.8$) to the adapter class while suppressing probabilities for the non-adapter class ($<0.2$).
 Conversely, for true non-adapter bases (Supplementary Fig.~\ref{fig:adaprob}b), the model reliably predicted high probabilities for the non-adapter class and low probabilities for the adapter class.
 The minimal presence of intermediate probability values suggests that DeepChopper makes highly confident predictions with low ambiguity between classes.
 This decisive classification behavior reflects the model’s robust feature representation, well-calibrated decision boundaries, and strong generalization to previously unseen data.
@@ -223,7 +224,7 @@ However, we found that Dorado alone—regardless of trimming—was insufficient 
 In contrast, DeepChopper reduced unsupported chimeric alignments by around 95\% and increased the fraction of cDNA-supported chimeric events from 5.8\% to 48.7\%, whether applied before or after Dorado trimming (Fig.~\ref{fig:f2}d).
 These results underscore DeepChopper’s ability to distinguish true biological chimeras from technical artifacts.
 
-To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using BLAST-like alignment tool (BLAT)~\cite{kent2002blat}. Adapter regions identified within chimera artifacts exhibited lower base quality (Fig.~\ref{fig:f2}e) and poor sequence identity to the reference genome (Fig.~\ref{fig:f2}f), supporting their non-human and non-biological origin.
+To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using BLAST-like alignment tool (BLAT)~\cite{kent2002blat}. Adapter regions identified within chimera artifacts exhibited lower base quality (mean Q-score: 9.96) (Fig.~\ref{fig:f2}e) and poor sequence identity (mean BLAT identity: 0.36) to the reference genome (Fig.~\ref{fig:f2}f), supporting their non-human and non-biological origin.
 
 Finally, we evaluated post-processing performance as a function of the sliding window size used for segmentation.
 Using a 1M-read subsample, we tested window sizes of 11, 21, 31, 41, and 51 bp.
@@ -259,7 +260,7 @@ We first applied DeepChopper in a zero-shot setting to assess cross-chemistry ge
 In zero-shot application, DeepChopper detected internal adapters in 0.33\% of VCaP RNA004 reads (38,878 reads out of 11,714,520 total), lower than the 1.62\% observed in VCaP RNA002 (Supplementary Table~\ref{tab:prevalence}).
 DeepChopper reduced chimeric alignments by 21\% compared to Dorado base-called and adapter-trimmed reads, increasing the proportion of cDNA-supported chimeric alignments from approximately 25\% to 30\% (Supplementary Fig.~\ref{fig:vcap004_chimera}a).
 Similar results were observed when DeepChopper was applied after Dorado's adapter trimming, demonstrating compatibility with standard preprocessing pipelines.
-Internal adapter-like sequences identified by DeepChopper exhibited low base quality scores (mean Q-score: 7.8) and poor alignment identity to the human genome (mean BLAT identity: 0.38), supporting their classification as artifacts (Supplementary Fig.~\ref{fig:vcap004_chimera}b).
+Internal adapter-like sequences identified by DeepChopper exhibited low base quality scores (mean Q-score: 7.85) and poor alignment identity to the human genome (mean BLAT identity: 0.38), supporting their classification as artifacts (Supplementary Fig.~\ref{fig:vcap004_chimera}b).
 
 To optimize performance on RNA004 data, we fine-tuned DeepChopper using a dataset with 300,000 reads created from VCaP RNA004 reads (70\% training, 20\% validation, 10\% test) (See \hyperref[sec:methods]{Methods} for details).
 The fine-tuned model achieved marginal additional improvement, reducing chimeric alignments by 23-25\% compared to Dorado-processed reads, a 3-4\% improvement over the zero-shot model (Supplementary Fig.~\ref{fig:finetune}).
