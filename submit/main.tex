@@ -55,20 +55,9 @@ $\ast$ Corresponding author: rendong.yang@northwestern.edu
 
 \section{Introduction}
 
-% Outline
-% 1. Sequencing history
-% 2. Genomics LLM history
-% 3. Challenges of LLM / efficiency of transformer and improvements
-% 3.1 long range
-% 3.2 single nucleotide resolution
-% 4. Cons of drs
-% 5. Our method
-% 6. Results
-% 7. Conclusion
-
 Long-read RNA sequencing technologies are revolutionizing transcriptomic research by providing unparalleled resolution for detecting complex splicing and gene fusion events often missed by conventional short-read RNA-seq methods.
 Among these technologies, Oxford Nanopore Technologies (ONT) dRNA-seq stands out by sequencing full-length RNA molecules directly, preserving native RNA modifications and allowing a more accurate and comprehensive analysis of RNA biology.
-This approach bypasses the inherent limitations of cDNA-based sequencing methods, such as artifacts arising from reverse transcription (RT), template switching, and Polymerase Chain Reaction (PCR) amplification~\cite{garalde2018highly, jain2022advances,zou2025comparative}.
+This approach bypasses the inherent limitations of cDNA-based sequencing methods, such as artifacts arising from reverse transcription (RT), template switching, and polymerase chain reaction (PCR) amplification~\cite{garalde2018highly, jain2022advances,zou2025comparative}.
 
 Despite these advantages, a critical question remains: Does ONT dRNA-seq introduce technical artifacts?
 A previous study has suggested that dRNA-seq might generate chimera artifacts, leading to multi-mapped reads~\cite{smith2020molecular}, but systematic characterization of these artifacts (their prevalence, formation mechanisms, and persistence with modern sequencing chemistries such as RNA004 and current Dorado basecalling~\cite{dorado2023}) remains limited in peer-reviewed literature.
@@ -155,9 +144,9 @@ DeepChopper processes input data through a three-stage pipeline: (1) FASTQ-to-Pa
 
 We systematically benchmarked DeepChopper's computational performance to assess scalability for large-scale dRNA-seq studies, testing datasets ranging from 0.1M to 23M reads.
 Using VCaP read subsamples from 0.1M to 9M reads, we observed near-linear runtime scaling (Supplementary Fig.~6a), with the 9M VCaP dataset requiring approximately 5 hours on two NVIDIA A100 GPUs.
-Memory usage increased with input size, peaking at approximately 70 GB for CPU-based inference and 56 GB for GPU-based execution (Supplementary Fig.~6b).
+Memory usage increased with input size, peaking at approximately 93 GB for CPU-based inference and 56 GB for GPU-based execution (Supplementary Fig.~6b).
 To evaluate performance at substantially larger scale, we benchmarked a merged dataset of 23 million reads combining five cell lines (A549, HCT116, HepG2, K562, and MCF7), which required approximately 10.6 hours total processing time (23 minutes for FASTQ conversion, 8.5 hours for prediction, 1.7 hours for post-processing).
-Importantly, runtime continued to scale near-linearly and memory usage remained stable (CPU: 70-93 GB, GPU: 34-56 GB) across the entire range, demonstrating that DeepChopper can process datasets substantially larger than 23M reads with no fundamental computational barriers to scaling (See \hyperref[sec:methods]{Methods} for details).
+Importantly, runtime continued to scale near-linearly and memory usage remained stable across the entire range, demonstrating that DeepChopper can process datasets larger than 23M reads with no fundamental computational barriers to scaling (See \hyperref[sec:methods]{Methods} for details).
 
 Applying DeepChopper to the full VCaP dataset increased usable read yield by 3\%, resulting in 9,357,913 adapter-trimmed reads.
 It identified 8,218,172 adapter sequences across 7,990,102 reads (87\% of total), most measuring ${\sim}70$ bp, consistent with the expected length of the RMX adapter used in ONT's SQK-RNA002 dRNA-seq kit (Fig.~\ref{fig:f2}a)~\cite{nano2017tech}.
@@ -250,7 +239,8 @@ These improvements are robust across different sequencing chemistries and prepro
 DeepChopper addresses a critical gap in ONT dRNA-seq: detecting and recovering adapter-bridged chimeric artifacts through internal adapter identification.
 Our validation across multiple cell lines, species, and chemistries demonstrates internal adapters occur systematically in 0.33-1.62\% of reads (tens to hundreds of thousands per experiment), with each propagating errors to transcript annotation, gene fusion detection, and expression quantification~\cite{ma2018squid}.
 No prior literature has systematically characterized adapter-bridged chimera formation mechanisms in dRNA-seq; our work addresses this gap while providing the computational solution.
-DeepChopper identifies internal adapter sequences marking artificial junctions, then splits chimeras at these boundaries with single-nucleotide precision to recover component sub-reads. This adapter-based approach differs fundamentally from filtering methods that discard problematic reads.
+DeepChopper identifies internal adapter sequences marking artificial junctions, then splits chimeras at these boundaries with single-nucleotide precision to recover component sub-reads.
+This adapter-based approach differs fundamentally from filtering methods that discard problematic reads.
 The recovery capability depends on detectable internal adapters, distinguishing adapter-bridged artifacts from RT-mediated template-switching in cDNA-seq, which creates chimeras without internal adapters~\cite{schulz2021direct,balazs2019templateswitching}.
 
 DeepChopper leverages GLM capabilities unavailable to conventional approaches: (1) Long-range context~\cite{nguyen2024hyenadna} enabling full-transcript scanning (median ${\sim}$2.7 kb, 99th percentile ${\sim}$14 kb); (2) Transfer learning enabling robust detection despite sequencing errors; (3) Quality-aware predictions integrating per-base confidence (F1: $0.97\rightarrow0.99$); (4) Alignment-free operation eliminating mapping biases.

@@ -230,7 +230,11 @@
 
 \begin{figure}[!ht]
 	\includegraphics[height=0.4\columnwidth]{finals/runtime_and_memory_usage_with_23M_optchop}
-	\caption{ {\bf Computational performance metrics across different data sizes.} (a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across five data sizes: subsampled VCaP datasets (0.1M, 0.5M, 1M reads), full VCaP \mbox{\gls{drs}} dataset (9M reads), and merged large-scale dataset (23M reads combining A549, HCT116, HepG2, K562, and MCF7). Runtime scales near-linearly with data size. As data size increases, prediction time becomes the dominant component, requiring approximately 5 hours for the 9M dataset and 10.6 hours for the 23M dataset. (b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements. CPU memory usage ranges from 70-93 GB and GPU memory from 34-56 GB across larger datasets, with stable memory footprint indicating no fundamental barriers to processing larger datasets. All measurements include error bars representing standard deviation from three technical replicates.}\label{fig:compute_benchmark}
+	\caption{ {\bf Computational performance metrics across different data sizes.}
+		All measurements were conducted with three technical replicates. Individual data points are shown as overlaid dots, and bars represent mean values.
+		(a) Runtime analysis showing processing time requirements for different pipeline stages (FASTQ Conversion, Prediction, Post-Processing) and total runtime across five data sizes: subsampled VCaP datasets (0.1M, 0.5M, 1M reads), full VCaP \mbox{\gls{drs}} dataset (9M reads), and merged large-scale dataset (23M reads combining A549, HCT116, HepG2, K562, and MCF7). Runtime scales near-linearly with data size. As data size increases, prediction time becomes the dominant component, requiring approximately 5 hours for the 9M dataset and 10.6 hours for the 23M dataset.
+		(b) Memory usage comparison between CPU and GPU implementations across the same data sizes. The prediction stage shows consistently higher memory requirements. CPU memory usage ranges from 70-93 GB and GPU memory from 34-56 GB across larger datasets, with stable memory footprint indicating no fundamental barriers to processing larger datasets.
+	}\label{fig:compute_benchmark}
 \end{figure}
 
 \begin{figure}
