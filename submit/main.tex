@@ -33,6 +33,9 @@
 \affil[1]{Department of Urology, Northwestern University Feinberg School of Medicine, 303 E Superior St, Chicago, IL 60611, USA}
 \affil[2]{Robert H. Lurie Comprehensive Cancer Center, Northwestern University Feinberg School of Medicine, 675 N St Clair St, Chicago, IL 60611, USA}
 
+% ignore date
+\date{}
+
 %% Corresponding author and equal contributions
 \renewcommand{\Authfont}{\small}
 \renewcommand{\Affilfont}{\small\itshape}
@@ -63,13 +66,13 @@ Despite these advantages, a critical question remains: Does ONT dRNA-seq introdu
 A previous study has suggested that dRNA-seq might generate chimera artifacts, leading to multi-mapped reads~\cite{smith2020molecular}, but systematic characterization of these artifacts (their prevalence, formation mechanisms, and persistence with modern sequencing chemistries such as RNA004 and current Dorado basecalling~\cite{dorado2023}) remains limited in peer-reviewed literature.
 These artifacts may result from ligation during library preparation or chimeric reads produced by software missing the open pore signal, potentially confounding downstream analyses such as transcriptome assembly, quantification, and detection of alternative splicing and gene fusion events.
 Detecting these chimera artifacts is challenging because long-read aligners often produce chimeric alignments from such artifacts that are indistinguishable from those derived from true gene fusion events.
-Importantly, chimeric read artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, suggesting that these adapter-bridged chimeras could theoretically be distinguished from biological chimeras by detecting the presence of internal adapters.
+Importantly, chimera artifacts frequently contain internal adapter sequences~\cite{smith2020molecular}, suggesting that these adapter-bridged chimeras could theoretically be distinguished from biological chimeras by detecting the presence of internal adapters.
 However, ONT dRNA-seq basecallers, trained in RNA, struggle to properly call these DNA-based adapter sequences under an RNA model~\cite{liu2024sequencing}.
 As a result, current adapter detection tools~\cite{pychopper, Wick2017, bonenfant2023porechop} cannot exploit this feature to eliminate these adapter-bridged chimeras, leaving the issue unresolved (Supplementary Table~1).
 
-To address this unmet need, we developed DeepChopper, a Genomic Language Model (GLM) for long-read sequence analysis.
-Leveraging recent advances in Large Language Model (LLM) that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
-This capability enables precise identification of ONT adapter sequences within base-called long reads, facilitating the detection and removal of chimeric read artifacts in dRNA-seq data.
+To address this unmet need, we developed DeepChopper, a genomic language model (GLM) for long-read sequence analysis.
+Leveraging recent advances in large language model (LLM) that can interpret complex genetic patterns~\cite{benegas2024genomic}, DeepChopper processes long genomic contexts with single-nucleotide resolution.
+This capability enables precise identification of ONT adapter sequences within base-called long reads, facilitating the detection and removal of chimera artifacts in dRNA-seq data.
 Through analysis of both existing and newly generated dRNA-seq data, including those using the most recent RNA004 chemistry, we uncovered the prevalence of chimera artifacts, a critical issue previously overlooked in the long-read sequencing field.
 We demonstrated that these artifacts significantly impact transcriptomic analysis by complicating gene fusion detection, transcript annotation, and alternative splicing studies.
 By both identifying and addressing this problem, our work enhances the reliability and precision of dRNA-seq data, improving its utility in transcriptomic research.
@@ -77,7 +80,7 @@ By both identifying and addressing this problem, our work enhances the reliabili
 
 \section{Results}
 
-\subsection{DeepChopper Architecture and Training}\label{subsec:deepchopper_architecture}
+\subsection{DeepChopper Architecture and Training}
 
 DeepChopper leverages the long-context genomic language model (LCGLM) HyenaDNA~\cite{nguyen2024hyenadna}, which excels at capturing long-range dependencies (Fig.~\ref{fig:f1}a).
 To process sequencing base quality information, DeepChopper extends its framework by incorporating a dedicated quality block, which is a neural network comprising multiple multilayer perceptrons (MLPs) with residual connections~\cite{he2015deep} (Fig.~\ref{fig:f1}b, See \hyperref[sec:methods]{Methods} for details).
@@ -152,7 +155,7 @@ Applying DeepChopper to the full VCaP dataset increased usable read yield by 3\%
 It identified 8,218,172 adapter sequences across 7,990,102 reads (87\% of total), most measuring ${\sim}70$ bp, consistent with the expected length of the RMX adapter used in ONT's SQK-RNA002 dRNA-seq kit (Fig.~\ref{fig:f2}a)~\cite{nano2017tech}.
 Analysis of adapter locations revealed that 7,777,624 reads had adapters at the $3'$ end, while 148,452 contained internal adapters (Fig.~\ref{fig:f2}b), indicating that chimeric artifacts are common in VCaP dRNA-seq data.
 
-Further examination showed that chimera artifacts could arise from the joining of multiple long reads, with the most frequent pattern involving two reads joine by a single internal aapter (Fig.~\ref{fig:f2}c).
+Further examination showed that chimera artifacts could arise from the joining of multiple long reads, with the most frequent pattern involving two reads joined by a single internal adapter (Fig.~\ref{fig:f2}c).
 To validate these findings, we analyzed minimap2~\cite{li2018minimap2} chimeric alignments and compared them to a matched VCaP direct cDNA-seq dataset, which we generated as part of this study.
 Chimeric reads fully supported by cDNA sequencing were considered bona fide events (See \hyperref[sec:methods]{Methods} for details).
 Notably, we also evaluated whether ONT's Dorado basecaller trimming feature could mitigate these artifacts.
@@ -160,7 +163,8 @@ However, we found that Dorado alone, regardless of trimming, was insufficient to
 In contrast, DeepChopper reduced unsupported chimeric alignments by around 95\% and increased the fraction of cDNA-supported chimeric events from 5.8\% to 48.7\%, whether applied before or after Dorado trimming (Fig.~\ref{fig:f2}d).
 These results underscore DeepChopper’s ability to distinguish true biological chimeras from technical artifacts.
 
-To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using BLAST-like alignment tool (BLAT)~\cite{kent2002blat}. Adapter regions identified within chimera artifacts exhibited lower base quality (mean Q-score: 9.96) (Fig.~\ref{fig:f2}e) and poor sequence identity (mean BLAT identity: 0.36) to the reference genome (Fig.~\ref{fig:f2}f), supporting their non-human and non-biological origin.
+To further verify the artifactual nature of internal adapters, we analyzed their base quality scores and aligned them to the human reference genome using BLAST-like alignment tool (BLAT)~\cite{kent2002blat}.
+Adapter regions identified within chimera artifacts exhibited lower base quality (mean Q-score: 9.96) (Fig.~\ref{fig:f2}e) and poor sequence identity (mean BLAT identity: 0.36) to the reference genome (Fig.~\ref{fig:f2}f), supporting their non-human and non-biological origin.
 
 Finally, we evaluated post-processing performance as a function of the sliding window size used for segmentation.
 Using a 1M-read subsample, we tested window sizes of 11, 21, 31, 41, and 51 bp.
@@ -225,9 +229,9 @@ To further assess the implications of artifact removal, we examined gene fusion 
 Importantly, these reduced fusion calls were not supported by fusions detected in matched short-read RNA-seq data using Arriba~\cite{uhrig2021accurate} (Fig.~\ref{fig:f3}c), suggesting they were false positives.
 Applying DeepChopper after Dorado trimming yielded consistent results, reinforcing its utility regardless of prior processing steps.
 
-Closer inspection of the filtered gene fusion calls revealed a strong enrichment for ribosomal protein genes (Supplementary Fig.~12a). Gene Ontology (GO) enrichment analyses in VCaP (Fig.~\ref{fig:f3}d) and SG-NEx cell lines (Supplementary Fig.~12b) confirmed this trend, with ribosomal genes frequently appearing in artifact-associated fusions.
+Closer inspection of the filtered gene fusion calls revealed a strong enrichment for ribosomal protein genes (Supplementary Fig.~12a). Gene Ontology (GO) enrichment analyses in VCaP (Fig.~\ref{fig:f3}d) and SG-NEx cell lines confirmed this trend, with ribosomal genes frequently appearing in artifact-associated fusions.
 This enrichment extended to chimera artifacts in RNA004 data as well (Supplementary Fig.~12b).
-A manual review of a chimeric read identified as an RPS29–COX8A fusion revealed that the DeepChopper-processed region—interpreted as an internal adapter sequence—aligned with low-intensity raw current signals, consistent with ONT adapter characteristics (Fig.~\ref{fig:f3}e).
+A manual review of a chimeric read identified as an RPS29–COX8A fusion revealed that the DeepChopper-processed region, interpreted as an internal adapter sequence, aligned with low-intensity raw current signals, which is consistent with ONT adapter characteristics (Fig.~\ref{fig:f3}e).
 The presence of polyA and open pore signals at the boundary of this region further supported an artifact origin rather than a bona fide fusion event.
 Supplementary Fig.~13 illustrates the corresponding sequence and base qualities, including the alignment of upstream and downstream segments around the detected adapter, confirming that the apparent RPS29–COX8A fusion arises from an adapter-bridged chimera.
 
