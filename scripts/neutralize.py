@@ -524,5 +524,6 @@ def resolve_refs_command(
             f"[green]✓[/green] Successfully wrote output to '{output}'", file=sys.stderr
         )
 
+
 if __name__ == "__main__":
     app()

@@ -1,58 +1,19 @@
-% Version 3 December 2023
-% See section 11 of the User Manual for version history
+\documentclass[11pt,letterpaper]{article}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                                                 %%
-%% Please do not use \input{...} to include other tex files.       %%
-%% Submit your LaTeX manuscript as one .tex document.              %%
-%%                                                                 %%
-%% All additional figures and files should be attached             %%
-%% separately and not embedded in the \TeX\ document itself.       %%
-%%                                                                 %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
-
-%%=======================================================%%
-%% to print line numbers in the margin use lineno option %%
-%%=======================================================%%
-
-% \documentclass[lineno,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-
-%%======================================================%%
-%% to compile with pdflatex/xelatex use pdflatex option %%
-%%======================================================%%
-
-% \documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-
-%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis.\\
-%%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst%
-\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
-% \documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-% \documentclass[pdflatex, sn-mathphys-num, lineno]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
-%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
-%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
-%%\documentclass[pdflatex,sn-vancouver,Numbered]{sn-jnl}% Vancouver Reference Style
-%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
-%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+%% Standard article class packages
+\usepackage[margin=1in]{geometry}
+\usepackage{authblk}  % For author affiliations
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
 
 \usepackage{xr}
 \externaldocument{supplement}  % NO prefix - just the filename
 
 %%%% Standard Packages
-%% additional latex packages if required can be included here>
-\usepackage{graphicx}%
-\usepackage{multirow}%
-\usepackage{amsmath,amssymb,amsfonts}%
-\usepackage{amsthm}%
-\usepackage{mathrsfs}%
-\usepackage[title]{appendix}%
-\usepackage{xcolor}%
-\usepackage{textcomp}%
-\usepackage{manyfoot}%
-\usepackage{booktabs}%
-\usepackage{xspace}
-\usepackage{enumitem}
-\usepackage[detect-all=true]{siunitx}
+\usepackage{graphicx}      % For figures
+\usepackage{amsmath,amssymb,amsfonts}  % For math
+\usepackage{booktabs}      % For professional tables
+\usepackage{url}           % For URLs
+\usepackage[detect-all=true]{siunitx}  % For numbers and units
 \sisetup{
     scientific-notation=false,
     round-mode = places,
@@ -108,64 +69,41 @@
 \newacronym{geo}{GEO}{Gene Expression Omnibus}
 \newacronym{rt}{RT}{Reverse Transcription}
 
-%%%%%=============================================================================%%%%
-%%%%  Remarks: This template is provided to aid authors with the preparation
-%%%%  of original research articles intended for submission to journals published
-%%%%  by Springer Nature. The guidance has been prepared in partnership with
-%%%%  production teams to conform to Springer Nature technical requirements.
-%%%%  Editorial and presentation requirements differ among journal portfolios and
-%%%%  research disciplines. You may find sections in this template are irrelevant
-%%%%  to your work and are empowered to omit any such section if allowed by the
-%%%%  journal you intend to submit to. The submission guidelines and policies
-%%%%  of the journal take precedence. A detailed User Manual is available in the
-%%%%  template package for technical guidance.
-%%%%%=============================================================================%%%%
-
-\raggedbottom
-\unnumbered% uncomment this for unnumbered level heads
-
 \begin{document}
 
-\title[Article Title]{Genomic Language Model Mitigates Chimera Artifacts in Nanopore Direct RNA Sequencing}
+\title{Genomic Language Model Mitigates Chimera Artifacts in Nanopore Direct RNA Sequencing}
 
-%%=============================================================%%
-%% GivenName	-> \fnm{Joergen W.}
-%% Particle	-> \spfx{van der} -> surname prefix
-%% FamilyName	-> \sur{Ploeg}
-%% Suffix	-> \sfx{IV}
-%% \author*[1,2]{\fnm{Joergen W.} \spfx{van der} \sur{Ploeg}
-%%  \sfx{IV}}\email{iauthor@gmail.com}
-%%=============================================================%%
+%% Authors with authblk package
+\author[1$\dagger$]{Yangyang Li}
+\author[1$\dagger$]{Ting-You Wang}
+\author[1]{Qingxiang Guo}
+\author[1]{Yanan Ren}
+\author[1]{Xiaotong Lu}
+\author[1,2]{Qi Cao}
+\author[1,2,$\ast$]{Rendong Yang}
 
-\author[1]{\fnm{Yangyang} \sur{Li}}\email{yangyang.li@northwestern.edu}
-\equalcont{These authors contributed equally to this work.}
+\affil[1]{Department of Urology, Northwestern University Feinberg School of Medicine, 303 E Superior St, Chicago, IL 60611, USA}
+\affil[2]{Robert H. Lurie Comprehensive Cancer Center, Northwestern University Feinberg School of Medicine, 675 N St Clair St, Chicago, IL 60611, USA}
 
-% \author*[1,2]{\fnm{First} \sur{Author}}\email{iauthor@gmail.com}
-\author[1]{\fnm{Ting--You} \sur{Wang}}\email{tywang@northwestern.edu}
-\equalcont{These authors contributed equally to this work.}
+%% Corresponding author and equal contributions
+\renewcommand{\Authfont}{\small}
+\renewcommand{\Affilfont}{\small\itshape}
+\setlength{\affilsep}{0.5em}
 
-\author[1]{\fnm{Qingxiang} \sur{Guo}}\email{qingxiang.guo@northwestern.edu}
+%% Add footnotes for equal contribution and correspondence
+\makeatletter
+\renewcommand\AB@affilsepx{; \protect\Affilfont}
+\makeatother
 
-\author[1]{\fnm{Yanan} \sur{Ren}}\email{ynren1020@gmail.com}
-\author[1]{\fnm{Xiaotong} \sur{Lu}}\email{xiaotong.lu@northwestern.edu}
-
-\author[1,2]{\fnm{Qi} \sur{Cao}}\email{qi.cao@northwestern.edu}
-\author*[1,2]{\fnm{Rendong} \sur{Yang}}\email{rendong.yang@northwestern.edu}
-
-\affil[1]{\orgdiv{Department of Urology}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{303 E Superior St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
-\affil[2]{\orgdiv{Robert H. Lurie Comprehensive Cancer Center}, \orgname{Northwestern University Feinberg School of Medicine}, \orgaddress{\street{675 N St Clair St}, \city{Chicago}, \postcode{60611}, \state{IL}, \country{USA}}}
-
-% \author[1,2]{\fnm{Third} \sur{Author}}\email{iiiauthor@gmail.com}
-% \equalcont{These authors contributed equally to this work.}
-
-% \affil*[1]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{100190}, \state{State}, \country{Country}}}
-% \affil[2]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{10587}, \state{State}, \country{Country}}}
-% \affil[3]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{610101}, \state{State}, \country{Country}}}
-
-\abstract{
-	Chimera artifacts in nanopore \gls{drs} introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection. Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of \gls{drs} for transcriptomics research. To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called \gls{drs} long reads with single-base precision. Operating independently of raw signal or alignment information, DeepChopper effectively eliminates chimeric read artifacts, significantly enhancing the accuracy of crucial downstream analyses. This improvement in reliability unlocks the full potential of nanopore \gls{drs}, establishing it as a more robust tool for diverse transcriptomics applications.
-}
 \maketitle
+
+\noindent
+$\dagger$ These authors contributed equally to this work.\\
+$\ast$ Corresponding author: rendong.yang@northwestern.edu
+
+\begin{abstract}
+	Chimera artifacts in nanopore \gls{drs} introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection. Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of \gls{drs} for transcriptomics research. To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called \gls{drs} long reads with single-base precision. Operating independently of raw signal or alignment information, DeepChopper effectively eliminates chimeric read artifacts, significantly enhancing the accuracy of crucial downstream analyses. This improvement in reliability unlocks the full potential of nanopore \gls{drs}, establishing it as a more robust tool for diverse transcriptomics applications.
+\end{abstract}
 
 \section{Introduction}
 
@@ -310,7 +248,7 @@ DeepChopper selectively eliminated only those chimeric alignments not supported 
 To assess cross-species generalizability, we extended the analysis to the F121-9 mouse embryonic stem cell line, also from the \gls{lrgasp} dataset.
 DeepChopper reliably removed chimeric reads not supported by orthogonal cDNA-based sequencing platform (Supplementary Fig.~\ref{fig:mouse_chimera}), confirming its applicability to both human and non-human transcriptomes.
 
-Importantly, across all datasets, DeepChopper consistently outperformed \mbox{\gls{ont}}’s Dorado adapter trimming alone, even when applied as a post-processing step, underscoring its distinct and additive utility in chimera artifact correction.
+Importantly, across all datasets, DeepChopper consistently outperformed \gls{ont}'s Dorado adapter trimming alone, even when applied as a post-processing step, underscoring its distinct and additive utility in chimera artifact correction.
 
 \subsection{Chimera Artifact Analysis in RNA004 Chemistry}
 
@@ -673,19 +611,18 @@ The package can be installed via PyPI (\url{https://pypi.org/project/deepchopper
 An interactive demo is available on Hugging Face (\url{https://huggingface.co/spaces/yangliz5/deepchopper}), allowing users to test DeepChopper's functionality without local installation.
 For large-scale analyses, we recommend using DeepChopper on systems with \gls{gpu} acceleration. Detailed system requirements and optimization guidelines are available in the repository's documentation.
 
-\bibliography{references}% common bib file
+\bibliographystyle{unsrt}  % Citations in order of appearance
+\bibliography{references}
 
-\backmatter
-
-\bmhead{Acknowledgements}
+\section*{Acknowledgements}
 
 This project was supported in part by NIH grants R35GM142441 and R01CA259388 awarded to RY, and NIH grants R01CA256741, R01CA278832, and R01CA285684 awarded to QC.
 
-\bmhead{Author Contributions}
+\section*{Author Contributions}
 
 YL, TYW and RY designed the study with QC. YL and TYW performed the analysis. QG, YR and XL performed the experiments. YL designed and implemented the model and computational tool. YL, TYW, QG and RY wrote the manuscript. RY supervised this work.
 
-\bmhead{Conflict of interests}
+\section*{Conflict of Interests}
 
 RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is unrelated to and did not influence the research presented in this study.
 

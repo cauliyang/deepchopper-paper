@@ -1,47 +1,75 @@
-# Makefile for Nature Communications with glossaries support
-
+# Makefile for LaTeX document compilation
+# Main document
 MAIN = main
-SUPP = supplement
+SUPPLEMENT = supplement
 
-# Compilers
+# LaTeX compiler
 LATEX = pdflatex
 BIBTEX = bibtex
-MAKEGLOSSARIES = makeglossaries
-
-# Flags
 LATEX_FLAGS = -interaction=nonstopmode -halt-on-error
 
-# Auxiliary extensions to clean
-AUX_EXT = aux log bbl blg out toc lof lot fls fdb_latexmk synctex.gz \
-          nav snm vrb bcf run.xml xwm dvi ps
+.PHONY: all main supplement clean cleanall view help
 
-# Glossary extensions
-GLOS_EXT = glo gls glg ist acn acr alg
+# Default target
+all: main supplement
 
-# Backup files
-BACKUP = *~ *.backup
+# Compile main document
+main: $(MAIN).pdf
 
-.PHONY: clean cleanall help
+$(MAIN).pdf: $(MAIN).tex references.bib
+	@echo "Compiling $(MAIN).tex..."
+	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
+	$(BIBTEX) $(MAIN)
+	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
+	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
+	@echo "✓ $(MAIN).pdf compiled successfully"
 
-# Clean auxiliary and glossary files, keep PDFs
+# Compile supplement
+supplement: $(SUPPLEMENT).pdf
+
+$(SUPPLEMENT).pdf: $(SUPPLEMENT).tex
+	@echo "Compiling $(SUPPLEMENT).tex..."
+	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
+	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
+	@echo "✓ $(SUPPLEMENT).pdf compiled successfully"
+
+# Quick compile (single pass, for testing)
+quick:
+	@echo "Quick compile..."
+	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
+
+# Clean auxiliary files
 clean:
 	@echo "Cleaning auxiliary files..."
-	@for ext in $(AUX_EXT) $(GLOS_EXT); do \
-		rm -f $(MAIN).$$ext $(SUPP).$$ext; \
-	done
-	@rm -f $(BACKUP)
-	@echo "✓ Auxiliary files cleaned. PDFs preserved."
+	rm -f *.aux *.log *.bbl *.blg *.out *.toc *.lof *.lot
+	rm -f *.fdb_latexmk *.fls *.synctex.gz
+	rm -f *.acn *.acr *.alg *.glg *.glo *.gls *.ist
+	@echo "✓ Clean complete"
 
 # Clean everything including PDFs
 cleanall: clean
 	@echo "Removing PDFs..."
-	@rm -f $(MAIN).pdf $(SUPP).pdf
-	@echo "✓ All generated files removed."
+	rm -f $(MAIN).pdf $(SUPPLEMENT).pdf
+	@echo "✓ Clean all complete"
 
-# Help
+# View PDF (opens with default PDF viewer)
+view: $(MAIN).pdf
+	@if command -v xdg-open > /dev/null; then \
+		xdg-open $(MAIN).pdf; \
+	elif command -v open > /dev/null; then \
+		open $(MAIN).pdf; \
+	else \
+		echo "No PDF viewer found"; \
+	fi
+
+# Show help
 help:
 	@echo "Available targets:"
-	@echo "  all        - Compile both main and supplement (default)"
-	@echo "  clean      - Remove auxiliary files, keep PDFs"
-	@echo "  cleanall   - Remove all generated files including PDFs"
-	@echo "  help       - Show this help message"
+	@echo "  make all        - Compile both main and supplement (default)"
+	@echo "  make main       - Compile main.pdf"
+	@echo "  make supplement - Compile supplement.pdf"
+	@echo "  make quick      - Quick compile (single pass)"
+	@echo "  make clean      - Remove auxiliary files"
+	@echo "  make cleanall   - Remove all generated files including PDFs"
+	@echo "  make view       - Open main.pdf in default viewer"
+	@echo "  make help       - Show this help message"
