@@ -216,10 +216,10 @@ class ReferenceResolver:
             print(f"Warning: .aux file not found: {aux_file}", file=sys.stderr)
             return
 
-        content = aux_file.read_text(encoding='utf-8')
+        content = aux_file.read_text(encoding="utf-8")
 
         # Pattern to match \newlabel{label}{{number}{...}...}
-        pattern = r'\\newlabel\{([^}]+)\}\{\{([^}]+)\}'
+        pattern = r"\\newlabel\{([^}]+)\}\{\{([^}]+)\}"
 
         for match in re.finditer(pattern, content):
             label = match.group(1)
@@ -233,6 +233,7 @@ class ReferenceResolver:
         - \\ref{label}
         - \\ref{label} (with external references from xr package)
         """
+
         def replace_match(match):
             label = match.group(1)
 
@@ -243,7 +244,7 @@ class ReferenceResolver:
             return self.labels[label]
 
         # Pattern: \ref{label}
-        pattern = r'\\ref\{([^}]+)\}'
+        pattern = r"\\ref\{([^}]+)\}"
 
         return re.sub(pattern, replace_match, content)
 
@@ -266,12 +267,12 @@ class ReferenceResolver:
             Processed content
         """
         # Read input file
-        content = input_file.read_text(encoding='utf-8')
+        content = input_file.read_text(encoding="utf-8")
 
         # Determine which .aux files to parse
         if aux_files is None:
             # Default: use the input file's .aux file
-            aux_files = [input_file.with_suffix('.aux')]
+            aux_files = [input_file.with_suffix(".aux")]
 
         # Parse all .aux files
         for aux_file in aux_files:
@@ -282,9 +283,9 @@ class ReferenceResolver:
 
         # Output handling
         if in_place:
-            input_file.write_text(result, encoding='utf-8')
+            input_file.write_text(result, encoding="utf-8")
         elif output_file:
-            output_file.write_text(result, encoding='utf-8')
+            output_file.write_text(result, encoding="utf-8")
 
         return result
 
@@ -398,12 +399,11 @@ def replace_gls_command(
     if in_place:
         console.print(
             f"[green]✓[/green] Successfully modified '{input_file}' in place",
-            file=sys.stderr
+            file=sys.stderr,
         )
     elif output:
         console.print(
-            f"[green]✓[/green] Successfully wrote output to '{output}'",
-            file=sys.stderr
+            f"[green]✓[/green] Successfully wrote output to '{output}'", file=sys.stderr
         )
 
 
@@ -484,7 +484,7 @@ def resolve_refs_command(
 
     # Add internal aux file only if requested
     if include_internal:
-        aux_file_list.append(input_file.with_suffix('.aux'))
+        aux_file_list.append(input_file.with_suffix(".aux"))
 
     # Add external aux files
     if aux_files:
@@ -507,9 +507,7 @@ def resolve_refs_command(
         return
 
     # Process file
-    result = resolver.process_file(
-        input_file, output, aux_file_list, in_place
-    )
+    result = resolver.process_file(input_file, output, aux_file_list, in_place)
 
     # Print to stdout if no output file specified and not in-place
     if not output and not in_place:
@@ -519,14 +517,12 @@ def resolve_refs_command(
     if in_place:
         console.print(
             f"[green]✓[/green] Successfully modified '{input_file}' in place",
-            file=sys.stderr
+            file=sys.stderr,
         )
     elif output:
         console.print(
-            f"[green]✓[/green] Successfully wrote output to '{output}'",
-            file=sys.stderr
+            f"[green]✓[/green] Successfully wrote output to '{output}'", file=sys.stderr
         )
-
 
 if __name__ == "__main__":
     app()
