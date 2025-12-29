@@ -51,6 +51,17 @@ view: $(MAIN).pdf
 		echo "No PDF viewer found"; \
 	fi
 
+# zip submitted material 
+zip:
+	zip -r deepchopper_submission.zip \
+  main.tex \
+  figure_*.pdf \
+  supplement.pdf \
+  nr-reporting-summary.pdf \
+  Inventory_Supporting_Information.docx \
+  NCOMMS-24-76720B_Author_checklist_1766849851_73.docx \
+  biorender_license.pdf 
+
 # Show help
 help:
 	@echo "Available targets:"
