@@ -395,7 +395,6 @@ The model is implemented by PyTorch (v2.5.0)~\cite{paszke2019pytorch}.
 To identify the best hyperparameter configuration, the Hydra (v1.3.2)~\cite{Yadan2019Hydra} framework was used.
 
 \subsection{Ablation study of quality block component}
-
 An ablation study was conducted to compare two model variants: one with the quality block component and one without. Both models were trained using the same dataset of 100,000 samples, following the training procedures described in \hyperref[ssec:data]{Training data preparation} and \hyperref[ssec:training]{Model training}.
 All hyperparameters, including learning rate, batch size, and optimization algorithm, were kept constant across both configurations. The only architectural difference was the inclusion or exclusion of the quality block.
 Evaluation was performed on a held-out test set using the F1 score as the primary metric.
@@ -462,9 +461,6 @@ The number and percentage of reads exceeding the 32 kb threshold were specifical
 All read length statistics were computed from Dorado (v0.5.2) base-called reads with the trim option enabled.
 
 
-% 24 25 26
-% 4:26  3:41 3:40
-% 51 58 56
 \subsection{Validation of chimera artifact reduction}
 
 Cross-platform validation of dRNA-seq chimera artifacts identified by DeepChopper was conducted leveraging ONT direct cDNA sequencing and additional cDNA-based sequencing platforms.

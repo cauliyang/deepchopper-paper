@@ -22,17 +22,6 @@ $(MAIN).pdf: $(MAIN).tex
 	$(LATEX) $(LATEX_FLAGS) $(MAIN).tex
 	@echo "✓ $(MAIN).pdf compiled successfully"
 
-# Compile supplement
-supplement: $(SUPPLEMENT).pdf
-
-$(SUPPLEMENT).pdf: $(SUPPLEMENT).tex references.bib
-	@echo "Compiling $(SUPPLEMENT).tex..."
-	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
-	$(BIBTEX) $(SUPPLEMENT)
-	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
-	$(LATEX) $(LATEX_FLAGS) $(SUPPLEMENT).tex
-	@echo "✓ $(SUPPLEMENT).pdf compiled successfully"
-
 # Quick compile (single pass, for testing)
 quick:
 	@echo "Quick compile..."
@@ -67,7 +56,6 @@ help:
 	@echo "Available targets:"
 	@echo "  make all        - Compile both main and supplement (default)"
 	@echo "  make main       - Compile main.pdf"
-	@echo "  make supplement - Compile supplement.pdf"
 	@echo "  make quick      - Quick compile (single pass)"
 	@echo "  make clean      - Remove auxiliary files"
 	@echo "  make cleanall   - Remove all generated files including PDFs"
