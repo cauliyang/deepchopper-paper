@@ -479,7 +479,7 @@ Additional cDNA-based long-read sequencing data from the WTC11 (human) and F121-
 The raw FASTQ files (and FASTA files for ONT R2C2) from these datasets were provided by the LRGASP project~\cite{pardo2024systematic}.
 For the PCR-cDNA data, the reads were processed using Pychopper (\url{https://github.com/epi2me-labs/pychopper}, v2.7.9) and Cutadapt (v4.2)~\cite{martin2011cutadapt}, following the protocol described in reference~\cite{grunberger2022nanopore}.
 ONT reads were then aligned to the human reference genome (GRCh38) or mouse reference genome (GRCm39) using minimap2 (v2.24)~\cite{li2018minimap2} with the parameters (-ax splice -uf -k14), while PacBio reads were aligned using the parameters (-ax splice:hq -uf).
-The ONT dRNA-seq data from A549, K562, HepG2, MCF7, HCT116, VCaP, WTC11 and F121-9 cell lines were processed as previously described, except that the F121-9 cell line data was aligned to the mouse reference genome (GRCm39).
+The ONT dRNA-seq data from A549, K562, HepG2, MCF7, HCT116, VCaP, WTC11 and F121-9 cell lines were processed using the same pipeline, except that the F121-9 cell line data was aligned to the mouse reference genome (GRCm39).
 
 To validate the chimeric alignments derived from dRNA-seq, comparisons were made with chimeric alignments identified from cDNA-based data across the specified platforms.
 Chimeric alignments, defined by a primary alignment and one or more supplementary alignments, each containing the SA tag in the BAM file, were converted into lists of genomic intervals based on their corresponding alignments.
