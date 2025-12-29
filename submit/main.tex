@@ -156,7 +156,7 @@ Further examination showed that chimera artifacts could arise from the joining o
 To validate these findings, we analyzed minimap2~\cite{li2018minimap2} chimeric alignments and compared them to a matched VCaP direct cDNA-seq dataset, which we generated as part of this study.
 Chimeric reads fully supported by cDNA sequencing were considered bona fide events (See \hyperref[sec:methods]{Methods} for details).
 Notably, we also evaluated whether ONT's Dorado basecaller trimming feature could mitigate these artifacts.
-However, we found that Dorado alone—regardless of trimming—was insufficient to eliminate spurious chimeric alignments.
+However, we found that Dorado alone, regardless of trimming, was insufficient to eliminate spurious chimeric alignments.
 In contrast, DeepChopper reduced unsupported chimeric alignments by around 95\% and increased the fraction of cDNA-supported chimeric events from 5.8\% to 48.7\%, whether applied before or after Dorado trimming (Fig.~\ref{fig:f2}d).
 These results underscore DeepChopper’s ability to distinguish true biological chimeras from technical artifacts.
 
