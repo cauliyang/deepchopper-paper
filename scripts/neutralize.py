@@ -28,6 +28,7 @@ app = typer.Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 console = Console()
+err_console = Console(stderr=True)
 
 
 class ReplacementMode(str, Enum):
@@ -397,13 +398,12 @@ def replace_gls_command(
 
     # Print success message for file operations
     if in_place:
-        console.print(
-            f"[green]✓[/green] Successfully modified '{input_file}' in place",
-            file=sys.stderr,
+        err_console.print(
+            f"[green]✓[/green] Successfully modified '{input_file}' in place"
         )
     elif output:
-        console.print(
-            f"[green]✓[/green] Successfully wrote output to '{output}'", file=sys.stderr
+        err_console.print(
+            f"[green]✓[/green] Successfully wrote output to '{output}'"
         )
 
 
@@ -515,13 +515,12 @@ def resolve_refs_command(
 
     # Print success message for file operations
     if in_place:
-        console.print(
-            f"[green]✓[/green] Successfully modified '{input_file}' in place",
-            file=sys.stderr,
+        err_console.print(
+            f"[green]✓[/green] Successfully modified '{input_file}' in place"
         )
     elif output:
-        console.print(
-            f"[green]✓[/green] Successfully wrote output to '{output}'", file=sys.stderr
+        err_console.print(
+            f"[green]✓[/green] Successfully wrote output to '{output}'"
         )
 
 
