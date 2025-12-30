@@ -35,6 +35,7 @@
 
 % ignore date
 \date{}
+\setcounter{secnumdepth}{0}
 
 %% Corresponding author and equal contributions
 \renewcommand{\Authfont}{\small}
@@ -53,7 +54,11 @@ $\dagger$ These authors contributed equally to this work.\\
 $\ast$ Corresponding author: rendong.yang@northwestern.edu
 
 \begin{abstract}
-	Chimera artifacts in nanopore direct RNA sequencing (dRNA-seq) introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection. Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of dRNA-seq for transcriptomics research. To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called dRNA-seq long reads with single-base precision. Operating independently of raw signal or alignment information, DeepChopper effectively eliminates chimeric read artifacts, significantly enhancing the accuracy of crucial downstream analyses. This improvement in reliability unlocks the full potential of nanopore dRNA-seq, establishing it as a more robust tool for diverse transcriptomics applications.
+	Chimera artifacts in nanopore direct RNA sequencing (dRNA-seq) introduce substantial inaccuracies, complicating downstream applications such as transcript annotation and gene fusion detection.
+	Current basecalling models are unable to detect or mitigate these artifacts, limiting the reliability and utility of dRNA-seq for transcriptomics research.
+	To address this challenge, we present DeepChopper, a genomic language model specifically designed to identify and remove adapter sequences from base-called dRNA-seq long reads with single-base precision.
+	Operating independently of raw signal or alignment information, DeepChopper effectively eliminates adapter-bridged artifacts.
+	Here, we show that DeepChopper enhances the accuracy of downstream analyses and unlocks the full potential of nanopore dRNA-seq, establishing it as a more robust tool for diverse transcriptomics applications.
 \end{abstract}
 
 \section{Introduction}
@@ -231,9 +236,9 @@ Applying DeepChopper after Dorado trimming yielded consistent results, reinforci
 
 Closer inspection of the filtered gene fusion calls revealed a strong enrichment for ribosomal protein genes (Supplementary Fig.~12a). Gene Ontology (GO) enrichment analyses in VCaP (Fig.~\ref{fig:f3}d) and SG-NEx cell lines confirmed this trend, with ribosomal genes frequently appearing in artifact-associated fusions.
 This enrichment extended to chimera artifacts in RNA004 data as well (Supplementary Fig.~12b).
-A manual review of a chimeric read identified as an RPS29–COX8A fusion revealed that the DeepChopper-processed region, interpreted as an internal adapter sequence, aligned with low-intensity raw current signals, which is consistent with ONT adapter characteristics (Fig.~\ref{fig:f3}e).
+A manual review of a chimeric read identified as an \textit{RPS29}–\textit{COX8A} fusion revealed that the DeepChopper-processed region, interpreted as an internal adapter sequence, aligned with low-intensity raw current signals, which is consistent with ONT adapter characteristics (Fig.~\ref{fig:f3}e).
 The presence of polyA and open pore signals at the boundary of this region further supported an artifact origin rather than a bona fide fusion event.
-Supplementary Fig.~13 illustrates the corresponding sequence and base qualities, including the alignment of upstream and downstream segments around the detected adapter, confirming that the apparent RPS29–COX8A fusion arises from an adapter-bridged chimera.
+Supplementary Fig.~13 illustrates the corresponding sequence and base qualities, including the alignment of upstream and downstream segments around the detected adapter, confirming that the apparent \textit{RPS29}–\textit{COX8A} fusion arises from an adapter-bridged chimera.
 
 In summary, DeepChopper improves the quality of nanopore dRNA-seq data by accurately identifying and splitting adapter-bridged chimera that otherwise confound transcript annotation and gene fusion detection.
 These improvements are robust across different sequencing chemistries and preprocessing pipelines.
@@ -522,7 +527,7 @@ Gene expression levels from dRNA-seq were quantified using IsoQuant (v3.1.2)~\ci
 For ONT dRNA-seq data, gene fusions were identified using FusionSeeker (v1.0.1)~\cite{chen2023gene} with default settings.
 For short-read RNA-seq data, FASTQ files for the VCaP cell line were obtained from the Cancer Cell Line Encyclopedia (CCLE) project~\cite{barretina2012cancer} under SRA accession SRX5417211.
 Raw reads were mapped to the hg38 reference genome using STAR (v2.7.11)~\cite{dobin2013star}, and gene fusion events were detected with Arriba (v2.4.0)~\cite{uhrig2021accurate}.
-The gene structure of the RPS29-COX8A fusion was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
+The gene structure of the \textit{RPS29}-\textit{COX8A} fusion was visualized using GSDS (v2.0)~\cite{hu2015gsds}.
 Base quality scores were generated with a custom Python script, and ion current signals were visualized using Squigualiser (v0.6.3)~\cite{samarakoon2024interactive}.
 The circos plot for gene fusion events was visualized using chimeraviz (v1.30.0)~\cite{laagstad2017chimeraviz}.
 
@@ -813,7 +818,7 @@ RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is 
 		(b) The bar plot shows the number of transcripts (in thousands) across different isoform classification categories. DeepChopper-processed reads result in a higher number of transcripts compared to Dorado-trimmed reads. The inset details the isoform classification scheme.
 		(c) Detected gene fusions from Dorado adapter-trimmed reads and DeepChopper-processed reads. Gene fusions identified from short-read RNA-seq were used to validate fusion events detected from dRNA-seq.
 		(d) GO enrichment analysis of chimera artifact-affected genes, with color indicating gene count per term. Statistical significance assessed by one-sided Fisher's exact test (EASE score) with Benjamini-Hochberg FDR correction ($\textrm{FDR} < 0.05$).
-		(e) Analysis of a chimeric read (Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c) artifact detected as an RPS29-COX8A fusion. The schematic shows the fusion between RPS29 (Chr 14) and COX8A (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an ONT adapter.}\label{fig:f3}
+		(e) Analysis of a chimeric read (Read ID: 3b2292e9-43e5-4e40-87d9-ccc23897377c) artifact detected as an \textit{RPS29}-\textit{COX8A} fusion. The schematic shows the fusion between \textit{RPS29} (Chr 14) and \textit{COX8A} (Chr 11). The green plot indicates quality scores along the read, and the blue plot shows raw signal intensity (in pA). The chopped region identified by DeepChopper corresponds to a low-quality segment with low current intensity, polyA, and short open pore signals, suggesting the presence of an ONT adapter.}\label{fig:f3}
 \end{figure}
 
 \end{document}
