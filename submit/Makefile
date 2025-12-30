@@ -38,7 +38,7 @@ clean:
 # Clean everything including PDFs
 cleanall: clean
 	@echo "Removing PDFs..."
-	rm -f $(MAIN).pdf $(SUPPLEMENT).pdf
+	rm -f $(MAIN).pdf
 	@echo "✓ Clean all complete"
 
 # View PDF (opens with default PDF viewer)
@@ -55,7 +55,7 @@ view: $(MAIN).pdf
 zip:
 	zip -r deepchopper_submission.zip \
   main.tex \
-  figure_*.pdf \
+  figure*.pdf \
   supplement.pdf \
   nr-reporting-summary.pdf \
   Inventory_Supporting_Information.docx \
