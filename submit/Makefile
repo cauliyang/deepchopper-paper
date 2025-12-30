@@ -60,7 +60,7 @@ zip:
   nr-reporting-summary.pdf \
   Inventory_Supporting_Information.docx \
   NCOMMS-24-76720B_Author_checklist_1766849851_73.docx \
-  biorender_license.pdf 
+  BioRender_Publication_License_for_figure1_Dec-29-2025.pdf
 
 # Show help
 help:
