@@ -577,9 +577,7 @@ For large-scale analyses, we recommend using DeepChopper on systems with GPU acc
 	\newblock {\em Genome Research}, 30(9):1345--1353, September 2020.
 
 	\bibitem{dorado2023}
-	Oxford~Nanopore PLC.
-	\newblock {Dorado}.
-	\newblock \url{https://github.com/nanoporetech/dorado}, 2023.
+	GitHub - nanoporetech/dorado: Oxford Nanopore's Basecaller. \url{https://github.com/nanoporetech/dorado}, 2023.
 
 	\bibitem{liu2024sequencing}
 	Wang Liu-Wei, Wiep van~der Toorn, Patrick Bohn, Martin H{\"o}~lzer, Redmond~P Smyth, and Max von Kleist.
@@ -587,8 +585,7 @@ For large-scale analyses, we recommend using DeepChopper on systems with GPU acc
 	\newblock {\em BMC genomics}, 25(1):528, 2024.
 
 	\bibitem{pychopper}
-	{epi2me-labs/pychopper: cDNA read preprocessing}.
-	\newblock Github.
+	GitHub - epi2me-labs/pychopper: cDNA read preprocessing. \url{ https://github.com/epi2me-labs/pychopper}, 2024.
 
 	\bibitem{Wick2017}
 	Ryan~R. Wick, Louise~M. Judd, Claire~L. Gorrie, and Kathryn~E. Holt.
@@ -715,9 +712,9 @@ For large-scale analyses, we recommend using DeepChopper on systems with GPU acc
 	\newblock {\em Bioinformatics}, 25(16):2078--2079, 2009.
 
 	\bibitem{kingma2014adam}
-	Diederik~P Kingma and Jimmy Ba.
+	Diederik~P. Kingma and Jimmy Ba.
 	\newblock {Adam: A method for stochastic optimization}.
-	\newblock {\em arXiv}, 2014.
+	\newblock In {\em Proceedings of the 3rd International Conference on Learning Representations (ICLR)}, pages 1--15, 2015.
 
 	\bibitem{paszke2019pytorch}
 	Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, et~al.
@@ -725,9 +722,7 @@ For large-scale analyses, we recommend using DeepChopper on systems with GPU acc
 	\newblock {\em Advances in neural information processing systems}, 32, 2019.
 
 	\bibitem{Yadan2019Hydra}
-	Omry Yadan.
-	\newblock {Hydra - A framework for elegantly configuring complex applications}.
-	\newblock Github, 2019.
+	GitHub - facebookresearch/hydra: A framework for elegantly configuring complex applications. \url{ https://github.com/facebookresearch/hydra}, 2024.
 
 	\bibitem{martin2011cutadapt}
 	Marcel Martin.
@@ -791,17 +786,17 @@ YL, TYW and RY designed the study with QC. YL and TYW performed the analysis. QG
 
 \section*{Conflict of Interests}
 
-RY has served as an advisor/consultant for Tempus AI, Inc. This relationship is unrelated to and did not influence the research presented in this study.
-
+RY has served as an advisor/consultant for Tempus AI, Inc.
+This relationship is unrelated to and did not influence the research presented in this study.
+Other authors have no competing interests.
 
 \begin{figure}[!ht]
 	% \includegraphics[height=0.63\columnwidth]{figure1}
 	\caption{{\bf DeepChopper architecture and methodology.}
-		(a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA, a long-context genomic language model (LCGLM), to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created with BioRender.com.
+		(a) Overview of the DeepChopper model. Raw sequences are first tokenized into vectors and processed by HyenaDNA, a long-context genomic language model (LCGLM), to generate embedding features. These features are integrated with base quality information in the quality block to produce per-token probability scores. A refinement strategy further optimizes the predictions. Created in BioRender. Guo, Q. (2026) https://BioRender.com/zlls0nk.
 		(b) Architecture of the quality block. The block combines a multi-layer perceptron (MLP)  (purple) with a residual connection to process both embedding features and sequence base quality scores (green vector). The output provides per-token probabilities indicating whether each base belongs to an adapter sequence.
 		(c) Illustration of the sliding window refinement method. The model's initial predictions are inferred from probability. Then the predictions are processed using a sliding window approach (red rectangle) to refine predictions. The dashed rectangle highlights the first four steps of this refinement process, where each step refines the prediction for a single base position in terms of the majority vote.}\label{fig:f1}
 \end{figure}
-
 
 \begin{figure}[!ht]
 	% \includegraphics[height=0.6\columnwidth]{figure2}

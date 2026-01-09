@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper, total={6.5in, 9in}]{geometry}
+\usepackage{pbyp}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{subcaption}
+\usepackage{float}
+
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+
+% set figures name as Response Figure
+\renewcommand{\figurename}{Response Figure}
+% set table name as Response Table
+\renewcommand{\tablename}{Response Table}
+% set Cref name as Response Figure
+\Crefname{figure}{Response Figure}{Response Figures}
+\Crefname{table}{Response Table}{Response Tables}
+
+\usepackage{url}
+\usepackage{hyperref}
+
+\begin{document}
+\begin{center}
+	\Large\bfseries Point-by-point responses
+\end{center}
+
+Thank you for the editorial review.
+We have carefully addressed all the requested changes as detailed below:
+
+\begin{question}
+	{\QuestionRevA{Q1}}\label{R1:Q1}
+	Please include a negative statement for other authors in the Competing interests section. ``Other authors have no competing interests.''
+\end{question}
+\begin{redresponse}
+	We have updated the Competing interests section to include the statement ``Other authors have no competing interests.'' The revised section now reads:
+
+	RY has served as an advisor/consultant for Tempus AI, Inc.
+	This relationship is unrelated to and did not influence the research presented in this study.
+	Other authors have no competing interests.
+\end{redresponse}
+
+\begin{question}
+	{\QuestionRevA{Q2}}\label{R1:Q2}
+	Please ensure the references [5, 7, 33, 35] are in the standard Nature format and follow the sequence: author list, title of paper, name of journal, volume number, initial-final page numbers or article number (year).
+\end{question}
+\begin{redresponse}
+	We have reformatted references [5, 7, 33, 35] to comply with Nature format standards:
+	\begin{itemize}
+		\item[{[5]}] GitHub - nanoporetech/dorado: Oxford Nanopore's Basecaller. \url{https://github.com/nanoporetech/dorado}, 2023.
+
+		\item[{[7]}] GitHub - epi2me-labs/pychopper: cDNA read preprocessing. \url{https://github.com/epi2me-labs/pychopper}, 2024.
+
+		\item[{[33]}] Kingma, D. P. \& Ba, J. Adam: A method for stochastic optimization. Proceedings of the 3rd International Conference on Learning Representations (ICLR), 1–15 (2015).
+
+		\item[{[35]}] GitHub - facebookresearch/hydra: A framework for elegantly configuring complex applications. \url{https://github.com/facebookresearch/hydra}, 2024.
+	\end{itemize}
+
+	Note: References [5, 7, 35] are software tools without formal publications, so we have cited them following Nature's standard format for software citations, consistent with recently published articles (e.g., \url{https://www.nature.com/articles/s41467-025-58576-x#Bib1}).
+\end{redresponse}
+
+\begin{question}
+	{\QuestionRevA{Q3}}\label{R1:Q3}
+	Please ensure that the citation for BioRender provided in the license matches the citation used in the corresponding figure legend.
+\end{question}
+\begin{redresponse}
+	We have verified and updated the BioRender citation to ensure consistency between the license and the figure legend. The citation in the manuscript now reads: ``Created in BioRender. Guo, Q. (2026) https://BioRender.com/zlls0nk''.
+\end{redresponse}
+
+\end{document}
